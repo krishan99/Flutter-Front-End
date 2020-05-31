@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
 }
+
+//class MyTextTheme extends TextTheme {
+//  final TextStyle button1;
+//  final TextStyle button2;
+//  final TextStyle formField;
+//  final TextStyle subtext;
+//
+//  MyTextTheme._({this.button1, this.button2, this.formField, this.subtext}) {
+//    super.copyWith(
+//      headline1: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 47, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w800),
+//      headline2: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 40, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w800),
+//      headline3: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(98, 98, 98, 1), fontWeight: FontWeight.w800),
+//      headline4: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(57, 57, 57, 1), fontWeight: FontWeight.w600),
+//      bodyText1: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w800),
+//      bodyText2: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(116, 116, 116, 1), fontWeight: FontWeight.w800),
+//      caption: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w600),
+//    );
+//  }
+//
+//  factory MyTextTheme() {
+//    return new MyTextTheme._(
+//      button1: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w600),
+//      button2: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w600),
+//      formField: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w600),
+//      subtext: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w600),
+//    );
+//  }
+//}
 
 class MyApp extends StatelessWidget {
   @override
@@ -10,56 +40,36 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+        // Define the default brightness and colors.
+        primaryColor: Color.fromRGBO(255, 83, 83, 1),
+        backgroundColor: Colors.white,
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+        // Define the default font family.
+        fontFamily: 'Helvetica Neue',
 
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        // Define the default TextTheme. Use this to specify the default
+        // text styling for headlines, titles, bodies of text, and more.
+        textTheme: TextTheme(
+          headline1: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 47, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w800),
+          headline2: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 40, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w800),
+          headline3: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(98, 98, 98, 1), fontWeight: FontWeight.w800),
+          headline4: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(57, 57, 57, 1), fontWeight: FontWeight.w600),
+          bodyText1: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w800),
+          bodyText2: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(116, 116, 116, 1), fontWeight: FontWeight.w800),
+          caption: TextStyle(fontFamily: 'Helvetica Neue', fontSize: 20, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w600),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      home: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Text("LiveSafe for Businesses", style: Theme.of(context).textTheme.headline1),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
