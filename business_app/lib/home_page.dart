@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                         style: Theme.of(context).textTheme.button,
                       ),
                       color: Theme.of(context).secondaryHeaderColor,
-                      onPressed: () => {print("sign up")},
+                      onPressed: () => {print("Log In")},
                     ),
                   ),
                 ],

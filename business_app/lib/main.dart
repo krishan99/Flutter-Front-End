@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:business_app/home_page.dart';
+import 'package:business_app/login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() => runApp(MyApp());
@@ -48,10 +49,14 @@ class MyApp extends StatelessWidget {
           ),
           subtitle1: TextStyle(
               fontSize: 20, color: Color.fromRGBO(98, 98, 98, 1), fontWeight: FontWeight.w300
+          ),
+          subtitle2: TextStyle(
+            fontSize: 15, color: Color.fromRGBO(186, 186, 186, 1), fontWeight: FontWeight.w300
           )
+
         ),
       ),
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }
