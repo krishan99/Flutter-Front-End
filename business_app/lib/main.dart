@@ -1,3 +1,4 @@
+import 'package:business_app/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/home_page.dart';
 import 'package:business_app/login_page.dart';
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
 
         ),
       ),
-      home: LoginPage(),
+      home: SignUpPage(),
     );
   }
 }

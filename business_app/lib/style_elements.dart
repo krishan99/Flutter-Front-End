@@ -66,11 +66,13 @@ class StyleTextField extends StatefulWidget {
   final Function(String) onChanged;
   final Function(String) onSubmitted;
   final String placeholderText;
+  final int maxLines;
 
-  StyleTextField({@required this.placeholderText, this.onChanged, this.onSubmitted}) : super();
+  StyleTextField({this.maxLines = 1, @required this.placeholderText, this.onChanged, this.onSubmitted}) : super();
 
   @override
   _StyleTextFieldState createState() => _StyleTextFieldState(
+      maxLines: this.maxLines,
       placeholderText: this.placeholderText,
       status: StyleTextFieldStatus.neutral,
       onChanged: (string){print("ROAR");},
@@ -83,6 +85,8 @@ class _StyleTextFieldState extends State<StyleTextField> {
   final Function(String) onChanged;
   final Function(String) onSubmitted;
   final String placeholderText;
+  final int maxLines;
+
   TextEditingController _controller = null;
 
   Color get borderColor {
@@ -94,7 +98,15 @@ class _StyleTextFieldState extends State<StyleTextField> {
     }
   }
 
-  _StyleTextFieldState({this.placeholderText, @required this.status, this.onChanged, this.onSubmitted}) : super();
+  Alignment get textFieldFontAlignment {
+    if (maxLines == 1) {
+      return Alignment.center;
+    } else {
+      return Alignment.topLeft;
+    }
+  }
+
+  _StyleTextFieldState({this.maxLines, this.placeholderText, @required this.status, this.onChanged, this.onSubmitted}) : super();
 
   void initState() {
     super.initState();
@@ -110,7 +122,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        alignment: Alignment.center,
+        alignment: textFieldFontAlignment,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: Colors.white,
@@ -127,7 +139,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
             controller: _controller,
             onChanged: (string){onChanged(string);},
             onSubmitted: onSubmitted,
-            maxLines: 1,
+            maxLines: maxLines,
             cursorColor: Theme.of(context).primaryColor,
             style: Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.grey[900]),
             decoration: InputDecoration(
