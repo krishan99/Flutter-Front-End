@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:business_app/style_elements.dart';
 
+import 'login_page.dart';
+
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,22 @@ class HomePage extends StatelessWidget {
                         style: Theme.of(context).textTheme.button,
                       ),
                       color: Theme.of(context).secondaryHeaderColor,
-                      onPressed: () => {print("Log In")},
+                      onPressed: () => {
+                        showModalBottomSheet(isScrollControlled: true, context: context, builder: (BuildContext context) {
+
+                          return SingleChildScrollView(
+                            child: Container(
+                                height: MediaQuery.of(context).size.height*0.9,
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                                    ),
+                                    child: LoginPage()
+                                )
+                            ),
+                          );
+                        })
+                      },
                     ),
                   ),
                 ],

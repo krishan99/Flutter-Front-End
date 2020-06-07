@@ -9,73 +9,84 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
-        child: Container(
-          color: Colors.white,
-          child: SafeArea(
-            child: Center(
-              child: Container(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                        child: Text(
-                          "Welcome Back!",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline2,
-                        )),
-                    Container(
-                      child: Text(
-                        "Happy customers are the best advertising money can buy.",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline4,
+    return Container(
+        color: Colors.white,
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Flexible(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          child: Text(
+                            "Welcome Back!",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline2,
+                          )
                       ),
-                    ),
+                      SizedBox(height: 12,),
+                      Container(
+                        child: Text(
+                          "Happy customers are the best advertising money can buy.",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
 //              Container(
 //                  child: GoogleSignInButton()
 //              ),
-                    Column(
-                      children: <Widget>[
-                        GoogleSignInButton(
-                          onPressed: () {
-                            print("sah");
-                          },
-                        ),
-                        SizedBox(height: 10,),
-                        GoogleSignInButton(
-                          onPressed: () {
-                            print("sah");
-                          },
-                        ),
-                      ],
-                    ),
+                Flexible(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      GoogleSignInButton(
+                        onPressed: () {
+                          print("sah");
+                        },
+                      ),
+                      SizedBox(height: 10,),
+                      GoogleSignInButton(
+                        onPressed: () {
+                          print("sah");
+                        },
+                      ),
+                    ],
+                  ),
+                ),
 
-                    Container(
-                      child: Text(
-                        "Or Login With Email",
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
+                Flexible(
+                  flex: 7,
+                  fit: FlexFit.loose,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxHeight: 300
                     ),
-                    Container(
-                      width: 269,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                              child: StyleTextField(placeholderText: "Email...", onChanged: (string){print("$string");},)
-                          ),
-                          SizedBox(height: 12),
-                          Container(
-                              child: StyleTextField(placeholderText: "Password...", onChanged: (string){print("$string");},)
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
+                    width: 269,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
+                        Container(
+                          child: Text(
+                            "Or Login With Email",
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ),
+                        Container(
+                            child: StyleTextField(placeholderText: "Email...", onChanged: (string){print("$string");},)
+                        ),
+                        Container(
+                            child: StyleTextField(placeholderText: "Password...", onChanged: (string){print("$string");},)
+                        ),
                         Container(
                           child: ActionButton(
                             width: 233,
@@ -88,24 +99,23 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () => {print("sign up")},
                           ),
                         ),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            child: Text(
+                              "forgot your password",
+                              style: Theme.of(context).textTheme.subtitle2,
+                            ),
+                          ),
+                        )
                       ],
                     ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        child: Text(
-                          "forgot your password",
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
-      ),
     );
   }
 }

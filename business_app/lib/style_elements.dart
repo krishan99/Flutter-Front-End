@@ -123,7 +123,6 @@ class _StyleTextFieldState extends State<StyleTextField> {
     return Material(
       child: Container(
         alignment: textFieldFontAlignment,
-        constraints: BoxConstraints(minHeight: 100),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: Colors.white,
