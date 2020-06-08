@@ -136,7 +136,6 @@ class _StyleTextFieldState extends State<StyleTextField> {
         ),
         padding: EdgeInsets.only(left: 10),
         child: TextField(
-          autofocus: true,
             controller: _controller,
             onChanged: (string){onChanged(string);},
             onSubmitted: onSubmitted,

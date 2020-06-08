@@ -1,121 +1,130 @@
+import 'package:business_app/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/style_elements.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget implements EntranceScreen {
+  final double height;
+  LoginPage.height({this.height});
+  LoginPage({this.height});
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState(height: this.height);
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final double height;
+  _LoginPageState({this.height}) : super();
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Flexible(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          child: Text(
-                            "Welcome Back!",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline2,
-                          )
-                      ),
-                      SizedBox(height: 12,),
-                      Container(
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: height),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Flexible(
+                flex: 2,
+                fit: FlexFit.loose,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
                         child: Text(
-                          "Happy customers are the best advertising money can buy.",
+                          "Welcome Back!",
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
+                          style: Theme.of(context).textTheme.headline2,
+                        )
+                    ),
+                    SizedBox(height: 12,),
+                    Container(
+                      child: Text(
+                        "Happy customers are the best advertising money can buy.",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline4,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
 
 //              Container(
 //                  child: GoogleSignInButton()
 //              ),
-                Flexible(
-                  flex: 2,
+              Flexible(
+                flex: 2,
+                fit: FlexFit.loose,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GoogleSignInButton(
+                      onPressed: () {
+                        print("sah");
+                      },
+                    ),
+                    SizedBox(height: 10,),
+                    GoogleSignInButton(
+                      onPressed: () {
+                        print("sah");
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              Flexible(
+                flex: 7,
+                fit: FlexFit.loose,
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 300
+                  ),
+                  width: 269,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      GoogleSignInButton(
-                        onPressed: () {
-                          print("sah");
-                        },
+                      Container(
+                        child: Text(
+                          "Or Login With Email",
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
                       ),
-                      SizedBox(height: 10,),
-                      GoogleSignInButton(
-                        onPressed: () {
-                          print("sah");
-                        },
+                      Container(
+                          child: StyleTextField(placeholderText: "Email...", onChanged: (string){print("$string");},)
                       ),
+                      Container(
+                          child: StyleTextField(placeholderText: "Password...", onChanged: (string){print("$string");},)
+                      ),
+                      Container(
+                        child: ActionButton(
+                          width: 233,
+                          height: 55,
+                          child: Text(
+                            "Sign Up",
+                            style: Theme.of(context).textTheme.button,
+                          ),
+                          gradient: MyGradients.primaryGradient,
+                          onPressed: () => {print("sign up")},
+                        ),
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          child: Text(
+                            "forgot your password",
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
-
-                Flexible(
-                  flex: 7,
-                  fit: FlexFit.loose,
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxHeight: 300
-                    ),
-                    width: 269,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                          child: Text(
-                            "Or Login With Email",
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ),
-                        Container(
-                            child: StyleTextField(placeholderText: "Email...", onChanged: (string){print("$string");},)
-                        ),
-                        Container(
-                            child: StyleTextField(placeholderText: "Password...", onChanged: (string){print("$string");},)
-                        ),
-                        Container(
-                          child: ActionButton(
-                            width: 233,
-                            height: 55,
-                            child: Text(
-                              "Sign Up",
-                              style: Theme.of(context).textTheme.button,
-                            ),
-                            gradient: MyGradients.primaryGradient,
-                            onPressed: () => {print("sign up")},
-                          ),
-                        ),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            child: Text(
-                              "forgot your password",
-                              style: Theme.of(context).textTheme.subtitle2,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 }
