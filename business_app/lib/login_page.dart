@@ -1,4 +1,5 @@
 import 'package:business_app/home_page.dart';
+import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/style_elements.dart';
 
@@ -34,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           "Welcome Back!",
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline2,
+                          style: MyStyles.of(context).textThemes.h2,
                         )
                     ),
                     SizedBox(height: 12,),
@@ -42,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Happy customers are the best advertising money can buy.",
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline4,
+                        style: MyStyles.of(context).textThemes.h4,
                       ),
                     ),
                   ],
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         child: Text(
                           "Or Login With Email",
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: MyStyles.of(context).textThemes.bodyText2,
                         ),
                       ),
                       Container(
@@ -102,9 +103,9 @@ class _LoginPageState extends State<LoginPage> {
                           height: 55,
                           child: Text(
                             "Sign Up",
-                            style: Theme.of(context).textTheme.button,
+                            style: MyStyles.of(context).textThemes.button,
                           ),
-                          gradient: MyGradients.primaryGradient,
+                          gradient: MyStyles.of(context).colors.accentGradient,
                           onPressed: () => {print("sign up")},
                         ),
                       ),
@@ -113,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: InkWell(
                           child: Text(
                             "forgot your password",
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: MyStyles.of(context).textThemes.placeholder,
                           ),
                         ),
                       )
@@ -156,9 +157,9 @@ class GoogleSignInButton extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10),
                 child: Text(
                   'Sign in with Google',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline4
+                  style: MyStyles.of(context)
+                      .textThemes
+                      .h4
                       .copyWith(fontSize: 17),
                 ),
               )

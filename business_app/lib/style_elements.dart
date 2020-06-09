@@ -1,14 +1,5 @@
+import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
-
-class MyGradients {
-  static const primaryGradient = LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: <Color>[
-        Color.fromRGBO(255, 75, 43, 1),
-        Color.fromRGBO(255, 65, 108, 1)
-      ]);
-}
 
 class ActionButton extends StatelessWidget {
   final Widget child;
@@ -140,10 +131,10 @@ class _StyleTextFieldState extends State<StyleTextField> {
             onChanged: (string){onChanged(string);},
             onSubmitted: onSubmitted,
             maxLines: maxLines,
-            cursorColor: Theme.of(context).primaryColor,
-            style: Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.grey[900]),
+            cursorColor: MyStyles.of(context).colors.accent,
+            style: MyStyles.of(context).textThemes.subtitle1.copyWith(color: Colors.grey[900]),
             decoration: InputDecoration(
-                hintStyle: Theme.of(context).textTheme.subtitle2,
+                hintStyle: MyStyles.of(context).textThemes.placeholder,
                 border: InputBorder.none,
                 hintText: placeholderText
             )

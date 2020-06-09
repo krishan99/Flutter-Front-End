@@ -1,3 +1,4 @@
+import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/style_elements.dart';
 
@@ -45,14 +46,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                   child: Text(
                                     "Sign Up",
                                     textAlign: TextAlign.center,
-                                    style: Theme.of(context).textTheme.headline2,
+                                    style: MyStyles.of(context).textThemes.h2,
                                   )),
                               SizedBox(height: 6,),
                               Container(
                                 child: Text(
                                   "EndLine Inc.",
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.subtitle2,
+                                  style: MyStyles.of(context).textThemes.h2,
                                 ),
                               ),
                             ],
@@ -104,9 +105,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               height: 55,
                               child: Text(
                                 "Continue",
-                                style: Theme.of(context).textTheme.button,
+                                style: MyStyles.of(context).textThemes.button,
                               ),
-                              gradient: MyGradients.primaryGradient,
+                              gradient: MyStyles.of(context).colors.accentGradient,
                               onPressed: () => {print("sign up")},
                             ),
                           ),
