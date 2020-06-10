@@ -36,6 +36,7 @@ class HomePage extends StatelessWidget {
           builder: (BuildContext context) {
             return Container(
                 height: height,
+                //TODO: Supposed be rounding off page but doesn't
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
@@ -113,7 +114,7 @@ class HomePage extends StatelessWidget {
                     ActionButton(
                         child: Text(
                           "Sign Up",
-                          style: MyStyles.of(context).textThemes.button,
+                          style: MyStyles.of(context).textThemes.buttonActionText1,
                         ),
                         gradient: MyStyles.of(context).colors.accentGradient,
                         onPressed: () => {
@@ -127,7 +128,7 @@ class HomePage extends StatelessWidget {
                       child: ActionButton(
                         child: Text(
                           "Log In",
-                          style: MyStyles.of(context).textThemes.button,
+                          style: MyStyles.of(context).textThemes.buttonActionText1,
                         ),
                         color: MyStyles.of(context).colors.secondary,
                         onPressed: () => {

@@ -3,6 +3,8 @@ import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/home_page.dart';
 
+import 'dashboard_page.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
         fontFamily: "SanFrancisco",
         //Using SanFrancisco because Helvetica's usWeightClass is off. Fix later.
       ),
-      home: HomePage(),
+      home: DashboardPage(name: "John Doe"),
     );
   }
 }

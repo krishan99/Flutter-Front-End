@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 55,
                             child: Text(
                               "Sign Up",
-                              style: MyStyles.of(context).textThemes.button,
+                              style: MyStyles.of(context).textThemes.buttonActionText1,
                             ),
                             gradient: MyStyles.of(context).colors.accentGradient,
                             onPressed: () => {print("sign up")},

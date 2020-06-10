@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MyStyles {
-  static MyStyles lightMode = MyStyles._(colors: MyColors.lightMode, textThemes: MyTextThemes.lightMode);
-  static MyStyles darkMode = MyStyles._(colors: MyColors.darkMode, textThemes: MyTextThemes.darkMode);
+  static MyStyles lightMode = MyStyles._(images: MyImages.lightMode, colors: MyColors.lightMode, textThemes: MyTextThemes.lightMode);
+  static MyStyles darkMode = MyStyles._(images: MyImages.darkMode, colors: MyColors.darkMode, textThemes: MyTextThemes.darkMode);
 
   static MyStyles of(BuildContext context) {
     switch (MediaQuery.of(context).platformBrightness) {
@@ -13,10 +16,40 @@ class MyStyles {
     }
   }
 
+  final MyImages images;
   final MyColors colors;
   final MyTextThemes textThemes;
 
-  const MyStyles._({this.colors, this.textThemes});
+  const MyStyles._({this.images, this.colors, this.textThemes});
+}
+
+class MyImages {
+  static const imagePath = "assets/images/";
+
+  static final MyImages lightMode = MyImages._(
+    userAccountIcon: Image.asset("${imagePath}user_account_icon.png"),
+    gearIcon: Image.asset("${imagePath}gear_icon.png"),
+  );
+
+  static final MyImages darkMode = lightMode.copyWith();
+
+  final Image userAccountIcon;
+  final Image gearIcon;
+
+  MyImages._({
+    this.userAccountIcon,
+    this.gearIcon
+  });
+
+  MyImages copyWith({
+    Image userAccountIcon,
+    Image gearIcon,
+  }) {
+    return MyImages._(
+      userAccountIcon: userAccountIcon ?? this.userAccountIcon,
+      gearIcon: gearIcon ?? this.gearIcon
+    );
+  }
 }
 
 class MyColors {
@@ -63,11 +96,13 @@ class MyTextThemes {
     h2: TextStyle(fontSize: 40, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.bold),
     h3: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(98, 98, 98, 1), fontWeight: FontWeight.bold),
     h4: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(57, 57, 57, 1), fontWeight: FontWeight.w300),
+    h5: TextStyle(fontSize: 10, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(98, 98, 98, 1), fontWeight: FontWeight.w300),
     bodyText1: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.bold),
     bodyText2: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(116, 116, 116, 1), fontWeight: FontWeight.bold),
-    caption: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w300),
-    button: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
-    subtitle1: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(98, 98, 98, 1), fontWeight: FontWeight.w300),
+    bodyText3: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w300),
+    buttonActionText1: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
+    buttonActionText2: TextStyle(fontSize: 16, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
+    subtext: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(160, 160, 160, 1), fontWeight: FontWeight.w300),
     placeholder: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(186, 186, 186, 1), fontWeight: FontWeight.w300),
   );
 
@@ -77,12 +112,30 @@ class MyTextThemes {
   final TextStyle h2;
   final TextStyle h3;
   final TextStyle h4;
+  final TextStyle h5;
   final TextStyle bodyText1;
   final TextStyle bodyText2;
-  final TextStyle caption;
-  final TextStyle button;
-  final TextStyle subtitle1;
+  final TextStyle bodyText3;
+  final TextStyle buttonActionText1;
+  final TextStyle buttonActionText2;
+  final TextStyle formField1;
+  final TextStyle subtext;
   final TextStyle placeholder;
 
-  const MyTextThemes._({this.h1, this.h2, this.h3, this.h4, this.bodyText1, this.bodyText2, this.caption, this.button, this.subtitle1, this.placeholder});
+  const MyTextThemes._({
+    this.h1,
+    this.h2,
+    this.h3,
+    this.h4,
+    this.h5,
+    this.bodyText1,
+    this.bodyText2,
+    this.bodyText3,
+    this.buttonActionText1,
+    this.buttonActionText2,
+    this.formField1,
+    this.subtext,
+    this.placeholder,
+  });
+
 }

@@ -94,7 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 55,
                       child: Text(
                         "Continue",
-                        style: MyStyles.of(context).textThemes.button,
+                        style: MyStyles.of(context).textThemes.buttonActionText1,
                       ),
                       gradient: MyStyles.of(context).colors.accentGradient,
                       onPressed: () => {print("sign up")},

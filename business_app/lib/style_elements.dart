@@ -78,7 +78,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
   final String placeholderText;
   final int maxLines;
 
-  TextEditingController _controller = null;
+  TextEditingController _controller;
 
   Color get borderColor {
     switch (status) {
@@ -132,7 +132,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
             onSubmitted: onSubmitted,
             maxLines: maxLines,
             cursorColor: MyStyles.of(context).colors.accent,
-            style: MyStyles.of(context).textThemes.subtitle1.copyWith(color: Colors.grey[900]),
+            style: MyStyles.of(context).textThemes.placeholder.copyWith(color: Colors.grey[900]),
             decoration: InputDecoration(
                 hintStyle: MyStyles.of(context).textThemes.placeholder,
                 border: InputBorder.none,
