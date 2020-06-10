@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
-        color: Colors.white,
+        color: MyStyles.of(context).colors.background1,
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 
 class MyStyles {
-  static const lightMode = MyStyles._(colors: MyColors.lightMode, textThemes: MyTextThemes.lightMode);
-  static const darkMode = MyStyles._(colors: MyColors.darkMode, textThemes: MyTextThemes.darkMode);
+  static MyStyles lightMode = MyStyles._(colors: MyColors.lightMode, textThemes: MyTextThemes.lightMode);
+  static MyStyles darkMode = MyStyles._(colors: MyColors.darkMode, textThemes: MyTextThemes.darkMode);
 
   static MyStyles of(BuildContext context) {
     switch (MediaQuery.of(context).platformBrightness) {
       case Brightness.light: 
-        return MyStyles.lightMode;
-        break;
+        return MyStyles.darkMode;
       case Brightness.dark:
         return MyStyles.darkMode;
-        break;
     }
-
-    assert(false);
   }
 
   final MyColors colors;
@@ -24,7 +20,7 @@ class MyStyles {
 }
 
 class MyColors {
-  static const lightMode = const MyColors._(
+  static MyColors lightMode = const MyColors._(
     background1: Colors.white,
     background2: Color.fromRGBO(248, 248, 248, 1),
     accent: Color.fromRGBO(255, 83, 83, 1),
@@ -39,13 +35,14 @@ class MyColors {
     )
   );
 
-  static const darkMode = MyColors.lightMode;
+  static MyColors darkMode = MyColors.lightMode.copyWith();
 
   MyColors copyWith({Color background1, Color background2, Color accent, Color secondary, LinearGradient accentGradient}) {
     return MyColors._(
       background1: background1 ?? this.background1,
       background2: background2 ?? this.background2,
       accent: accent ?? this.accent, 
+      secondary: secondary ?? this.secondary,
       accentGradient: accentGradient ?? this.accentGradient
       );
   }

@@ -116,7 +116,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
         alignment: textFieldFontAlignment,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: Colors.white,
+            color: MyStyles.of(context).colors.background1,
             border: Border.all(color: borderColor),
             boxShadow: [
               BoxShadow(
