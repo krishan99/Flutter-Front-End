@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>930004590507-k9cllldm7ra7u2o1v4un0f45jccm3q10.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.930004590507-k9cllldm7ra7u2o1v4un0f45jccm3q10</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC1Y4AwHldpq2527N7JiNC0QOLkkvYZrhI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>930004590507</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.livesafe.businessapp</string>
+	<key>PROJECT_ID</key>
+	<string>livesafe-ac52a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>livesafe-ac52a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:930004590507:ios:03039563745e227c847cee</string>
+	<key>DATABASE_URL</key>
+	<string>https://livesafe-ac52a.firebaseio.com</string>
+</dict>
+</plist>
