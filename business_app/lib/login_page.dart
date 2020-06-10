@@ -1,7 +1,8 @@
-import 'package:business_app/home_page.dart';
-import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
+
+import 'package:business_app/home_page.dart';
 import 'package:business_app/style_elements.dart';
+import 'package:business_app/themes.dart';
 
 class LoginPage extends StatefulWidget implements EntranceScreen {
   final double height;
@@ -131,9 +132,12 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class GoogleSignInButton extends StatelessWidget {
-  Function onPressed;
-
-  GoogleSignInButton({this.onPressed}) : super();
+  final Function onPressed;
+  
+  const GoogleSignInButton({
+    Key key,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
