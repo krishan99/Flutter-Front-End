@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:business_app/home_page.dart';
+import 'package:business_app/views/home_page.dart';
 import 'package:business_app/style_elements.dart';
 import 'package:business_app/themes.dart';
 
@@ -133,6 +133,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
 
 class GoogleSignInButton extends StatelessWidget {
   final Function onPressed;

@@ -1,8 +1,9 @@
-import 'package:business_app/home_page.dart';
-import 'package:business_app/themes.dart';
+import 'package:business_app/model_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dashboard_page.dart';
+
+import 'package:business_app/views/home_page.dart';
+import 'package:business_app/themes.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,6 +15,8 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp
     ]);
+
+    final ModelData mD = ModelData();
 
     return MaterialApp(
       title: 'Flutter Demo',
