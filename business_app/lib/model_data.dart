@@ -15,12 +15,19 @@ class User extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  bool isSignedIn = false;
+  FirebaseUser _firebaseUser;
+
+  bool get isLoggedIn {
+    return _firebaseUser != null;
+  }
+
+  String get name {
+    return _firebaseUser.displayName;
+  }
 
   Future<String> signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -38,5 +45,13 @@ class User extends ChangeNotifier {
 
     return 'signInWithGoogle succeeded: $user';
   }
+
+  User() {
+    _auth.onAuthStateChanged.listen((fUser) {
+      this._firebaseUser = fUser;
+      this.notifyListeners();
+    });
+  }
 }
+
 

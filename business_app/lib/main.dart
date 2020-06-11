@@ -1,4 +1,6 @@
 import 'package:business_app/model_data.dart';
+import 'package:business_app/views/dashboard_page.dart';
+import 'package:business_app/views/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,7 +34,15 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
         title: 'EndLine',
-        home: HomePage()
+        home: Consumer<User>(
+            builder: (context, user, _) {
+              if (user.isLoggedIn) {
+                return DashboardPage(name: user.name ?? "John Doe",);
+              } else {
+                return HomePage();
+              }
+            },
+          )
     );
   }
 }

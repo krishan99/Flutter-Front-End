@@ -27,7 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
           onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
           child: Container(
             color: MyStyles.of(context).colors.background1,
-            constraints: BoxConstraints(maxHeight: height),
+            constraints: BoxConstraints(maxHeight: height ?? MediaQuery.of(context).size.height),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
