@@ -3,9 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:business_app/views/home_page.dart';
-import 'package:business_app/themes.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  final mD = ModelData();
+
+  runApp(
+    MultiProvider(
+      providers: [
+            ChangeNotifierProvider<User>(create: (context) => mD.user,)
+      ],
+      child: MyApp()
+    )
+  );
+      
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -16,14 +30,9 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp
     ]);
 
-    final ModelData mD = ModelData();
-
     return MaterialApp(
-      title: 'Flutter Demo',
-      home: HomePage(),
-      // home: DashboardPage(name: "John Doe"),
+        title: 'EndLine',
+        home: HomePage()
     );
-
-
   }
 }

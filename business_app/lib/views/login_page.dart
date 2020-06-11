@@ -1,11 +1,15 @@
+
+import 'package:business_app/model_data.dart';
 import 'package:flutter/material.dart';
 
 import 'package:business_app/views/home_page.dart';
 import 'package:business_app/style_elements.dart';
 import 'package:business_app/themes.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget implements EntranceScreen {
   final double height;
+
   LoginPage.height({this.height});
   LoginPage({this.height});
   @override
@@ -13,8 +17,17 @@ class LoginPage extends StatefulWidget implements EntranceScreen {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  User user;
   final double height;
   _LoginPageState({this.height}) : super();
+
+  BuildContext get context => super.context;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    user = Provider.of<User>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 10,),
                       GoogleSignInButton(
                         onPressed: () {
-                          print("sah");
+                          user.signInWithGoogle();
                         },
                       ),
                     ],

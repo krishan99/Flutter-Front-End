@@ -1,13 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-abstract class ModelController {
-  ModelData mD;
-
-  User get user {
-    return mD.user;
-  }
-}
+import 'package:provider/provider.dart';
 
 class ModelData {
   User user;
@@ -17,30 +11,34 @@ class ModelData {
   }
 }
 
-class User {
-  static final FirebaseAuth _auth = FirebaseAuth.instance;
-  static final GoogleSignIn googleSignIn = GoogleSignIn();
+class User extends ChangeNotifier {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  static Future<String> signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+  bool isSignedIn = false;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
+  Future<String> signInWithGoogle() async {
+    print("SIGN IN W? GOOGLE");
+    return "roar";
+    // final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    // final GoogleSignInAuthentication googleSignInAuthentication =
+    //     await googleSignInAccount.authentication;
 
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
+    // final AuthCredential credential = GoogleAuthProvider.getCredential(
+    //   accessToken: googleSignInAuthentication.accessToken,
+    //   idToken: googleSignInAuthentication.idToken,
+    // );
 
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    // final AuthResult authResult = await _auth.signInWithCredential(credential);
+    // final FirebaseUser user = authResult.user;
 
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
+    // assert(!user.isAnonymous);
+    // assert(await user.getIdToken() != null);
 
-    return 'signInWithGoogle succeeded: $user';
+    // final FirebaseUser currentUser = await _auth.currentUser();
+    // assert(user.uid == currentUser.uid);
+
+    // return 'signInWithGoogle succeeded: $user';
   }
 }
 
