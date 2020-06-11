@@ -18,27 +18,25 @@ class User extends ChangeNotifier {
   bool isSignedIn = false;
 
   Future<String> signInWithGoogle() async {
-    print("SIGN IN W? GOOGLE");
-    return "roar";
-    // final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    // final GoogleSignInAuthentication googleSignInAuthentication =
-    //     await googleSignInAccount.authentication;
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
 
-    // final AuthCredential credential = GoogleAuthProvider.getCredential(
-    //   accessToken: googleSignInAuthentication.accessToken,
-    //   idToken: googleSignInAuthentication.idToken,
-    // );
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
 
-    // final AuthResult authResult = await _auth.signInWithCredential(credential);
-    // final FirebaseUser user = authResult.user;
+    final AuthResult authResult = await _auth.signInWithCredential(credential);
+    final FirebaseUser user = authResult.user;
 
-    // assert(!user.isAnonymous);
-    // assert(await user.getIdToken() != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
 
-    // final FirebaseUser currentUser = await _auth.currentUser();
-    // assert(user.uid == currentUser.uid);
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
 
-    // return 'signInWithGoogle succeeded: $user';
+    return 'signInWithGoogle succeeded: $user';
   }
 }
 

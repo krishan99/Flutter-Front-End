@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "930004590507",
+    "firebase_url": "https://livesafe-ac52a.firebaseio.com",
+    "project_id": "livesafe-ac52a",
+    "storage_bucket": "livesafe-ac52a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930004590507:android:abb16e0ec6131fd7847cee",
+        "android_client_info": {
+          "package_name": "com.livesafe.business_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930004590507-95j40i6pfompmkc51k5p4kagcqrvi9us.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.livesafe.business_app",
+            "certificate_hash": "d2ab0d5519952f664ca1a426a7bf64f5d3a1dc31"
+          }
+        },
+        {
+          "client_id": "930004590507-75uvee7p04q7m6lbetfq7ovc6ngt7fu7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxt3Ye_BAXUiUjqz6GmhFel_6iHrq5k2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930004590507-75uvee7p04q7m6lbetfq7ovc6ngt7fu7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "930004590507-k9cllldm7ra7u2o1v4un0f45jccm3q10.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.livesafe.businessapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
