@@ -17,16 +17,32 @@ class LoginPage extends StatefulWidget implements EntranceScreen {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  User user;
-  final double height;
-  _LoginPageState({this.height}) : super();
 
-  BuildContext get context => super.context;
+  //little hacky but should be fine as Login Page should always be presented modally in production.
+  bool get isModallyPresented {
+    return height != null;
+  }
+
+  double height;
+  User user;
+
+  _LoginPageState({double height}) {
+    this.height = height;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     user = Provider.of<User>(context);
+
+    if (user.isLoggedIn && isModallyPresented) {
+        Navigator.pop(context);
+     }
   }
 
   @override
@@ -65,10 +81,6 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-
-//              Container(
-//                  child: GoogleSignInButton()
-//              ),
                 Flexible(
                   flex: 2,
                   fit: FlexFit.loose,
@@ -85,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           user.signInWithGoogle();
                         },
-                      ),
+                      )
                     ],
                   ),
                 ),

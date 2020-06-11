@@ -1,6 +1,5 @@
 import 'package:business_app/model_data.dart';
 import 'package:business_app/views/dashboard_page.dart';
-import 'package:business_app/views/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

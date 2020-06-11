@@ -48,6 +48,7 @@ class User extends ChangeNotifier {
 
   User() {
     _auth.onAuthStateChanged.listen((fUser) {
+      print("AUTH STATE CHANGED: ${(fUser == null) ? "logged out" : "logged in"}");
       this._firebaseUser = fUser;
       this.notifyListeners();
     });
