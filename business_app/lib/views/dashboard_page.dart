@@ -1,5 +1,7 @@
+import 'package:business_app/model_data.dart';
 import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class DashboardPage extends StatelessWidget {
@@ -37,9 +39,18 @@ class DashboardPage extends StatelessWidget {
                     ),
                   ),
 
-                  Container(
-                    padding: EdgeInsets.all(3),
-                    child: MyStyles.of(context).images.gearIcon
+                  Consumer<User>(
+                    builder: (context, user, _) {
+                      return GestureDetector(
+                        onTap: () => {
+                          user.signOut()
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(3),
+                          child: MyStyles.of(context).images.gearIcon
+                        ),
+                      );
+                    },
                   )
                 ],
               ),

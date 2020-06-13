@@ -77,40 +77,74 @@ class AccentedActionButton extends StatelessWidget {
   }
 }
 
+enum StyleTextFieldType {
+  email, password
+}
+
 enum StyleTextFieldStatus {
   neutral,
   error
 }
 
 class StyleTextField extends StatefulWidget {
-  final Function(String) onChanged;
-  final Function(String) onSubmitted;
-  final String placeholderText;
-  final int maxLines;
-
-  StyleTextField({this.maxLines = 1, @required this.placeholderText, this.onChanged, this.onSubmitted}) : super();
-
-  @override
-  _StyleTextFieldState createState() => _StyleTextFieldState(
-      maxLines: this.maxLines,
-      placeholderText: this.placeholderText,
-      status: StyleTextFieldStatus.neutral,
-      onChanged: (string){print("ROAR");},
-      onSubmitted: onSubmitted
-  );
-}
-
-class _StyleTextFieldState extends State<StyleTextField> {
+  final IconData icon;
   final StyleTextFieldStatus status;
   final Function(String) onChanged;
   final Function(String) onSubmitted;
+  final String Function(String) checkError;
   final String placeholderText;
   final int maxLines;
+
+  factory StyleTextField.type({
+    @required StyleTextFieldType type,
+     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
+      Function(String ) onChanged, 
+      Function(String) onSubmitted,}) {
+
+    switch (type) {
+      case StyleTextFieldType.email:
+        return StyleTextField(
+          icon: Icons.email,
+          status: status,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted,
+          placeholderText: "Email...",
+          maxLines: 1,
+        );
+
+      case StyleTextFieldType.password:
+        return StyleTextField(
+          icon: Icons.panorama_fish_eye,
+          status: status,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted,
+          placeholderText: "Password...",
+          
+          checkError: (text) {
+            if (text.length <= 5) {
+              return "Password should contains more then 5 character";
+            } else {
+              return null;
+            }
+          },
+
+          maxLines: 1,
+        );
+    }
+  }
+
+  const StyleTextField({Key key, this.icon, this.checkError, this.status = StyleTextFieldStatus.neutral, this.onChanged, this.onSubmitted, @required this.placeholderText, this.maxLines}) : super(key: key);
+
+  @override
+  _StyleTextFieldState createState() => _StyleTextFieldState();
+}
+
+class _StyleTextFieldState extends State<StyleTextField> {
 
   TextEditingController _controller;
 
   Color get borderColor {
-    switch (status) {
+    switch (widget.status) {
       case StyleTextFieldStatus.neutral:
         return Colors.transparent;
       case StyleTextFieldStatus.error:
@@ -118,15 +152,30 @@ class _StyleTextFieldState extends State<StyleTextField> {
     }
   }
 
+  Color get iconColor {
+    switch (widget.status) {
+      case StyleTextFieldStatus.neutral:
+        return null;
+      case StyleTextFieldStatus.error:
+      return Colors.red;
+    }
+  }
+
   Alignment get textFieldFontAlignment {
-    if (maxLines == 1) {
+    if (widget.maxLines != null && widget.maxLines <= 1) {
       return Alignment.center;
     } else {
       return Alignment.topLeft;
     }
   }
 
-  _StyleTextFieldState({this.maxLines, this.placeholderText, @required this.status, this.onChanged, this.onSubmitted}) : super();
+  EdgeInsets get insets {
+    if (widget.icon == null) {
+      return EdgeInsets.only(left: 10);
+    } else {
+      return null;
+    }
+  }
 
   void initState() {
     super.initState();
@@ -154,18 +203,22 @@ class _StyleTextFieldState extends State<StyleTextField> {
                   offset: Offset(0, 2))
             ]
         ),
-        padding: EdgeInsets.only(left: 10),
-        child: TextField(
+        padding: insets,
+        child: TextFormField(
             controller: _controller,
-            onChanged: (string){onChanged(string);},
-            onSubmitted: onSubmitted,
-            maxLines: maxLines,
-            cursorColor: MyStyles.of(context).colors.accent,
+            onChanged: widget.onChanged,
+            onFieldSubmitted: widget.onSubmitted,
+            maxLines: widget.maxLines,
+            cursorColor: Colors.blue,
             style: MyStyles.of(context).textThemes.placeholder.copyWith(color: Colors.grey[900]),
+            textAlign: TextAlign.left,
+            textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
+                prefixIcon: (widget.icon != null)? Icon(widget.icon, color: iconColor): null,
                 hintStyle: MyStyles.of(context).textThemes.placeholder,
                 border: InputBorder.none,
-                hintText: placeholderText
+                hintText: widget.placeholderText,
+                errorText: (widget.checkError != null)? widget.checkError(_controller.text): null,
             )
         ),
       ),

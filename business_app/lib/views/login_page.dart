@@ -52,10 +52,11 @@ class _LoginPageState extends State<LoginPage> {
         child: GestureDetector(
           onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
           child: Container(
-            constraints: BoxConstraints(minHeight: height),
+            constraints: BoxConstraints(maxHeight: height ?? MediaQuery.of(context).size.height),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.min,
+              // mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Flexible(
                   flex: 2,
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Container(
                           child: Text(
-                            "Welcome Back!",
+                            "Welcome Backk!",
                             textAlign: TextAlign.center,
                             style: MyStyles.of(context).textThemes.h2,
                           )
@@ -95,7 +96,27 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 10,),
                       GoogleSignInButton(
                         onPressed: () {
-                          user.signInWithGoogle();
+                          Future<String> fut = user.signInWithGoogle();
+                          fut.catchError((error) {
+                            showDialog(
+                               context: context, 
+                               builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: new Text("Sign In Error"),
+                                  content: new Text(error.toString()),
+                                  actions: <Widget>[
+                                    // usually buttons at the bottom of the dialog
+                                    new FlatButton(
+                                      child: new Text("Close"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }
+                            );
+                          });
                         },
                       )
                     ],
@@ -120,10 +141,20 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Container(
-                            child: StyleTextField(placeholderText: "Email...", onChanged: (string){print("$string");},)
+                            child: StyleTextField.type(
+                              type: StyleTextFieldType.email,
+                              onChanged: (string) {
+                                print("$string");
+                              },
+                            )
                         ),
                         Container(
-                            child: StyleTextField(placeholderText: "Password...", onChanged: (string){print("$string");},)
+                            child: StyleTextField.type(
+                              type: StyleTextFieldType.password, 
+                              onChanged: (string) {
+                                print("$string");
+                              },
+                            )
                         ),
                         Container(
                           child: ActionButton(

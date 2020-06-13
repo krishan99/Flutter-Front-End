@@ -29,6 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
             color: MyStyles.of(context).colors.background1,
             constraints: BoxConstraints(maxHeight: height ?? MediaQuery.of(context).size.height),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Flexible(
