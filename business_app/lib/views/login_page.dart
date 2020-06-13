@@ -83,17 +83,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Flexible(
-                  flex: 2,
+                  flex: 1,
                   fit: FlexFit.loose,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      GoogleSignInButton(
-                        onPressed: () {
-                          print("sah");
-                        },
-                      ),
-                      SizedBox(height: 10,),
                       GoogleSignInButton(
                         onPressed: () {
                           Future<String> fut = user.signInWithGoogle();
