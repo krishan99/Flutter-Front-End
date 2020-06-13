@@ -4,7 +4,7 @@ import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-//TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down
+//TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down. Using Temp Button rn.
 
 class DashboardPage extends StatefulWidget {
   final String name;
@@ -19,50 +19,60 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: AccentedActionButton(text: "+", width: 50, height: 50,),
       body: SafeArea(
+        bottom: false,
         child: Container(
-          color: MyStyles.of(context).colors.background2,
           child: CustomScrollView(slivers: <Widget>[
             SliverPersistentHeader(
-              pinned: false,
+              pinned: true,
               delegate: _SliverAppBarDelegate(
+                color: MyStyles.of(context).colors.background2,
                 name: widget.name,
-                minExtent: 50.0,
-                maxExtent: 175,
+                minExtent: 100.0,
+                maxExtent: 125,
               ),
             ),
+
             SliverList(delegate: SliverChildBuilderDelegate((context, index) {
               if (index != 0) {
                 return null;
               }
 
               return Container(
-                decoration: BoxDecoration(
-                  color: MyStyles.of(context).colors.background1,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),
-                ),
-                child: Column(
-                    children: <Widget>[
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: MyStyles.of(context).colors.background1,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30)),
+                      ),
+                      child: Column(
+                        children: <Widget>[
                           SizedBox(
                             height: 15,
                           )
                         ] +
-                        List.generate(2, (index) {
+                        List.generate(3, (index) {
                           return Container(
-                              padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
-                              child: SlidableListCell(
-                                isSelected: index == 0,
-                                isActive: index % 2 == 0,
-                                title: "Outdoor Line",
-                                subheading: "20 People in Line",
-                                body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun",
-                              )
-                            );
-                        })),
+                            padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+                            child: SlidableListCell(
+                              isSelected: index == 0,
+                              isActive: index % 2 == 0,
+                              title: "Outdoor Line",
+                              subheading: "20 People in Line",
+                              body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun",
+                            )
+                          );
+                        })
+                      ),
+                    ),
+                  ],
+                ),
               );
-            }))
+            })),
           ]),
         ),
       ),
@@ -98,8 +108,6 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
         ),
-        AccentedActionButton(text: "New Queue",),
-        SizedBox(height: 15,)
       ]),
     );
   }
