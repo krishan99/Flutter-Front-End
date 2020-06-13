@@ -93,6 +93,8 @@ class StyleTextField extends StatefulWidget {
   final Function(String) onSubmitted;
   final String Function(String) checkError;
   final String placeholderText;
+  final TextInputType textInputType;
+  final bool obscureText;
   final int maxLines;
 
   factory StyleTextField.type({
@@ -105,6 +107,7 @@ class StyleTextField extends StatefulWidget {
       case StyleTextFieldType.email:
         return StyleTextField(
           icon: Icons.email,
+          textInputType: TextInputType.emailAddress,
           status: status,
           onChanged: onChanged,
           onSubmitted: onSubmitted,
@@ -115,6 +118,8 @@ class StyleTextField extends StatefulWidget {
       case StyleTextFieldType.password:
         return StyleTextField(
           icon: Icons.panorama_fish_eye,
+          textInputType: TextInputType.visiblePassword,
+          obscureText: true,
           status: status,
           onChanged: onChanged,
           onSubmitted: onSubmitted,
@@ -133,7 +138,7 @@ class StyleTextField extends StatefulWidget {
     }
   }
 
-  const StyleTextField({Key key, this.icon, this.checkError, this.status = StyleTextFieldStatus.neutral, this.onChanged, this.onSubmitted, @required this.placeholderText, this.maxLines}) : super(key: key);
+  const StyleTextField({Key key, this.obscureText = false, this.textInputType, this.icon, this.checkError, this.status = StyleTextFieldStatus.neutral, this.onChanged, this.onSubmitted, @required this.placeholderText, this.maxLines}) : super(key: key);
 
   @override
   _StyleTextFieldState createState() => _StyleTextFieldState();
@@ -206,6 +211,8 @@ class _StyleTextFieldState extends State<StyleTextField> {
         padding: insets,
         child: TextFormField(
             controller: _controller,
+            keyboardType: widget.textInputType,
+            obscureText: widget.obscureText,
             onChanged: widget.onChanged,
             onFieldSubmitted: widget.onSubmitted,
             maxLines: widget.maxLines,
