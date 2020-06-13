@@ -1,5 +1,6 @@
 import 'package:business_app/model_data.dart';
 import 'package:business_app/views/dashboard_page.dart';
+import 'package:business_app/views/queue_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         home: Consumer<User>(
             builder: (context, user, _) {
               if (user.isLoggedIn) {
-                return DashboardPage(name: user.name ?? "John Doe",);
+                return QueuePage(name: user.name ?? "John Doe",);
               } else {
                 return HomePage();
               }
