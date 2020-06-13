@@ -107,12 +107,14 @@ class MyTextThemes {
     h4: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(57, 57, 57, 1), fontWeight: FontWeight.w300),
     h5: TextStyle(fontSize: 10, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(98, 98, 98, 1), fontWeight: FontWeight.w300),
     bodyText1: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.bold),
-    bodyText2: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(116, 116, 116, 1), fontWeight: FontWeight.bold),
-    bodyText3: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w300),
+    bodyText2: TextStyle(fontSize: 18, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(116, 116, 116, 1), fontWeight: FontWeight.bold),
+    bodyText3: TextStyle(fontSize: 17, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w300),
     buttonActionText1: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
     buttonActionText2: TextStyle(fontSize: 16, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
     subtext: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(160, 160, 160, 1), fontWeight: FontWeight.w300),
     placeholder: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(186, 186, 186, 1), fontWeight: FontWeight.w300),
+    active: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(131, 219, 28, 1), fontWeight: FontWeight.bold),
+    disabled: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Colors.red, fontWeight: FontWeight.bold)
   );
 
   static const darkMode = lightMode;
@@ -130,6 +132,8 @@ class MyTextThemes {
   final TextStyle formField1;
   final TextStyle subtext;
   final TextStyle placeholder;
+  final TextStyle active;
+  final TextStyle disabled;
 
   const MyTextThemes._({
     this.h1,
@@ -145,6 +149,8 @@ class MyTextThemes {
     this.formField1,
     this.subtext,
     this.placeholder,
+    this.active,
+    this.disabled
   });
 
 }
