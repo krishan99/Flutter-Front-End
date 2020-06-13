@@ -9,15 +9,15 @@ class ActionButton extends StatelessWidget {
   final double height;
   final Function onPressed;
 
-  const ActionButton({
-    Key key,
-    @required this.child,
-    this.gradient,
-    this.color,
-    this.width = 233,
-    this.height = 55,
-    this.onPressed
-  }) : super(key: key);
+  const ActionButton(
+      {Key key,
+      @required this.child,
+      this.gradient,
+      this.color,
+      this.width = 233,
+      this.height = 55,
+      this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,7 @@ class ActionButton extends StatelessWidget {
               blurRadius: 6,
             )
           ],
-          borderRadius: BorderRadius.circular(30)
-      ),
+          borderRadius: BorderRadius.circular(30)),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -54,13 +53,13 @@ class AccentedActionButton extends StatelessWidget {
   final String text;
   final Function onPressed;
 
-  const AccentedActionButton({
-    Key key,
-    @required this.text,
-    this.height = 55,
-    this.width = 233,
-    this.onPressed
-  }) : super(key: key);
+  const AccentedActionButton(
+      {Key key,
+      @required this.text,
+      this.height = 55,
+      this.width = 233,
+      this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -77,14 +76,9 @@ class AccentedActionButton extends StatelessWidget {
   }
 }
 
-enum StyleTextFieldType {
-  email, password
-}
+enum StyleTextFieldType { email, password }
 
-enum StyleTextFieldStatus {
-  neutral,
-  error
-}
+enum StyleTextFieldStatus { neutral, error }
 
 class StyleTextField extends StatefulWidget {
   final IconData icon;
@@ -99,10 +93,10 @@ class StyleTextField extends StatefulWidget {
 
   factory StyleTextField.type({
     @required StyleTextFieldType type,
-     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
-      Function(String ) onChanged, 
-      Function(String) onSubmitted,}) {
-
+    StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
+    Function(String) onChanged,
+    Function(String) onSubmitted,
+  }) {
     switch (type) {
       case StyleTextFieldType.email:
         return StyleTextField(
@@ -124,7 +118,6 @@ class StyleTextField extends StatefulWidget {
           onChanged: onChanged,
           onSubmitted: onSubmitted,
           placeholderText: "Password...",
-          
           checkError: (text) {
             if (text.length <= 5) {
               return "Password should contains more then 5 character";
@@ -132,20 +125,29 @@ class StyleTextField extends StatefulWidget {
               return null;
             }
           },
-
           maxLines: 1,
         );
     }
   }
 
-  const StyleTextField({Key key, this.obscureText = false, this.textInputType, this.icon, this.checkError, this.status = StyleTextFieldStatus.neutral, this.onChanged, this.onSubmitted, @required this.placeholderText, this.maxLines}) : super(key: key);
+  const StyleTextField(
+      {Key key,
+      this.obscureText = false,
+      this.textInputType,
+      this.icon,
+      this.checkError,
+      this.status = StyleTextFieldStatus.neutral,
+      this.onChanged,
+      this.onSubmitted,
+      @required this.placeholderText,
+      this.maxLines})
+      : super(key: key);
 
   @override
   _StyleTextFieldState createState() => _StyleTextFieldState();
 }
 
 class _StyleTextFieldState extends State<StyleTextField> {
-
   TextEditingController _controller;
 
   Color get borderColor {
@@ -162,7 +164,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
       case StyleTextFieldStatus.neutral:
         return null;
       case StyleTextFieldStatus.error:
-      return Colors.red;
+        return Colors.red;
     }
   }
 
@@ -206,8 +208,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
                   color: Colors.black.withOpacity(0.1),
                   blurRadius: 5,
                   offset: Offset(0, 2))
-            ]
-        ),
+            ]),
         padding: insets,
         child: TextFormField(
             controller: _controller,
@@ -217,21 +218,29 @@ class _StyleTextFieldState extends State<StyleTextField> {
             onFieldSubmitted: widget.onSubmitted,
             maxLines: widget.maxLines,
             cursorColor: Colors.blue,
-            style: MyStyles.of(context).textThemes.placeholder.copyWith(color: Colors.grey[900]),
+            style: MyStyles.of(context)
+                .textThemes
+                .placeholder
+                .copyWith(color: Colors.grey[900]),
             textAlign: TextAlign.left,
             textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
-                prefixIcon: (widget.icon != null)? Icon(widget.icon, color: iconColor): null,
-                hintStyle: MyStyles.of(context).textThemes.placeholder,
-                border: InputBorder.none,
-                hintText: widget.placeholderText,
-                errorText: (widget.checkError != null)? widget.checkError(_controller.text): null,
-            )
-        ),
+              prefixIcon: (widget.icon != null)
+                  ? Icon(widget.icon, color: iconColor)
+                  : null,
+              hintStyle: MyStyles.of(context).textThemes.placeholder,
+              border: InputBorder.none,
+              hintText: widget.placeholderText,
+              errorText: (widget.checkError != null)
+                  ? widget.checkError(_controller.text)
+                  : null,
+            )),
       ),
     );
   }
 }
+
+enum SlideableListCellSize { big, medium, small }
 
 class SlidableListCell extends StatelessWidget {
   static const double borderRadius = 20;
@@ -240,8 +249,17 @@ class SlidableListCell extends StatelessWidget {
   final String title;
   final String subheading;
   final String body;
+  final SlideableListCellSize sListSize;
 
-  const SlidableListCell({Key key, this.isActive = true, @required this.title, this.subheading, this.body, this.isSelected = false}) : super(key: key);
+  const SlidableListCell(
+      {Key key,
+      this.sListSize = SlideableListCellSize.big,
+      this.isActive = true,
+      @required this.title,
+      this.subheading,
+      this.body,
+      this.isSelected = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -300,38 +318,119 @@ class SlidableListCell extends StatelessWidget {
                     ),
                   ],
                 ),
+                
                 child: Container(
-                  constraints: BoxConstraints(minHeight: 175),
-                  child: Container(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            (isActive) ? "Active" : "Inactive",
-                            textAlign: TextAlign.end,
-                            style: (isActive) ? MyStyles.of(context).textThemes.active : MyStyles.of(context).textThemes.disabled,
-                          ),
-                          Text(title,
-                              textAlign: TextAlign.left,
-                              style: MyStyles.of(context).textThemes.bodyText1),
-                          SizedBox(height: 5),
-                          Text(
-                            subheading,
-                            style: MyStyles.of(context).textThemes.bodyText2,
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            body,
-                            style: MyStyles.of(context).textThemes.bodyText3,
-                          )
-                        ]),
-                  ),
+                  padding: EdgeInsets.only(bottom: (sListSize == SlideableListCellSize.big) ? 20 : 0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Text(title,
+                                textAlign: TextAlign.left,
+                                style: MyStyles.of(context)
+                                    .textThemes
+                                    .bodyText1),
+                            Expanded(
+                              child: Text(
+                                (isActive) ? "Active" : "Inactive",
+                                textAlign: TextAlign.end,
+                                style: (isActive)
+                                    ? MyStyles.of(context).textThemes.active
+                                    : MyStyles.of(context)
+                                        .textThemes
+                                        .disabled,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          subheading,
+                          style: MyStyles.of(context).textThemes.bodyText2,
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          body,
+                          maxLines: (sListSize == SlideableListCellSize.small) ? 1 : null,
+                          style: MyStyles.of(context).textThemes.bodyText3,
+                        )
+                      ]),
                 ),
               ),
             ),
           ),
-        )
-      );
+        ));
+  }
+}
+
+//TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down. Using Temp Button rn.
+class SlideableList extends StatefulWidget {
+  final SliverPersistentHeader header;
+
+  const SlideableList({Key key, @required this.header}) : super(key: key);
+
+  @override
+  _SlideableListState createState() => _SlideableListState();
+}
+
+class _SlideableListState extends State<SlideableList> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: AccentedActionButton(
+        text: "+",
+        width: 50,
+        height: 50,
+      ),
+      body: SafeArea(
+        bottom: false,
+        child: Container(
+          child: CustomScrollView(slivers: <Widget>[
+            widget.header,
+            SliverList(delegate: SliverChildBuilderDelegate((context, index) {
+              if (index != 0) {
+                return null;
+              }
+
+              return Container(
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: MyStyles.of(context).colors.background1,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30)),
+                      ),
+                      child: Column(
+                          children: <Widget>[
+                                SizedBox(
+                                  height: 15,
+                                )
+                              ] +
+                              List.generate(3, (index) {
+                                return Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(30, 15, 30, 15),
+                                    child: SlidableListCell(
+                                      isSelected: index == 0,
+                                      isActive: index % 2 == 0,
+                                      title: "Outdoor Line",
+                                      subheading: "20 People in Line",
+                                      body:
+                                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun",
+                                    ));
+                              })),
+                    ),
+                  ],
+                ),
+              );
+            })),
+          ]),
+        ),
+      ),
+    );
   }
 }

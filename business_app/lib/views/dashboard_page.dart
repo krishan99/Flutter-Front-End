@@ -1,84 +1,34 @@
-import 'package:business_app/model_data.dart';
-import 'package:business_app/style_elements.dart';
-import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-//TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down. Using Temp Button rn.
+import 'package:business_app/model_data.dart';
+import 'package:business_app/style_elements.dart';
+import 'package:business_app/themes.dart';
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage extends StatelessWidget {
   final String name;
 
-  const DashboardPage({Key key, @required this.name}) : super(key: key);
+  const DashboardPage({
+    Key key,
+    this.name,
+  }) : super(key: key);
 
-  @override
-  _DashboardPageState createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: AccentedActionButton(text: "+", width: 50, height: 50,),
-      body: SafeArea(
-        bottom: false,
-        child: Container(
-          child: CustomScrollView(slivers: <Widget>[
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _SliverAppBarDelegate(
-                color: MyStyles.of(context).colors.background2,
-                name: widget.name,
-                minExtent: 100.0,
-                maxExtent: 125,
-              ),
-            ),
-
-            SliverList(delegate: SliverChildBuilderDelegate((context, index) {
-              if (index != 0) {
-                return null;
-              }
-
-              return Container(
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: MyStyles.of(context).colors.background1,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 15,
-                          )
-                        ] +
-                        List.generate(3, (index) {
-                          return Container(
-                            padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
-                            child: SlidableListCell(
-                              isSelected: index == 0,
-                              isActive: index % 2 == 0,
-                              title: "Outdoor Line",
-                              subheading: "20 People in Line",
-                              body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun",
-                            )
-                          );
-                        })
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            })),
-          ]),
+    return SlideableList(
+      header: SliverPersistentHeader(
+        pinned: true,
+        delegate: _SliverAppBarDelegate(
+          color: MyStyles.of(context).colors.background2,
+          name: name,
+          minExtent: 100.0,
+          maxExtent: 125,
         ),
       ),
     );
   }
 }
+
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final Color color;
