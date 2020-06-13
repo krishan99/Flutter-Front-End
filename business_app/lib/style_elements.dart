@@ -235,9 +235,13 @@ class _StyleTextFieldState extends State<StyleTextField> {
 
 class SlidableListCell extends StatelessWidget {
   static const double borderRadius = 20;
-  final bool selected;
+  final bool isSelected;
+  final bool isActive;
+  final String title;
+  final String subheading;
+  final String body;
 
-  const SlidableListCell({Key key, this.selected = false}) : super(key: key);
+  const SlidableListCell({Key key, this.isActive = true, @required this.title, this.subheading, this.body, this.isSelected = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +250,7 @@ class SlidableListCell extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.transparent,
-            border: (selected)
+            border: (isSelected)
                 ? Border.all(
                     width: 1, color: MyStyles.of(context).colors.accent)
                 : null,
@@ -304,21 +308,21 @@ class SlidableListCell extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Active",
+                            (isActive) ? "Active" : "Inactive",
                             textAlign: TextAlign.end,
-                            style: MyStyles.of(context).textThemes.active,
+                            style: (isActive) ? MyStyles.of(context).textThemes.active : MyStyles.of(context).textThemes.disabled,
                           ),
-                          Text("Outdoor Line",
+                          Text(title,
                               textAlign: TextAlign.left,
                               style: MyStyles.of(context).textThemes.bodyText1),
                           SizedBox(height: 5),
                           Text(
-                            "20 People in Line",
+                            subheading,
                             style: MyStyles.of(context).textThemes.bodyText2,
                           ),
                           SizedBox(height: 5),
                           Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veni",
+                            body,
                             style: MyStyles.of(context).textThemes.bodyText3,
                           )
                         ]),

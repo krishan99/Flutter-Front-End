@@ -4,6 +4,8 @@ import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+//TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down
+
 class DashboardPage extends StatefulWidget {
   final String name;
 
@@ -26,16 +28,20 @@ class _DashboardPageState extends State<DashboardPage> {
               delegate: _SliverAppBarDelegate(
                 name: widget.name,
                 minExtent: 50.0,
-                maxExtent: 120,
+                maxExtent: 175,
               ),
             ),
             SliverList(delegate: SliverChildBuilderDelegate((context, index) {
+              if (index != 0) {
+                return null;
+              }
+
               return Container(
                 decoration: BoxDecoration(
                   color: MyStyles.of(context).colors.background1,
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15)),
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30)),
                 ),
                 child: Column(
                     children: <Widget>[
@@ -46,7 +52,14 @@ class _DashboardPageState extends State<DashboardPage> {
                         List.generate(2, (index) {
                           return Container(
                               padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
-                              child: SlidableListCell());
+                              child: SlidableListCell(
+                                isSelected: index == 0,
+                                isActive: index % 2 == 0,
+                                title: "Outdoor Line",
+                                subheading: "20 People in Line",
+                                body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun",
+                              )
+                            );
                         })),
               );
             }))
@@ -85,6 +98,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
         ),
+        AccentedActionButton(text: "New Queue",),
+        SizedBox(height: 15,)
       ]),
     );
   }
