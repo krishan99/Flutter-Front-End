@@ -21,7 +21,7 @@ class DashboardPage extends StatelessWidget {
         delegate: _SliverAppBarDelegate(
           color: MyStyles.of(context).colors.background2,
           name: name,
-          minExtent: 100.0,
+          minExtent: 50.0,
           maxExtent: 125,
         ),
       ),

@@ -1,7 +1,11 @@
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:state_notifier/state_notifier.dart';
 
 class ModelData {
   User user;
@@ -10,6 +14,103 @@ class ModelData {
     this.user = User();
   }
 }
+
+enum QueueEntryState {
+  notified,
+  pendingNotification,
+  waiting,
+  pendingDeletion,
+  deleted
+}
+
+class QueueEntry {
+  final String name;
+  final String description;
+  final QueueEntryState state;
+
+  QueueEntry({
+    @required this.name,
+    this.description,
+    this.state = QueueEntryState.waiting,
+  });
+
+  QueueEntry copyWith({
+    String name,
+    String description,
+    QueueEntryState state
+  }) {
+    return QueueEntry(
+      name: name ?? this.name,
+      description: description ?? this.description,
+      state: state ?? this.state
+    );
+  }
+}
+
+class ListenableList<E> extends ListBase<E> with ChangeNotifier {
+  final List<E> data = [];
+  ListenableList();
+
+  int get length => data.length;
+
+  set length(int newLength) {
+    data.length = newLength; 
+    notifyListeners();
+  }
+  
+  E operator [](int index) {
+    return data[index];
+  }
+
+  void operator []=(int index, E value) {
+    data[index] = value; 
+    notifyListeners();
+  }
+}
+
+enum QueueState {
+  active, inactive
+}
+
+class Queue extends ListenableList<QueueEntry> {
+  String _name;
+  String get name => _name;
+  set name(String newValue) {
+    _name = newValue;
+    notifyListeners();
+  }
+
+  String _description;
+
+  String get description => _description;
+  set description(String newValue) {
+    _description = newValue;
+    notifyListeners();
+  }
+
+  QueueState _state;
+  QueueState get state => _state;
+  set state(QueueState newValue) {
+    _state = newValue;
+    notifyListeners();
+  }
+
+  int get numInLine {
+    return data.where((element) => element.state == QueueEntryState.waiting).length;
+  }
+
+    Queue({
+      @required String name, 
+      String description = "Swipe from the left to delete this queue and swipe right to see more details.",
+      QueueState state = QueueState.inactive,
+  }) {
+    this._name = name;
+    this._description = description;
+    this._state = state;
+  }
+}
+
+class Queues extends ListenableList<Queue> {}
 
 class User extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;

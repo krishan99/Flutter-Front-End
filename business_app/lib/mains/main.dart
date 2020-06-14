@@ -37,7 +37,10 @@ class MyApp extends StatelessWidget {
         home: Consumer<User>(
             builder: (context, user, _) {
               if (user.isLoggedIn) {
-                return QueuePage(name: user.name ?? "John Doe",);
+                var queue = Queue(name: "Outdoor Line", state: QueueState.active);
+                queue.add(QueueEntry(name: "John", description: "John likes peanuts"));
+                queue.add(QueueEntry(name: "John", description: "John likes peanuts"));
+                return QueuePage(queue: queue,);
               } else {
                 return HomePage();
               }

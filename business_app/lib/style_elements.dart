@@ -1,6 +1,8 @@
 import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
 
+import 'model_data.dart';
+
 class ActionButton extends StatelessWidget {
   final Widget child;
   final Gradient gradient;
@@ -240,26 +242,144 @@ class _StyleTextFieldState extends State<StyleTextField> {
   }
 }
 
+class QueueCell extends StatelessWidget {
+  final Queue queue;
+
+  const QueueCell({Key key, @required this.queue}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideableListCell(
+      title: queue.name,
+      subheading: (){
+        switch (queue.state) {
+          case QueueState.active:
+            final numInLine = queue.numInLine;
+            switch (numInLine) {
+              case 0:
+                return "Queue is Empty";
+              case 1:
+                return "1 Person is in Line";
+              default:
+                return "$numInLine People are in Line.";
+            }
+            break;
+          case QueueState.inactive:
+            return null;
+        }
+      }(),
+      body: queue.description,
+      isActive: () {
+        switch (queue.state) {
+          case QueueState.active:
+            return true;
+          case QueueState.inactive:
+            return false;
+        }
+      }(),
+      isSelected: false,
+      primaryText: "Open",
+      relativeSize: SlideableListCellSize.big,
+    );
+  }
+}
+
+enum QueueEntryCellSize {
+  medium, small
+}
+
+class QueueEntryCell extends SlideableListCell {
+  final QueueEntry queueEntry;
+  
+  QueueEntryCell({Key key, this.queueEntry, QueueEntryCellSize size})
+    : super(
+        isSelected: (){
+          switch (queueEntry.state) {
+            case QueueEntryState.pendingNotification:
+            case QueueEntryState.notified:
+              return true;
+            case QueueEntryState.waiting:
+            case QueueEntryState.pendingDeletion:          
+            case QueueEntryState.deleted:          
+              return false;
+          }
+        }(),
+        primaryText: "Notify",
+        title: queueEntry.name,
+        body: queueEntry.description ?? "",
+        relativeSize: (){
+          switch (size) {
+            case QueueEntryCellSize.small:
+              return SlideableListCellSize.small;
+            case QueueEntryCellSize.medium:
+              return SlideableListCellSize.medium;
+          }
+      }(),
+    );
+}
+
+// class QueueEntryCell extends StatelessWidget {
+
+//   final QueueEntry queueEntry;
+//   final QueueEntryCellSize size;
+
+//   const QueueEntryCell({Key key, this.queueEntry, this.size}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return StylizedListCell(
+//       isSelected: (){
+//         switch (queueEntry.state) {
+//           case QueueEntryState.pendingNotification:
+//           case QueueEntryState.notified:
+//             return true;
+//           case QueueEntryState.waiting:
+//           case QueueEntryState.pendingDeletion:          
+//           case QueueEntryState.deleted:          
+//             return false;
+//         }
+//       }(),
+//       primaryText: "Notify",
+//       title: queueEntry.name,
+//       body: queueEntry.description ?? "",
+//       size: (){
+//         switch (size) {
+//           case QueueEntryCellSize.small:
+//             return SlideableListCellSize.small;
+//           case QueueEntryCellSize.medium:
+//             return SlideableListCellSize.medium;
+//         }
+//       }(),
+//     );
+//   }
+// }
+
 enum SlideableListCellSize { big, medium, small }
 
-class SlidableListCell extends StatelessWidget {
+class SlideableListCell extends StatelessWidget {
   static const double borderRadius = 20;
   final bool isSelected;
   final bool isActive;
   final String title;
   final String subheading;
   final String body;
-  final SlideableListCellSize sListSize;
+  final String primaryText;
+  final String secondaryText;
+  final SlideableListCellSize relativeSize;
 
-  const SlidableListCell(
-      {Key key,
-      this.sListSize = SlideableListCellSize.big,
-      this.isActive = true,
-      @required this.title,
-      this.subheading,
-      this.body,
-      this.isSelected = false})
-      : super(key: key);
+  const SlideableListCell(
+      {
+        Key key,
+        this.relativeSize = SlideableListCellSize.big,
+        this.isActive,
+        @required this.title,
+        this.subheading,
+        this.body,
+        this.isSelected = false,
+        this.primaryText = "Active",
+        this.secondaryText = "Delete",
+      }
+    ) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -293,7 +413,7 @@ class SlidableListCell extends StatelessWidget {
                 color: MyStyles.of(context).colors.secondary,
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Delete",
+                  secondaryText,
                   style: MyStyles.of(context).textThemes.buttonActionText2,
                 ),
               ),
@@ -302,7 +422,7 @@ class SlidableListCell extends StatelessWidget {
                 color: MyStyles.of(context).colors.accent,
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "Notify",
+                  primaryText,
                   style: MyStyles.of(context).textThemes.buttonActionText2,
                 ),
               ),
@@ -320,7 +440,7 @@ class SlidableListCell extends StatelessWidget {
                 ),
                 
                 child: Container(
-                  padding: EdgeInsets.only(bottom: (sListSize == SlideableListCellSize.big) ? 20 : 0),
+                  padding: EdgeInsets.only(bottom: (relativeSize == SlideableListCellSize.big) ? 20 : 0),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -332,28 +452,45 @@ class SlidableListCell extends StatelessWidget {
                                 style: MyStyles.of(context)
                                     .textThemes
                                     .bodyText1),
-                            Expanded(
-                              child: Text(
-                                (isActive) ? "Active" : "Inactive",
-                                textAlign: TextAlign.end,
-                                style: (isActive)
-                                    ? MyStyles.of(context).textThemes.active
-                                    : MyStyles.of(context)
-                                        .textThemes
-                                        .disabled,
-                              ),
-                            ),
+          
+                            () {
+                              if (isActive != null) {
+                                return Expanded(
+                                  child: Text(
+                                    (isActive) ? "Active" : "Inactive",
+                                    textAlign: TextAlign.end,
+                                    style: (isActive)
+                                        ? MyStyles.of(context).textThemes.active
+                                        : MyStyles.of(context)
+                                            .textThemes
+                                            .disabled,
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }()
                           ],
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          subheading,
-                          style: MyStyles.of(context).textThemes.bodyText2,
-                        ),
+
+                        () {
+                          if (subheading != null) {
+                            return Container(
+                              padding: EdgeInsets.only(top: 5),
+                              child: Text(
+                                subheading,
+                                style: MyStyles.of(context).textThemes.bodyText2,
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }(),
+                        
                         SizedBox(height: 5),
                         Text(
                           body,
-                          maxLines: (sListSize == SlideableListCellSize.small) ? 1 : null,
+                          maxLines: (relativeSize == SlideableListCellSize.small) ? 1 : null,
                           style: MyStyles.of(context).textThemes.bodyText3,
                         )
                       ]),
@@ -367,9 +504,10 @@ class SlidableListCell extends StatelessWidget {
 
 //TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down. Using Temp Button rn.
 class SlideableList extends StatefulWidget {
+  final List<SlideableListCell> cells;
   final SliverPersistentHeader header;
 
-  const SlideableList({Key key, @required this.header}) : super(key: key);
+  const SlideableList({Key key, @required this.header, @required this.cells}) : super(key: key);
 
   @override
   _SlideableListState createState() => _SlideableListState();
@@ -405,24 +543,19 @@ class _SlideableListState extends State<SlideableList> {
                             topRight: Radius.circular(30)),
                       ),
                       child: Column(
-                          children: <Widget>[
-                                SizedBox(
-                                  height: 15,
-                                )
-                              ] +
-                              List.generate(3, (index) {
-                                return Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(30, 15, 30, 15),
-                                    child: SlidableListCell(
-                                      isSelected: index == 0,
-                                      isActive: index % 2 == 0,
-                                      title: "Outdoor Line",
-                                      subheading: "20 People in Line",
-                                      body:
-                                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun",
-                                    ));
-                              })),
+                        children: 
+                          <Widget>[
+                              SizedBox(
+                                height: 15,
+                              )
+                          ] +
+                          widget.cells.map((cell) {
+                            return Container(
+                              padding:EdgeInsets.fromLTRB(30, 10, 30, 10),
+                              child: cell
+                            );
+                          }).toList()
+                      ),
                     ),
                   ],
                 ),

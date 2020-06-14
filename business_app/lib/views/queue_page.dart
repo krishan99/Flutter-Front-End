@@ -1,17 +1,15 @@
 
+import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:business_app/model_data.dart';
 import 'package:business_app/style_elements.dart';
 import 'package:business_app/themes.dart';
 
 class QueuePage extends StatelessWidget {
-  final String name;
-
+  final Queue queue;
   const QueuePage({
     Key key,
-    this.name,
+    @required this.queue,
   }) : super(key: key);
 
   @override
@@ -21,11 +19,19 @@ class QueuePage extends StatelessWidget {
         pinned: true,
         delegate: _SliverAppBarDelegate(
           color: MyStyles.of(context).colors.background2,
-          name: name,
+          name: queue.name,
           minExtent: 100.0,
           maxExtent: 125,
         ),
       ),
+      cells: mapIndexed(queue,
+          (index, value) {
+            return QueueEntryCell(
+              queueEntry: value,
+              size: (index < 3) ? QueueEntryCellSize.medium : QueueEntryCellSize.small,
+            );
+          }
+        ).toList()
     );
   }
 }
