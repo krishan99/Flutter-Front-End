@@ -24,7 +24,17 @@ class DashboardPage extends StatelessWidget {
              value: element,
              child: Consumer<Queue>(
                builder: (context, queue, _) {
-                 return QueueCell(queue: queue,);
+                 return QueueCell(
+                   queue: queue,
+                   onDelete: () async {
+                     return Future.value(false);
+                   },
+
+                   onOpen: () async {
+                      Navigator.of(context).pushNamed("/queue", arguments: queue);
+                      return Future.value(false);
+                   },
+                  );
                },
              )
            )

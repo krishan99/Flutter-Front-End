@@ -245,8 +245,10 @@ class _StyleTextFieldState extends State<StyleTextField> {
 
 class QueueCell extends SlideableListCell {
   final Queue queue;
+  final Future<bool> Function() onOpen;
+  final Future<bool> Function() onDelete;
 
-  QueueCell({Key key, @required this.queue,})
+  QueueCell({Key key, @required this.queue, this.onOpen, this.onDelete})
     : super(
       key: key,
       title: queue.name,
@@ -278,6 +280,8 @@ class QueueCell extends SlideableListCell {
       }(),
       isSelected: false,
       primaryText: "Open",
+      onPrimaryTap: onOpen,
+      onSecondaryTap: onDelete,
       relativeSize: SlideableListCellSize.big,
   );
 }
@@ -328,9 +332,11 @@ class SlideableListCell extends StatelessWidget {
   final String body;
   final String primaryText;
   final String secondaryText;
+  final Future<bool> Function() onPrimaryTap;
+  final Future<bool> Function() onSecondaryTap;
   final SlideableListCellSize relativeSize;
 
-  const SlideableListCell(
+  SlideableListCell(
       {
         Key key,
         this.relativeSize = SlideableListCellSize.big,
@@ -339,6 +345,8 @@ class SlideableListCell extends StatelessWidget {
         this.subheading,
         this.body,
         this.isSelected = false,
+        this.onPrimaryTap,
+        this.onSecondaryTap,
         this.primaryText = "Active",
         this.secondaryText = "Delete",
       }
@@ -369,8 +377,13 @@ class SlideableListCell extends StatelessWidget {
             child: Dismissible(
               key: GlobalKey(),
               confirmDismiss: (direction) {
-                return Future.value(false);
+                if (direction == DismissDirection.startToEnd) {
+                  return onSecondaryTap();
+                } else {
+                  return onPrimaryTap();
+                }
               },
+              
               background: Container(
                 padding: EdgeInsets.all(15),
                 color: MyStyles.of(context).colors.secondary,

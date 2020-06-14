@@ -15,28 +15,25 @@ class QueuePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Queue>(
-        create: (_) => queue,
-        child: Consumer<Queue>(builder: (context, queue, _) {
-          return SlideableList(
-              header: SliverPersistentHeader(
-                pinned: true,
-                delegate: _SliverAppBarDelegate(
-                  color: MyStyles.of(context).colors.background2,
-                  queue: queue,
-                  minExtent: 100.0,
-                  maxExtent: 125,
-                ),
-              ),
-              cells: mapIndexed(queue, (index, value) {
-                return QueueEntryCell(
-                  queueEntry: value,
-                  size: (index < 3)
-                      ? QueueEntryCellSize.medium
-                      : QueueEntryCellSize.small,
-                );
-              }).toList());
-      }));
+    return SlideableList(
+      header: SliverPersistentHeader(
+        pinned: true,
+        delegate: _SliverAppBarDelegate(
+          color: MyStyles.of(context).colors.background2,
+          queue: queue,
+          minExtent: 100.0,
+          maxExtent: 125,
+        ),
+      ),
+      cells: mapIndexed(queue, (index, value) {
+        return QueueEntryCell(
+          queueEntry: value,
+          size: (index < 3)
+              ? QueueEntryCellSize.medium
+              : QueueEntryCellSize.small,
+        );
+      }).toList()
+    );
   }
 }
 
