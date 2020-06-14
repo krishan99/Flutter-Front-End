@@ -1,17 +1,16 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 class ModelData {
   User user;
+  Queues queues;
 
   ModelData() {
     this.user = User();
+    this.queues = Queues();
   }
 }
 
@@ -95,17 +94,38 @@ class Queue extends ListenableList<QueueEntry> {
     notifyListeners();
   }
 
-  int get numInLine {
-    return data.where((element) => element.state == QueueEntryState.waiting).length;
+  String _code;
+  String get code => _code;
+  set code(String newValue) {
+    _code = newValue;
+    notifyListeners();
   }
 
-    Queue({
+  int get numWaiting {
+    return _getNumOfState(QueueEntryState.waiting);
+  }
+  
+  int get numNotified {
+    return _getNumOfState(QueueEntryState.notified) + _getNumOfState(QueueEntryState.pendingNotification);
+  }
+
+  int get numCompleted {
+    return _getNumOfState(QueueEntryState.notified) + _getNumOfState(QueueEntryState.pendingDeletion);
+  }
+
+  int _getNumOfState(QueueEntryState state) {
+    return data.where((element) => element.state == state).length;
+  }
+
+  Queue({
       @required String name, 
       String description = "Swipe from the left to delete this queue and swipe right to see more details.",
       QueueState state = QueueState.inactive,
-  }) {
+      @required String code}) {
+
     this._name = name;
     this._description = description;
+    this._code = code;
     this._state = state;
   }
 }

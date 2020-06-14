@@ -12,10 +12,19 @@ void main() {
   
   final mD = ModelData();
 
+  mD.queues.add(
+    Queue(
+        name: "Outdoor Queue",
+        state: QueueState.active,
+        code: "54-24"
+    )
+  );
+
   runApp(
     MultiProvider(
       providers: [
-            ChangeNotifierProvider<User>(create: (context) => mD.user,)
+            ChangeNotifierProvider.value(value: mD.user),
+            ChangeNotifierProvider.value(value: mD.queues)
       ],
       child: MyApp()
     )
@@ -37,10 +46,7 @@ class MyApp extends StatelessWidget {
         home: Consumer<User>(
             builder: (context, user, _) {
               if (user.isLoggedIn) {
-                var queue = Queue(name: "Outdoor Line", state: QueueState.active);
-                queue.add(QueueEntry(name: "John", description: "John likes peanuts"));
-                queue.add(QueueEntry(name: "John", description: "John likes peanuts"));
-                return QueuePage(queue: queue,);
+                return DashboardPage();
               } else {
                 return HomePage();
               }

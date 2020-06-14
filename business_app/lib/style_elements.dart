@@ -1,5 +1,6 @@
-import 'package:business_app/themes.dart';
 import 'package:flutter/material.dart';
+
+import 'package:business_app/themes.dart';
 
 import 'model_data.dart';
 
@@ -242,19 +243,17 @@ class _StyleTextFieldState extends State<StyleTextField> {
   }
 }
 
-class QueueCell extends StatelessWidget {
+class QueueCell extends SlideableListCell {
   final Queue queue;
 
-  const QueueCell({Key key, @required this.queue}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SlideableListCell(
+  QueueCell({Key key, @required this.queue,})
+    : super(
+      key: key,
       title: queue.name,
       subheading: (){
         switch (queue.state) {
           case QueueState.active:
-            final numInLine = queue.numInLine;
+            final numInLine = queue.numWaiting;
             switch (numInLine) {
               case 0:
                 return "Queue is Empty";
@@ -280,8 +279,7 @@ class QueueCell extends StatelessWidget {
       isSelected: false,
       primaryText: "Open",
       relativeSize: SlideableListCellSize.big,
-    );
-  }
+  );
 }
 
 enum QueueEntryCellSize {
@@ -293,6 +291,7 @@ class QueueEntryCell extends SlideableListCell {
   
   QueueEntryCell({Key key, this.queueEntry, QueueEntryCellSize size})
     : super(
+        key: key,
         isSelected: (){
           switch (queueEntry.state) {
             case QueueEntryState.pendingNotification:
@@ -317,42 +316,6 @@ class QueueEntryCell extends SlideableListCell {
       }(),
     );
 }
-
-// class QueueEntryCell extends StatelessWidget {
-
-//   final QueueEntry queueEntry;
-//   final QueueEntryCellSize size;
-
-//   const QueueEntryCell({Key key, this.queueEntry, this.size}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return StylizedListCell(
-//       isSelected: (){
-//         switch (queueEntry.state) {
-//           case QueueEntryState.pendingNotification:
-//           case QueueEntryState.notified:
-//             return true;
-//           case QueueEntryState.waiting:
-//           case QueueEntryState.pendingDeletion:          
-//           case QueueEntryState.deleted:          
-//             return false;
-//         }
-//       }(),
-//       primaryText: "Notify",
-//       title: queueEntry.name,
-//       body: queueEntry.description ?? "",
-//       size: (){
-//         switch (size) {
-//           case QueueEntryCellSize.small:
-//             return SlideableListCellSize.small;
-//           case QueueEntryCellSize.medium:
-//             return SlideableListCellSize.medium;
-//         }
-//       }(),
-//     );
-//   }
-// }
 
 enum SlideableListCellSize { big, medium, small }
 
@@ -504,7 +467,7 @@ class SlideableListCell extends StatelessWidget {
 
 //TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down. Using Temp Button rn.
 class SlideableList extends StatefulWidget {
-  final List<SlideableListCell> cells;
+  final List<Widget> cells;
   final SliverPersistentHeader header;
 
   const SlideableList({Key key, @required this.header, @required this.cells}) : super(key: key);

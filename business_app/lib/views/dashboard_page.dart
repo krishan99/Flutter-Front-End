@@ -6,25 +6,31 @@ import 'package:business_app/style_elements.dart';
 import 'package:business_app/themes.dart';
 
 class DashboardPage extends StatelessWidget {
-  final String name;
-
-  const DashboardPage({
-    Key key,
-    this.name,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return SlideableList(
-      header: SliverPersistentHeader(
-        pinned: true,
-        delegate: _SliverAppBarDelegate(
-          color: MyStyles.of(context).colors.background2,
-          name: name,
-          minExtent: 50.0,
-          maxExtent: 125,
-        ),
-      ),
+    return Consumer<Queues>(
+      builder: (context, queues, _) {
+        return SlideableList(
+          header: SliverPersistentHeader(
+            pinned: true,
+            delegate: _SliverAppBarDelegate(
+              color: MyStyles.of(context).colors.background2,
+              minExtent: 50.0,
+              maxExtent: 125,
+            ),
+          ),
+          cells: queues.map((element) =>
+           ChangeNotifierProvider.value(
+             value: element,
+             child: Consumer<Queue>(
+               builder: (context, queue, _) {
+                 return QueueCell(queue: queue,);
+               },
+             )
+           )
+          ).toList(),
+        );
+      },
     );
   }
 }
@@ -32,23 +38,19 @@ class DashboardPage extends StatelessWidget {
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final Color color;
-  final String name;
   final double minExtent;
   final double maxExtent;
 
   const _SliverAppBarDelegate(
-      {this.color, this.name, this.minExtent, this.maxExtent});
+      {this.color, this.minExtent, this.maxExtent});
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    print(shrinkOffset);
     return Container(
       color: color,
       child: Column(children: <Widget>[
-        ProfileAppBar(
-          name: name,
-        ),
+        ProfileAppBar(),
         Expanded(
           child: Container(
             alignment: Alignment.center,
@@ -69,13 +71,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class ProfileAppBar extends StatelessWidget {
-  final String name;
   final Color color;
 
   const ProfileAppBar({
     Key key,
     this.color,
-    @required this.name,
   }) : super(key: key);
 
   @override
@@ -99,9 +99,13 @@ class ProfileAppBar extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        name,
-                        style: MyStyles.of(context).textThemes.h3,
+                      Consumer<User>(
+                        builder: (context, user, _) {
+                          return Text(
+                            user.name,
+                            style: MyStyles.of(context).textThemes.h3,
+                          );
+                        }
                       ),
                       Text(
                         "View Account",
