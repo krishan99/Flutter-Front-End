@@ -22,33 +22,44 @@ enum QueueEntryState {
   deleted
 }
 
-class QueueEntry {
-  final String name;
-  final String description;
-  final QueueEntryState state;
+mixin Titled on ChangeNotifier {
+  String _name;
+  String get name => _name;
+  set name(String newValue) {
+    _name = newValue;
+    notifyListeners();
+  }
+
+  String _description;
+
+  String get description => _description;
+  set description(String newValue) {
+    _description = newValue;
+    notifyListeners();
+  }
+}
+
+class QueueEntry with ChangeNotifier, Titled {
+  QueueEntryState _state;
+  QueueEntryState get state => _state;
+  set state(QueueEntryState newValue) {
+    _state = newValue;
+    notifyListeners();
+  }
 
   QueueEntry({
-    @required this.name,
-    this.description,
-    this.state = QueueEntryState.waiting,
-  });
-
-  QueueEntry copyWith({
     String name,
     String description,
-    QueueEntryState state
+    QueueEntryState state = QueueEntryState.waiting,
   }) {
-    return QueueEntry(
-      name: name ?? this.name,
-      description: description ?? this.description,
-      state: state ?? this.state
-    );
+    this._name = name;
+    this._description = description;
+    this._state = state;
   }
 }
 
 class ListenableList<E> extends ListBase<E> with ChangeNotifier {
   final List<E> data = [];
-  ListenableList();
 
   int get length => data.length;
 
@@ -71,22 +82,7 @@ enum QueueState {
   active, inactive
 }
 
-class Queue extends ListenableList<QueueEntry> {
-  String _name;
-  String get name => _name;
-  set name(String newValue) {
-    _name = newValue;
-    notifyListeners();
-  }
-
-  String _description;
-
-  String get description => _description;
-  set description(String newValue) {
-    _description = newValue;
-    notifyListeners();
-  }
-
+class Queue extends ListenableList<QueueEntry> with Titled {
   QueueState _state;
   QueueState get state => _state;
   set state(QueueState newValue) {

@@ -248,7 +248,7 @@ class QueueCell extends SlideableListCell {
   final Future<bool> Function() onOpen;
   final Future<bool> Function() onDelete;
 
-  QueueCell({Key key, @required this.queue, this.onOpen, this.onDelete})
+  QueueCell({Key key, @required this.queue, this.onOpen, this.onDelete, Function onTap})
     : super(
       key: key,
       title: queue.name,
@@ -280,9 +280,10 @@ class QueueCell extends SlideableListCell {
       }(),
       isSelected: false,
       primaryText: "Open",
-      onPrimaryTap: onOpen,
-      onSecondaryTap: onDelete,
+      onPrimarySwipe: onOpen,
+      onSecondarySwipe: onDelete,
       relativeSize: SlideableListCellSize.big,
+      onTap: onTap,
   );
 }
 
@@ -292,8 +293,10 @@ enum QueueEntryCellSize {
 
 class QueueEntryCell extends SlideableListCell {
   final QueueEntry queueEntry;
+  final Future<bool> Function() onDelete;
+  final Future<bool> Function() onNotify;
   
-  QueueEntryCell({Key key, this.queueEntry, QueueEntryCellSize size})
+  QueueEntryCell({Key key, this.onDelete, this.onNotify, this.queueEntry, Function onTap, QueueEntryCellSize size})
     : super(
         key: key,
         isSelected: (){
@@ -308,6 +311,8 @@ class QueueEntryCell extends SlideableListCell {
           }
         }(),
         primaryText: "Notify",
+        onPrimarySwipe: onNotify,
+        onSecondarySwipe: onDelete,
         title: queueEntry.name,
         body: queueEntry.description ?? "",
         relativeSize: (){
@@ -316,8 +321,9 @@ class QueueEntryCell extends SlideableListCell {
               return SlideableListCellSize.small;
             case QueueEntryCellSize.medium:
               return SlideableListCellSize.medium;
-          }
+        }
       }(),
+      onTap: onTap,
     );
 }
 
@@ -332,8 +338,9 @@ class SlideableListCell extends StatelessWidget {
   final String body;
   final String primaryText;
   final String secondaryText;
-  final Future<bool> Function() onPrimaryTap;
-  final Future<bool> Function() onSecondaryTap;
+  final Future<bool> Function() onPrimarySwipe;
+  final Future<bool> Function() onSecondarySwipe;
+  final Function onTap;
   final SlideableListCellSize relativeSize;
 
   SlideableListCell(
@@ -345,8 +352,9 @@ class SlideableListCell extends StatelessWidget {
         this.subheading,
         this.body,
         this.isSelected = false,
-        this.onPrimaryTap,
-        this.onSecondaryTap,
+        this.onPrimarySwipe,
+        this.onSecondarySwipe,
+        this.onTap,
         this.primaryText = "Active",
         this.secondaryText = "Delete",
       }
@@ -354,127 +362,130 @@ class SlideableListCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: (isSelected)
-                ? Border.all(
-                    width: 1, color: MyStyles.of(context).colors.accent)
-                : null,
-            borderRadius: BorderRadius.circular(borderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.10),
-                blurRadius: 10,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-            child: Dismissible(
-              key: GlobalKey(),
-              confirmDismiss: (direction) {
-                if (direction == DismissDirection.startToEnd) {
-                  return onSecondaryTap();
-                } else {
-                  return onPrimaryTap();
-                }
-              },
-              
-              background: Container(
-                padding: EdgeInsets.all(15),
-                color: MyStyles.of(context).colors.secondary,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  secondaryText,
-                  style: MyStyles.of(context).textThemes.buttonActionText2,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: (isSelected)
+                  ? Border.all(
+                      width: 1, color: MyStyles.of(context).colors.accent)
+                  : null,
+              borderRadius: BorderRadius.circular(borderRadius),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.10),
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
                 ),
-              ),
-              secondaryBackground: Container(
-                padding: EdgeInsets.all(15),
-                color: MyStyles.of(context).colors.accent,
-                alignment: Alignment.centerRight,
-                child: Text(
-                  primaryText,
-                  style: MyStyles.of(context).textThemes.buttonActionText2,
-                ),
-              ),
-              child: Container(
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: MyStyles.of(context).colors.background1,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 10,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+              child: Dismissible(
+                key: GlobalKey(),
+                confirmDismiss: (direction) {
+                  if (direction == DismissDirection.startToEnd) {
+                    return onSecondarySwipe();
+                  } else {
+                    return onPrimarySwipe();
+                  }
+                },
                 
+                background: Container(
+                  padding: EdgeInsets.all(15),
+                  color: MyStyles.of(context).colors.secondary,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    secondaryText,
+                    style: MyStyles.of(context).textThemes.buttonActionText2,
+                  ),
+                ),
+                secondaryBackground: Container(
+                  padding: EdgeInsets.all(15),
+                  color: MyStyles.of(context).colors.accent,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    primaryText,
+                    style: MyStyles.of(context).textThemes.buttonActionText2,
+                  ),
+                ),
                 child: Container(
-                  padding: EdgeInsets.only(bottom: (relativeSize == SlideableListCellSize.big) ? 20 : 0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Text(title,
-                                textAlign: TextAlign.left,
-                                style: MyStyles.of(context)
-                                    .textThemes
-                                    .bodyText1),
-          
-                            () {
-                              if (isActive != null) {
-                                return Expanded(
-                                  child: Text(
-                                    (isActive) ? "Active" : "Inactive",
-                                    textAlign: TextAlign.end,
-                                    style: (isActive)
-                                        ? MyStyles.of(context).textThemes.active
-                                        : MyStyles.of(context)
-                                            .textThemes
-                                            .disabled,
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            }()
-                          ],
-                        ),
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: MyStyles.of(context).colors.background1,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 10,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: (relativeSize == SlideableListCellSize.big) ? 20 : 0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Text(title,
+                                  textAlign: TextAlign.left,
+                                  style: MyStyles.of(context)
+                                      .textThemes
+                                      .bodyText1),
+            
+                              () {
+                                if (isActive != null) {
+                                  return Expanded(
+                                    child: Text(
+                                      (isActive) ? "Active" : "Inactive",
+                                      textAlign: TextAlign.end,
+                                      style: (isActive)
+                                          ? MyStyles.of(context).textThemes.active
+                                          : MyStyles.of(context)
+                                              .textThemes
+                                              .disabled,
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }()
+                            ],
+                          ),
 
-                        () {
-                          if (subheading != null) {
-                            return Container(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Text(
-                                subheading,
-                                style: MyStyles.of(context).textThemes.bodyText2,
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }(),
-                        
-                        SizedBox(height: 5),
-                        Text(
-                          body,
-                          maxLines: (relativeSize == SlideableListCellSize.small) ? 1 : null,
-                          style: MyStyles.of(context).textThemes.bodyText3,
-                        )
-                      ]),
+                          () {
+                            if (subheading != null) {
+                              return Container(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Text(
+                                  subheading,
+                                  style: MyStyles.of(context).textThemes.bodyText2,
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }(),
+                          
+                          SizedBox(height: 5),
+                          Text(
+                            body,
+                            maxLines: (relativeSize == SlideableListCellSize.small) ? 1 : null,
+                            style: MyStyles.of(context).textThemes.bodyText3,
+                          )
+                        ]),
+                  ),
                 ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 }
 
@@ -482,8 +493,9 @@ class SlideableListCell extends StatelessWidget {
 class SlideableList extends StatefulWidget {
   final List<Widget> cells;
   final SliverPersistentHeader header;
+  final Function onPlusTap;
 
-  const SlideableList({Key key, @required this.header, @required this.cells}) : super(key: key);
+  const SlideableList({Key key,this.onPlusTap, @required this.header, @required this.cells}) : super(key: key);
 
   @override
   _SlideableListState createState() => _SlideableListState();
@@ -497,6 +509,7 @@ class _SlideableListState extends State<SlideableList> {
         text: "+",
         width: 50,
         height: 50,
+        onPressed: widget.onPlusTap,
       ),
       body: SafeArea(
         bottom: false,

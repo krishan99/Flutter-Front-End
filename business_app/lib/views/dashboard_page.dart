@@ -11,6 +11,10 @@ class DashboardPage extends StatelessWidget {
     return Consumer<Queues>(
       builder: (context, queues, _) {
         return SlideableList(
+          onPlusTap: (){
+            queues.add(Queue(name: "Ror", code: "542-34"));
+          },
+
           header: SliverPersistentHeader(
             pinned: true,
             delegate: _SliverAppBarDelegate(
@@ -27,13 +31,18 @@ class DashboardPage extends StatelessWidget {
                  return QueueCell(
                    queue: queue,
                    onDelete: () async {
-                     return Future.value(false);
+                     queues.remove(queue);
+                     return Future.value(true);
                    },
 
                    onOpen: () async {
                       Navigator.of(context).pushNamed("/queue", arguments: queue);
                       return Future.value(false);
                    },
+
+                   onTap: () {
+                      Navigator.of(context).pushNamed("/queue", arguments: queue);
+                   }
                   );
                },
              )

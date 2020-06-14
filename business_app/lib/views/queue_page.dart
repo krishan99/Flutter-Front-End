@@ -16,6 +16,9 @@ class QueuePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SlideableList(
+      onPlusTap: (){
+        queue.add(QueueEntry(name: "John Doe"));
+      },
       header: SliverPersistentHeader(
         pinned: true,
         delegate: _SliverAppBarDelegate(
@@ -25,12 +28,30 @@ class QueuePage extends StatelessWidget {
           maxExtent: 125,
         ),
       ),
-      cells: mapIndexed(queue, (index, value) {
-        return QueueEntryCell(
-          queueEntry: value,
-          size: (index < 3)
-              ? QueueEntryCellSize.medium
-              : QueueEntryCellSize.small,
+      cells: mapIndexed(queue, (index, e) {
+        final QueueEntry entry = e as QueueEntry;
+        return ChangeNotifierProvider.value(
+          value: entry,
+          child: Consumer<QueueEntry>(
+            builder: (context, entry, _) {
+              return QueueEntryCell(
+                queueEntry: entry,
+                size: (index < 3)
+                    ? QueueEntryCellSize.medium
+                    : QueueEntryCellSize.small,
+                
+                onDelete: () {
+                  queue.remove(entry);
+                  return Future.value(true);
+                },
+                
+                onNotify: () {
+                  entry.state = QueueEntryState.pendingNotification;
+                  return Future.value(false);
+                },
+              );
+            },
+          ),
         );
       }).toList()
     );
@@ -67,10 +88,15 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.black,
-                              size: 30,
+                            child: InkWell(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.black,
+                                size: 30,
+                              ),
                             ),
                           ),
                           SizedBox(
