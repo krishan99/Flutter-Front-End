@@ -90,8 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: <Widget>[
                       GoogleSignInButton(
                         onPressed: () {
-                          Future<String> fut = user.signInWithGoogle();
-                          fut.catchError((error) {
+                          user.signInWithGoogle().catchError((error) {
                             showDialog(
                                context: context, 
                                builder: (BuildContext context) {
