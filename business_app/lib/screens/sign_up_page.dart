@@ -1,7 +1,8 @@
 import 'package:business_app/theme/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/components/components.dart';
-import 'package:business_app/screens/home_page.dart';
+
+import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget implements EntranceScreen {
   final double height;
