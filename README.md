@@ -112,7 +112,7 @@ We will have multiple mains in our project. Each corresponding to a different ap
 * The **Business App** Itself
 * **A Font Test App** (Fonts are weird in flutter and this lets you verify the font weights.)
 * A **Testing App** (This is generally just to try out certain widgets or ideas before implementing them in the main app. May be an issue going forward with conflicts.)
-* Eventually a **User App**
+**User App**
 
 ##### Sub Folders
 **Theme Folder:** This just contains a style.dart with the app theme which I access in the main.dart file.
@@ -124,6 +124,7 @@ The components folder has custom widgets which are used in multiple different sc
 
 **Screens Folder** This holds many different folders, each of which corresponds to a different screen of the app. Each screen folder holds two things: a primary screen file which serves to organize each component, and a “components” folder which holds each component in its own separate file. (I got lazy and haven't done the last part yet).
 
+There are "general" versions and "app-specific" folders of each of these. Basically, the objects in the general folder are shared between the user and business apps.
 
 ## Adobe XD Layout
 https://xd.adobe.com/view/8523fc7d-8922-4dc9-6ddb-60099099c19b-f312/
