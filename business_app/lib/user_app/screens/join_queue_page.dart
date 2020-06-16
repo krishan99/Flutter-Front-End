@@ -15,71 +15,88 @@ class _JoinQueuePageState extends State<JoinQueuePage> {
   @override
   Widget build(BuildContext context) {
     return TappableGradientScaffold(
-      body: Stack(
-        children: [
-          Center(
-            child: Container(
-              width: 300,
-              height: 340,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(
-                    "EndLine",
-                    style: MyStyles.of(context).textThemes.h1.copyWith(color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 5,
-                            offset: Offset(0, 2))
-                      ]),
-                    child: Container(
+        body: Stack(
+      children: [
+        Center(
+          child: Container(
+            width: 300,
+            height: 400,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Text(
+                  "EndLine",
+                  style: MyStyles.of(context)
+                      .textThemes
+                      .h1
+                      .copyWith(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+                Container(
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 5,
+                        offset: Offset(0, 2))
+                  ]),
+                  child: Container(
                       decoration: BoxDecoration(
-                        color: MyStyles.of(context).colors.accent
-                      ),
+                          color: MyStyles.of(context).colors.accent),
                       padding: EdgeInsets.all(5),
                       child: Consumer<ApiResponse<QueueReqs>>(
-                        builder: (context, response, _) {
-                          String code;
-                          switch (response.status) {
-                            case Status.LOADING:
-                            case Status.ERROR:
-                              code = "Invalid Queue Code";
-                              break;
-                            case Status.COMPLETED:
-                              code = response.data.code;
-                              break;
-                          }
-                          
-                          return Text(
-                            code,
-                            textAlign: TextAlign.center,
-                            style: MyStyles.of(context).textThemes.bodyText2.copyWith(color: Colors.white),
-                          );
+                          builder: (context, response, _) {
+                        String code;
+                        switch (response.status) {
+                          case Status.LOADING:
+                          case Status.ERROR:
+                            code = "Invalid Queue Code";
+                            break;
+                          case Status.COMPLETED:
+                            code = response.data.code;
+                            break;
                         }
-                      )
-                    ),
+
+                        return Text(
+                          code,
+                          textAlign: TextAlign.center,
+                          style: MyStyles.of(context)
+                              .textThemes
+                              .bodyText2
+                              .copyWith(color: Colors.white),
+                        );
+                      })),
+                ),
+                Text(
+                  "Join Queue for EndLine",
+                  style: MyStyles.of(context)
+                      .textThemes
+                      .h3
+                      .copyWith(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+                StyleTextField(placeholderText: "Full Name"),
+                StyleTextField(placeholderText: "Phone Number"),
+                StyleTextField(placeholderText: "Notes"),
+                Container(
+                  padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                  color: Colors.transparent,
+                  child: LoadingButton(
+                    defaultWidget: Text("Submit",
+                        style:
+                            MyStyles.of(context).textThemes.buttonActionText2),
+                    onPressed: () async {
+                      return (
+
+                      ){};
+                    },
                   ),
-                  Text(
-                    "Join Queue for EndLine",
-                    style: MyStyles.of(context).textThemes.h3.copyWith(color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                  StyleTextField(placeholderText: "Full Name"),
-                  StyleTextField(placeholderText: "Phone Number"),
-                  StyleTextField(placeholderText: "Notes"),
-                  
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      )
-    );
+        ),
+      ],
+    ));
   }
 }
