@@ -33,13 +33,17 @@ class QueueHandler {
     return _queueReqsController.sink;
   }
 
-  updateQueueReqs({@required String code}) async {
+  Future<ApiResponse<QueueReqs>> updateQueueReqs({@required String code}) async {
+    ApiResponse<QueueReqs> reqsResponse;
     try {
-      QueueReqs queueReqs = await server.getQueueInfo(code: code);
-      queueReqsSink.add(ApiResponse.completed(queueReqs));
+      QueueReqs reqs = await server.getQueueInfo(code: code);
+      reqsResponse = ApiResponse.completed(reqs);
     } catch (e) {
-      queueReqsSink.add(ApiResponse.error(e.toString()));
+      reqsResponse = ApiResponse.error(e.toString());
     }
+
+    queueReqsSink.add(reqsResponse);
+    return Future.value(reqsResponse);
   }
 
   QueueHandler({@required UAppServer server}) {

@@ -1,5 +1,6 @@
 import 'package:business_app/business_app/models/models.dart';
 import 'package:business_app/components/components.dart';
+import 'package:business_app/components/shake_widget.dart';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/user_app/components/components.dart';
@@ -32,9 +33,19 @@ class _HomePageState extends State<HomePage> {
     _queueHandler = Provider.of<QueueHandler>(context);
   }
 
+  navigateToQueuePage(Status responseStatus) {
+    switch (responseStatus) {
+      case Status.COMPLETED:
+        Navigator.of(context).pushNamed("/join_queue");
+        break;
+      case Status.ERROR:
+      case Status.LOADING:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return TappableGradientScaffold(
       body: Stack(
         children: [
@@ -44,7 +55,13 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("EndLine", style: MyStyles.of(context).textThemes.h1.copyWith(color: Colors.white),),
+                Text(
+                  "EndLine",
+                  style: MyStyles.of(context)
+                      .textThemes
+                      .h1
+                      .copyWith(color: Colors.white),
+                ),
                 SizedBox(height: 20),
 
                 Consumer<ApiResponse<QueueReqs>>(
@@ -57,24 +74,29 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.transparent,
                           constraints: BoxConstraints(maxWidth: 250),
                           child: StyleTextField(
-                            placeholderText: "Enter Pin...",                            
+                            placeholderText: "Enter Pin...",
                           ),
                         ),
-
                         () {
                           if (isError) {
-                            return Container(
-                              padding: EdgeInsets.all(10),
-                              child: Text("Invalid Queue Code", style: MyStyles.of(context).textThemes.subtext.copyWith(color: Colors.white)),
+                            return ShakeWidget(
+                              key: GlobalKey(),
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text("Invalid Queue Code",
+                                    style: MyStyles.of(context)
+                                        .textThemes
+                                        .subtext
+                                        .copyWith(color: Colors.white)),
+                              ),
                             );
                           } else {
                             return Container();
                           }
-                        } ()
+                        }()
                       ],
                     );
                   },
-                  
                 ),
 
                 Container(
@@ -82,29 +104,42 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.transparent,
                   constraints: BoxConstraints(maxWidth: 200),
                   child: LoadingButton(
-                        defaultWidget: Text("Submit", style: MyStyles.of(context).textThemes.buttonActionText2),
-                        onPressed: () async {
-                          await _queueHandler.updateQueueReqs(code: _textFieldController.value.text);
-                          return () async {
-                            Navigator.of(context).pushNamed("/join_queue");
-                          };
-                        },
-                      ),
-
+                    defaultWidget: Text("Submit",
+                        style:
+                            MyStyles.of(context).textThemes.buttonActionText2),
+                    onPressed: () async {
+                      final reqs = await _queueHandler.updateQueueReqs(
+                          code: _textFieldController.value.text);
+                      return () {
+                        navigateToQueuePage(reqs.status);
+                      };
+                    },
+                  ),
                 ),
 
                 // SizedBox(height: 20),
                 Container(
-                  child: Text("Need Help?", style: MyStyles.of(context).textThemes.h3.copyWith(color: Colors.white),),
+                  child: Text(
+                    "Need Help?",
+                    style: MyStyles.of(context)
+                        .textThemes
+                        .h3
+                        .copyWith(color: Colors.white),
+                  ),
                 )
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.all(15),
-            alignment: Alignment.bottomCenter,
-            child: Text("Business Owner?", style: MyStyles.of(context).textThemes.h3.copyWith(color: Colors.white),)
-          )
+              padding: EdgeInsets.all(15),
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                "Business Owner?",
+                style: MyStyles.of(context)
+                    .textThemes
+                    .h3
+                    .copyWith(color: Colors.white),
+              ))
         ],
       ),
     );
