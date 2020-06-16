@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:business_app/models/models.dart';
-import 'package:business_app/components/components.dart';
+import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/components/components.dart';
 import 'package:business_app/theme/themes.dart';
 
 class DashboardPage extends StatelessWidget {

@@ -1,7 +1,7 @@
-import 'package:business_app/models/models.dart';
-import 'package:business_app/screens/dashboard_page.dart';
-import 'package:business_app/screens/home_page.dart';
-import 'package:business_app/screens/queue_page.dart';
+import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/screens/dashboard_page.dart';
+import 'package:business_app/business_app/screens/home_page.dart';
+import 'package:business_app/business_app/screens/queue_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

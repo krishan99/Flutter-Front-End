@@ -15,21 +15,21 @@
             "name": "Business App",
             "request": "launch",
             "type": "dart",
-            "program": "lib/mains/main.dart"
+            "program": "lib/business_app/business_app_main.dart"
         },
 
         {
             "name": "Font Test App",
             "request": "launch",
             "type": "dart",
-            "program": "lib/mains/font_test_app.dart"
+            "program": "lib/test_mains/font_test_app.dart"
         },
 
         {
             "name": "Testing App",
             "request": "launch",
             "type": "dart",
-            "program": "lib/mains/testing.dart"
+            "program": "lib/test_mains/generic_testing_app.dart"
         },
     ]
 }

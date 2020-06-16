@@ -1,9 +1,9 @@
-import 'package:business_app/screens/sign_up_page.dart';
+import 'package:business_app/business_app/screens/sign_up_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:business_app/components/components.dart';
-import 'package:business_app/screens/login_page.dart';
+import 'package:business_app/business_app/components/components.dart';
+import 'package:business_app/business_app/screens/login_page.dart';
 
 enum EntranceScreenType { signUp, logIn }
 

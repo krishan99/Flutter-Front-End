@@ -28,7 +28,7 @@ $ flutter config --enable-web
 ### Running the App
 #### VSCode
 1. Open in VSCode
-2. Select "Run" tap from left side.
+2. Tap the "Run" icon from left side.
 3. In the upper drop down, select "Business App".
 4. Hit Play and select a simulator to run on.
 
@@ -46,8 +46,8 @@ $ flutter config --enable-web
 Flutter uses their own language called Dart. It's a weird cross between python and javascript.
 
 ### Syntax
-This is a 1 hour video on the syntax, however if you're lazy like me just read the cheat sheet in the description.
-https://www.youtube.com/watch?v=OLjyCy-7U2U&t=3878s
+This is a 1 hour video on the syntax; there's also a cheat sheet in the description.
+https://youtu.be/OLjyCy-7U2U
 
 ### Essential Knowledge
 To have a good understanding of how the app works, make sure you understand the unique pieces of dart. Basically, just don't try to write code like it's python or c++ and really try to take advantage of Dart.
@@ -88,7 +88,7 @@ I've done a fair bit of research on this and have come to the following conclusi
 
 #### Learning Provider
 There are 4 Parts totaling about an hour. Ideally watch them all - it'll save you so much time.
-https://www.youtube.com/watch?v=j8P__wcq2YM&t=587s
+https://youtu.be/j8P__wcq2YM
 
 ## App Structure (Read Before Writing Code in the App)
 

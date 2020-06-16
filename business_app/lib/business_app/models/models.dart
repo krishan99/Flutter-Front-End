@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:business_app/business_app/components/business_app_components.dart';
 import 'package:business_app/services/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,10 @@ abstract class ComplexEnum<T> {
 class ModelData {
   User user;
   Queues queues;
-  MyServer server;
+  BusinessAppServer server;
 
   ModelData() {
-    this.server = MyServer();
+    this.server = BusinessAppServer();
     this.user = User(server: server);
     this.queues = Queues();
   }
