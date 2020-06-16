@@ -32,9 +32,10 @@ dependencies:
   path: ^1.7.0
   http: ^0.12.1
   mockito: ^4.1.1
-
+  flutter_progress_button: '^1.0.0'
   # Check that you have this dependency (added in the previous step)
   firebase_core: ^0.4.0+9
+  progress_indicators: ^0.1.5
 
   # Add the dependency for the FlutterFire plugin for Google Analytics
   firebase_analytics: ^5.0.2

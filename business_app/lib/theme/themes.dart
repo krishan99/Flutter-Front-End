@@ -110,7 +110,8 @@ class MyTextThemes {
     bodyText2: TextStyle(fontSize: 18, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(116, 116, 116, 1), fontWeight: FontWeight.bold),
     bodyText3: TextStyle(fontSize: 17, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(103, 103, 103, 1), fontWeight: FontWeight.w300),
     buttonActionText1: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
-    buttonActionText2: TextStyle(fontSize: 16, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
+    buttonActionText2: TextStyle(fontSize: 18, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
+    buttonActionText3: TextStyle(fontSize: 16, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
     subtext: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(160, 160, 160, 1), fontWeight: FontWeight.w300),
     placeholder: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(186, 186, 186, 1), fontWeight: FontWeight.w300),
     active: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(131, 219, 28, 1), fontWeight: FontWeight.bold),
@@ -129,6 +130,7 @@ class MyTextThemes {
   final TextStyle bodyText3;
   final TextStyle buttonActionText1;
   final TextStyle buttonActionText2;
+  final TextStyle buttonActionText3;
   final TextStyle formField1;
   final TextStyle subtext;
   final TextStyle placeholder;
@@ -146,6 +148,7 @@ class MyTextThemes {
     this.bodyText3,
     this.buttonActionText1,
     this.buttonActionText2,
+    this.buttonActionText3,
     this.formField1,
     this.subtext,
     this.placeholder,

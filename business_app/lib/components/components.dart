@@ -144,7 +144,7 @@ class StyleTextField extends StatefulWidget {
       this.onChanged,
       this.onSubmitted,
       @required this.placeholderText,
-      this.maxLines})
+      this.maxLines = 1})
       : super(key: key);
 
   @override
@@ -201,6 +201,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.transparent,
       child: Container(
         alignment: textFieldFontAlignment,
         decoration: BoxDecoration(
@@ -401,7 +402,7 @@ class SlideableListCell extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     secondaryText,
-                    style: MyStyles.of(context).textThemes.buttonActionText2,
+                    style: MyStyles.of(context).textThemes.buttonActionText3,
                   ),
                 ),
                 secondaryBackground: Container(
@@ -410,7 +411,7 @@ class SlideableListCell extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: Text(
                     primaryText,
-                    style: MyStyles.of(context).textThemes.buttonActionText2,
+                    style: MyStyles.of(context).textThemes.buttonActionText3,
                   ),
                 ),
                 child: Container(

@@ -5,6 +5,10 @@ import 'package:provider/provider.dart';
 
 class ModelData {
   User user;
+
+  ModelData() {
+    user = User();
+  }
 }
 
 class User extends ChangeNotifier {
