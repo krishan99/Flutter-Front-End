@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
         title: 'EndLine',
-        onGenerateRoute: RouteGenerator.generateRoute,
+        onGenerateRoute: BAppRouteGenerator.generateRoute,
         home: Consumer<User>(
           builder: (context, user, _) {
             if (user.isLoggedIn) {

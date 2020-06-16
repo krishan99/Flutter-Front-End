@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/business_app/models/models.dart';
 
+//When this file gets to big, split into multiple files.
+
 class ActionButton extends StatelessWidget {
   final Widget child;
   final Gradient gradient;
@@ -15,7 +17,7 @@ class ActionButton extends StatelessWidget {
       {Key key,
       @required this.child,
       this.gradient,
-      this.color,
+      this.color = Colors.grey,
       this.width = 233,
       this.height = 55,
       this.onPressed})

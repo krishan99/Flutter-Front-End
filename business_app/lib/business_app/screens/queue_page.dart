@@ -1,7 +1,7 @@
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/models/models.dart';
-import 'package:business_app/business_app/components/components.dart';
+import 'package:business_app/components/components.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:provider/provider.dart';
 

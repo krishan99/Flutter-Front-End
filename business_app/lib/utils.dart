@@ -1,3 +1,4 @@
+//Generally helpful functions should go here.
 
 Iterable<E> mapIndexed<E, T>(
     Iterable<T> items, E Function(int index, T item) f) sync* {

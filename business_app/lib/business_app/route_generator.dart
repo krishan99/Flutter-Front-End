@@ -4,8 +4,9 @@ import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/business_app/screens/queue_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:business_app/route_generator.dart';
 
-class RouteGenerator {
+class BAppRouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
     final args = settings.arguments;
@@ -43,20 +44,7 @@ class RouteGenerator {
         // return _errorRoute();
         
       default:
-        return _errorRoute();
+        assert(false);
     }
-  }
-
-  static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Error'),
-        ),
-        body: Center(
-          child: Text('ERROR'),
-        ),
-      );
-    });
   }
 }

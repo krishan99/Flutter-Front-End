@@ -10,6 +10,13 @@
             "request": "launch",
             "program": "./test/"
         },
+
+        {
+            "name": "User App",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/user_app/user_app_main.dart"
+        },
         
         {
             "name": "Business App",
