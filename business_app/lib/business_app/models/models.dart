@@ -182,7 +182,7 @@ class Queues extends ListenableList<Queue> {}
 class User extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  final MyServer server;
+  final BusinessAppServer server;
 
   FirebaseUser _firebaseUser;
 

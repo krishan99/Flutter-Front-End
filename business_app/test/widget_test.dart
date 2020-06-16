@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/services/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,7 +13,7 @@ void main() async {
   
   test("Test Sign In",
    () async {
-      MyServer server = MyServer(path: "http://0.0.0.0:8000/");
+      BusinessAppServer server = BusinessAppServer(path: "http://0.0.0.0:8000/");
 
       expect(() async {
         await server.signIn("roar@gmail.com");

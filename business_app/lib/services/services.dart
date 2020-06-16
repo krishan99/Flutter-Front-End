@@ -30,50 +30,67 @@ class NotFoundException extends MyServerException {
 }
 
 class MyServerResponse {
-  Map<String, dynamic> _body;
+  Map<String, dynamic> body;
 
   int _statusCode;
   int get statusCode => _statusCode;
 
-  String get message => this["message"] as String;
+  String get errorMessage {
+    if (body.containsKey("message")) {
+      return body["message"] as String;
+    } else {
+      return null;
+    }
+  }
 
   dynamic operator [](String key) {
-    return _body[key];
+    return body[key];
   }
 
   MyServerResponse(http.Response r) {
-    this._body = jsonDecode(r.body);
+    this.body = jsonDecode(r.body);
     this._statusCode = r.statusCode;
   }
 }
 
 class MyServer {
   final path;
-  Future<MyServerResponse> _post(String route, {@required Map body}) async {
-    final url = "$path$route";
+
+  static Map<String, String> _headers = const <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+  };
+
+  String _getURL({@required String route}) {
+    return "$path$route";
+  }
+
+  Future<MyServerResponse> post(String route, {@required Map body}) async {
+    final url = _getURL(route: route);
 
     final response = await http.post(
       url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: _headers,
       body: jsonEncode(body)
     );
 
+    return _checkHttpResponse(response);
+  }
+
+  Future<MyServerResponse> get(String route) async {
+    final url = _getURL(route: route);
+    final response = await http.get(
+      url,
+      headers: _headers,
+    );
+
+    return _checkHttpResponse(response);
+  }
+
+  MyServerResponse _checkHttpResponse(http.Response response) {
     final myServerResponse = MyServerResponse(response);
     _checkResponse(myServerResponse);
 
-    return MyServerResponse(response);
-  }
-
-  //TODO: Use firebase Token ID instead.
-  Future<MyServerResponse> signIn(String email) async {
-    return _post(
-      "api/v1/test",
-      body: <String, String>{
-        "email": email,
-      }
-    ); 
+    return myServerResponse;
   }
 
   _checkResponse(MyServerResponse response) {
@@ -81,15 +98,32 @@ class MyServer {
       case 200:
         return;
       case 403:
-        throw ForbiddenException(response.message);
+        throw ForbiddenException(response.errorMessage);
       case 405:
-        throw JsonEncodingException(response.message);
+        throw JsonEncodingException(response.errorMessage);
       case 404:
-        throw NotFoundException(response.message);
+        throw NotFoundException(response.errorMessage);
       default:
-        throw Exception(response.message);
+        throw Exception(response.errorMessage);
     }
   }
 
-  MyServer({this.path = "http://0.0.0.0:8000/"});
+  MyServer({this.path});
 }
+
+class ApiResponse<T> {
+  Status status;
+  T data;
+  String message;
+  
+ApiResponse.loading(this.message) : status = Status.LOADING;
+ApiResponse.completed(this.data) : status = Status.COMPLETED;
+ApiResponse.error(this.message) : status = Status.ERROR;
+  
+@override
+  String toString() {
+    return "Status : $status \n Message : $message \n Data : $data";
+  }
+}
+
+enum Status { LOADING, COMPLETED, ERROR }

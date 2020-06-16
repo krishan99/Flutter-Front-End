@@ -1,4 +1,5 @@
 import 'package:business_app/components/components.dart';
+import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/user_app/components/components.dart';
 import 'package:business_app/user_app/models/models.dart';
@@ -29,29 +30,40 @@ class _JoinQueuePageState extends State<JoinQueuePage> {
                     style: MyStyles.of(context).textThemes.h1.copyWith(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
-                  Consumer<User>(
-                    builder: (context, user, _) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 5,
-                                offset: Offset(0, 2))
-                          ]),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: MyStyles.of(context).colors.accent
-                          ),
-                          padding: EdgeInsets.all(5),
-                          child: Text(
-                            user.qcode ?? "Invalid qCode",
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 5,
+                            offset: Offset(0, 2))
+                      ]),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: MyStyles.of(context).colors.accent
+                      ),
+                      padding: EdgeInsets.all(5),
+                      child: Consumer<ApiResponse<QueueReqs>>(
+                        builder: (context, response, _) {
+                          String code;
+                          switch (response.status) {
+                            case Status.LOADING:
+                            case Status.ERROR:
+                              code = "Invalid Queue Code";
+                              break;
+                            case Status.COMPLETED:
+                              code = response.data.code;
+                              break;
+                          }
+                          
+                          return Text(
+                            code,
                             textAlign: TextAlign.center,
                             style: MyStyles.of(context).textThemes.bodyText2.copyWith(color: Colors.white),
-                          )
-                        ),
-                      );
-                    },
+                          );
+                        }
+                      )
+                    ),
                   ),
                   Text(
                     "Join Queue for EndLine",

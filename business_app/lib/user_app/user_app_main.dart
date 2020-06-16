@@ -1,7 +1,7 @@
+import 'package:business_app/services/services.dart';
 import 'package:business_app/user_app/models/models.dart';
 import 'package:business_app/user_app/route_generator.dart';
 import 'package:business_app/user_app/screens/home_page.dart';
-import 'package:business_app/user_app/screens/join_queue_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +14,13 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-            ChangeNotifierProvider.value(value: mD.user),
+        Provider.value(value: mD.server),
+        Provider.value(value: mD.queueHandler),
+        StreamProvider.value(
+          value: mD.queueHandler.queueReqsStream,
+          initialData: ApiResponse.completed(QueueReqs()),
+        ),
+        ChangeNotifierProvider.value(value: mD.user),
       ],
       child: MyApp()
     )
