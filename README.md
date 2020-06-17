@@ -117,8 +117,9 @@ We will have multiple mains in our project. Each corresponding to a different ap
 ##### Sub Folders
 **Theme Folder:** This just contains a style.dart with the app theme which I access in the main.dart file.
 
-**Services Folder:** holds some web APIs and native interaction code
-The components folder has custom widgets which are used in multiple different screens.
+**Services Folder:** holds some web APIs and native interaction code.
+
+**Components Folder:** has custom widgets which are used in multiple different screens.
 
 **Models Folder:** contains files each with a custom class of an object widely used throughout the app.
 
