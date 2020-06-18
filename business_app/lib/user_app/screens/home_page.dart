@@ -15,13 +15,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   QueueHandler _queueHandler;
 
-  final _textFieldController = TextEditingController();
+  //TODO: Temporary solution, need to figure out how to pass controllers
+  String _code = "";
+  // final _textFieldController = TextEditingController();
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _textFieldController.dispose();
+    // _textFieldController.dispose();
   }
 
   @override
@@ -72,13 +74,17 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.transparent,
                           constraints: BoxConstraints(maxWidth: 250),
                           child: StyleTextField(
+                            onChanged: (value){
+                              _code = value;
+                            },
+
                             placeholderText: "Enter Pin...",
                           ),
                         ),
                         () {
                           if (isError) {
                             return ShakeWidget(
-                              key: GlobalKey(),
+                              key: ValueKey(_code),
                               child: Container(
                                 padding: EdgeInsets.all(10),
                                 child: Text("Invalid Queue Code",
@@ -105,9 +111,11 @@ class _HomePageState extends State<HomePage> {
                     defaultWidget: Text("Submit",
                         style:
                             MyStyles.of(context).textThemes.buttonActionText2),
-                    onPressed: () async {
-                      final reqs = await _queueHandler.updateQueueReqs(
-                          code: _textFieldController.value.text);
+                        onPressed: () async {
+                          final reqs = await _queueHandler.updateQueueReqs(
+                            code: _code
+                          );
+                          // code: _textFieldController.value.text);
                       return () {
                         navigateToQueuePage(reqs.status);
                       };

@@ -1,5 +1,6 @@
 
 import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:business_app/business_app/screens/home_page.dart';
@@ -91,24 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                       GoogleSignInButton(
                         onPressed: () {
                           user.signInWithGoogle().catchError((error) {
-                            showDialog(
-                               context: context, 
-                               builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: new Text("Sign In Error"),
-                                  content: new Text(error.toString()),
-                                  actions: <Widget>[
-                                    // usually buttons at the bottom of the dialog
-                                    new FlatButton(
-                                      child: new Text("Close"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              }
-                            );
+                            showErrorDialog(context, title: "Sign In Error", body: error.toString());
                           });
                         },
                       )

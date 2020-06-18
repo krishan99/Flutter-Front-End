@@ -74,7 +74,7 @@ class QueueReqs {
   
     return QueueReqs(
       qid: map['qid'] as int,
-      code: map['qcode'] as String,
+      code: map['code'] as String,
       needsName: (map.containsKey("Name: ")),
       needsPhoneNumber: map.containsKey('Phone: '),
     );

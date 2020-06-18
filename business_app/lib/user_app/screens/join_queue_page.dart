@@ -3,6 +3,8 @@ import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/user_app/components/components.dart';
 import 'package:business_app/user_app/models/models.dart';
+import 'package:business_app/user_app/services/services.dart';
+import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +14,19 @@ class JoinQueuePage extends StatefulWidget {
 }
 
 class _JoinQueuePageState extends State<JoinQueuePage> {
+  UAppServer _server;
+
+  String _fullName = "John Doe";
+  String _phoneNumber = "Phone Number";
+  String _notes = "";
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _server = Provider.of<UAppServer>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return TappableGradientScaffold(
@@ -75,20 +90,41 @@ class _JoinQueuePageState extends State<JoinQueuePage> {
                       .copyWith(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                StyleTextField(placeholderText: "Full Name"),
-                StyleTextField(placeholderText: "Phone Number"),
-                StyleTextField(placeholderText: "Notes"),
+                StyleTextField(
+                  onChanged: (value) => {_fullName = value},
+                  placeholderText: "Full Name"
+                ),
+                StyleTextField(
+                  onChanged: (value) => {_phoneNumber = value},
+                  placeholderText: "Phone Number"
+                ),
+                StyleTextField(
+                  onChanged: (value) => {_notes = value},
+                  placeholderText: "Notes"
+                ),
                 Container(
                   padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
                   color: Colors.transparent,
-                  child: LoadingButton(
-                    defaultWidget: Text("Submit",
-                        style:
-                            MyStyles.of(context).textThemes.buttonActionText2),
-                    onPressed: () async {
-                      return (
-
-                      ){};
+                  child: Consumer<QueueReqs>(
+                    builder: (context, reqs, _) {
+                      return LoadingButton(
+                        defaultWidget: Text("Submit",
+                            style: MyStyles.of(context).textThemes.buttonActionText2),
+                        onPressed: () async {
+                          bool success = false;
+                          try {
+                            await _server.addToQueue(qid: reqs.qid, name: _fullName, phoneNumber: _phoneNumber);
+                            success = true;
+                          } catch (e) {
+                            showErrorDialog(context, title: "Houston we have a problem.", body: e.toString());
+                          }
+                          return (){
+                            if (success) {
+                              Navigator.of(context).pushNamed("/thankyou");
+                            }
+                          };
+                        },
+                      );
                     },
                   ),
                 ),

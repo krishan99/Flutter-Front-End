@@ -8,17 +8,27 @@ class UAppServer extends MyServer {
   //TODO: Use firebase Token ID instead.
   
   Future<QueueReqs> getQueueInfo({@required String code}) async {
-    // final response = await post(
-    //   "/v1/queue/user/getform",
-    //   body: <String, String> {
-    //     "code": code,
-    //   });
+    final response = await post(
+      "/v1/queue/user/getform",
+      body: <String, String> {
+        "code": code,
+      });
     
-    // return QueueReqs.fromJson(response.body.toString());
+    return QueueReqs.fromJson(response.body.toString());
 
-    return QueueReqs(code: "43-4", qid: 1, needsName: true, needsPhoneNumber: true);
+    // return QueueReqs(code: "43-4", qid: 1, needsName: true, needsPhoneNumber: true);
   }
 
+  Future<MyServerResponse> addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
+    return post(
+      "/api/v1/queue/user/postform",
+      body: <String, String> {
+        "qid": qid.toString(),
+        "name": name,
+        "phone": phoneNumber,
+      }
+    );
+  }
 
   UAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);
 }

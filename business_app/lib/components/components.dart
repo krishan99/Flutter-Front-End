@@ -94,6 +94,7 @@ class StyleTextField extends StatefulWidget {
   final TextInputType textInputType;
   final bool obscureText;
   final int maxLines;
+  final TextEditingController controller;
 
   factory StyleTextField.type({
     @required StyleTextFieldType type,
@@ -136,6 +137,7 @@ class StyleTextField extends StatefulWidget {
 
   const StyleTextField(
       {Key key,
+      this.controller,
       this.obscureText = false,
       this.textInputType,
       this.icon,
