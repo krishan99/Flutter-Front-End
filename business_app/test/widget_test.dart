@@ -13,11 +13,19 @@ void main() async {
   
   test("Test Sign In",
    () async {
-      BusinessAppServer server = BusinessAppServer(path: "http://0.0.0.0:8000/");
+      BusinessAppServer server = BusinessAppServer();
 
       expect(() async {
         await server.signIn("roar@gmail.com");
       }, returnsNormally);
+
+      expect(() async {
+        await server.createQueue(name: "New Queue", description: "Magic");
+      }, returnsNormally);
+
+      final queues = await server.getQueues();
+
+      expect(queues.length, 2);
     }
   );
 }

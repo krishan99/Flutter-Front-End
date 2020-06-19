@@ -30,5 +30,5 @@ class UAppServer extends MyServer {
     );
   }
 
-  UAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);
+  UAppServer({String path = "http://0.0.0.0:8000"}) : super(path: path);
 }

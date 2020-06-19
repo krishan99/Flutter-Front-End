@@ -47,17 +47,30 @@ class MyServerResponse {
     return body[key];
   }
 
-  MyServerResponse(http.Response r) {
-    this.body = jsonDecode(r.body);
-    this._statusCode = r.statusCode;
+
+  MyServerResponse.from(http.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        this.body = jsonDecode(response.body);
+        this._statusCode = response.statusCode;
+        break;
+      case 403:
+        throw ForbiddenException(response.toString());
+      case 405:
+        throw JsonEncodingException(response.toString());
+      case 404:
+        throw NotFoundException(response.toString());
+      default:
+        throw Exception(response.toString());
+    }
   }
 }
 
 class MyServer {
   final path;
 
-  static Map<String, String> _headers = const <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+  static Map<String, String> _headers = <String, String>{
+        'Content-Type': 'application/json',
   };
 
   String _getURL({@required String route}) {
@@ -73,40 +86,40 @@ class MyServer {
       body: jsonEncode(body)
     );
 
-    return _checkHttpResponse(response);
+    updateCookie(response);
+
+    return MyServerResponse.from(response);
   }
 
-  Future<MyServerResponse> get(String route) async {
+  Future<MyServerResponse> get(String route, {Map body}) async {
     final url = _getURL(route: route);
+    final uri = Uri.parse(url).replace(queryParameters: body);
+
     final response = await http.get(
-      url,
+      uri,
       headers: _headers,
     );
 
-    return _checkHttpResponse(response);
+    updateCookie(response);
+
+    return MyServerResponse.from(response);
   }
 
-  MyServerResponse _checkHttpResponse(http.Response response) {
-    final myServerResponse = MyServerResponse(response);
-    _checkResponse(myServerResponse);
-
-    return myServerResponse;
-  }
-
-  _checkResponse(MyServerResponse response) {
-    switch (response.statusCode) {
-      case 200:
-        return;
-      case 403:
-        throw ForbiddenException(response.errorMessage);
-      case 405:
-        throw JsonEncodingException(response.errorMessage);
-      case 404:
-        throw NotFoundException(response.errorMessage);
-      default:
-        throw Exception(response.errorMessage);
+  void updateCookie(http.Response response) {
+    String rawCookie = response.headers['set-cookie'];
+    if (rawCookie != null) {
+      int index = rawCookie.indexOf(';');
+      _headers['cookie'] =
+          (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
   }
+
+  // MyServerResponse _checkHttpResponse(http.Response response) {
+  //   final myServerResponse = MyServerResponse(response);
+  //   _checkResponse(myServerResponse);
+
+  //   return myServerResponse;
+  // }
 
   MyServer({this.path});
 }

@@ -6,8 +6,6 @@ import 'dart:convert';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/user_app/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class ModelData {
   User user;
@@ -16,7 +14,7 @@ class ModelData {
 
   ModelData() {
     user = User();
-    server = UAppServer(path: "http://0.0.0.0:8000/");
+    server = UAppServer();
     queueHandler = QueueHandler(server: server);
   }
 }

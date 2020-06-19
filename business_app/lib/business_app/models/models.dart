@@ -177,7 +177,23 @@ class Queue extends ListenableList<QueueEntry> with Titled {
   }
 }
 
-class Queues extends ListenableList<Queue> {}
+class Queues extends ListenableList<Queue> {
+  static Queues fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
+    final queuesAsJson = map['queues'] as List;
+    List<Queue> listOfQueues = queuesAsJson.map((e) => Queue.fromJson(e)); 
+
+    final queues = Queues();
+    listOfQueues.forEach((element) {
+      queues.add(element);
+    });
+
+    return queues;
+  }
+
+  static Queues fromJson(String source) => fromMap(json.decode(source));
+}
 
 class User extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
