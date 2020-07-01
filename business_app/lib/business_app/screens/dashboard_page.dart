@@ -44,7 +44,7 @@ class DashboardPage extends StatelessWidget {
                           return QueueCell(
                             queue: q,
                             onDelete: () async {
-                              queues.remove(queue);
+                              qinfo.deleteQueue(element.id);
                               return Future.value(true);
                             },
 

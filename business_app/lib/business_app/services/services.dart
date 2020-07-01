@@ -27,6 +27,18 @@ class BusinessAppServer extends MyServer {
     return temp.body;
   }
 
+  Future<bool> deleteQueue(int id) async {
+    MyServerResponse temp = await post(
+      "api/v1/queue/delete",
+      body: <String, int>{
+        "qid": id,
+      }
+    );
+    if(temp["status_code"] == 200)
+      return true;
+    return false;
+  }
+
   BusinessAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);
 }
 

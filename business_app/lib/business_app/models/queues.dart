@@ -61,6 +61,14 @@ class AllQueuesInfo with ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteQueue(int qid) async {
+    bool done = await server.deleteQueue(qid);
+    if(done){
+      queues.remove(qid);
+      notifyListeners();
+    }
+  }
+
   void refresh() async {
     retrieveServer();
     notifyListeners();
