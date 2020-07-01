@@ -1,4 +1,5 @@
 import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/business_app/route_generator.dart';
 import 'package:business_app/business_app/screens/dashboard_page.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,8 @@ void main() {
     MultiProvider(
       providers: [
             ChangeNotifierProvider.value(value: mD.user),
-            ChangeNotifierProvider.value(value: mD.queues)
+            ChangeNotifierProvider.value(value: mD.queues),
+            ChangeNotifierProvider.value(value: mD.qinfo)
       ],
       child: MyApp()
     )

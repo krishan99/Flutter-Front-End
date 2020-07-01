@@ -1,3 +1,4 @@
+import 'package:business_app/business_app/models/queues.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,46 +9,60 @@ import 'package:business_app/theme/themes.dart';
 class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<Queues>(
-      builder: (context, queues, _) {
-        return SlideableList(
-          onPlusTap: (){
-            queues.add(Queue(name: "Ror", code: "542-34"));
-          },
+    return Consumer2<Queues, AllQueuesInfo>(
+      builder: (context, queues, qinfo, _) {
+        qinfo.retrieveServer();
+        return FutureBuilder(
+          future: qinfo.retrieveServer(),
+          builder: (context, snapshot){
+            if( snapshot.connectionState == ConnectionState.waiting){
+                return Text('Loading queues...');
+            }else{
+                if (snapshot.hasError)
+                  return Text('Error: ${snapshot.error}');
+                else
+                  return SlideableList(
+                    onPlusTap: (){
+                      queues.add(Queue(name: "Ror", code: "542-34"));
+                    },
 
-          header: SliverPersistentHeader(
-            pinned: true,
-            delegate: _SliverAppBarDelegate(
-              color: MyStyles.of(context).colors.background2,
-              minExtent: 50.0,
-              maxExtent: 125,
-            ),
-          ),
-          cells: queues.map((element) =>
-           ChangeNotifierProvider.value(
-             value: element,
-             child: Consumer<Queue>(
-               builder: (context, queue, _) {
-                 return QueueCell(
-                   queue: queue,
-                   onDelete: () async {
-                     queues.remove(queue);
-                     return Future.value(true);
-                   },
+                    header: SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _SliverAppBarDelegate(
+                        color: MyStyles.of(context).colors.background2,
+                        minExtent: 50.0,
+                        maxExtent: 125,
+                      ),
+                    ),
+                    cells: qinfo.body.map((element) =>
+                    ChangeNotifierProvider.value(
+                      value: element,
+                      child: Consumer<QueueInfo>(
+                        builder: (context, queue, _) {
+                          Queue q = Queue(name: element.name, id: element.id, code:element.code, description: element.description);
+                          return QueueCell(
+                            queue: q,
+                            onDelete: () async {
+                              queues.remove(queue);
+                              return Future.value(true);
+                            },
 
-                   onOpen: () async {
-                      Navigator.of(context).pushNamed("/queue", arguments: queue);
-                      return Future.value(false);
-                   },
+                            onOpen: () async {
+                                Navigator.of(context).pushNamed("/queue", arguments: q);
+                                return Future.value(false);
+                            },
 
-                   onTap: () {
-                      Navigator.of(context).pushNamed("/queue", arguments: queue);
-                   }
+                            onTap: () {
+                                Navigator.of(context).pushNamed("/queue", arguments: q);
+                            }
+                            );
+                        },
+                      )
+                    )
+                    ).toList(),
                   );
-               },
-             )
-           )
-          ).toList(),
+            }
+          }
         );
       },
     );

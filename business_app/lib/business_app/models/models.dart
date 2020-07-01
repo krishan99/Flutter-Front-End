@@ -6,6 +6,7 @@ import 'package:business_app/services/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:business_app/business_app/models/queues.dart';
 
 //When this file gets to big, split into multiple files.
 
@@ -19,11 +20,13 @@ class ModelData {
   User user;
   Queues queues;
   BusinessAppServer server;
+  AllQueuesInfo qinfo;
 
   ModelData() {
     this.server = BusinessAppServer();
     this.user = User(server: server);
     this.queues = Queues();
+    this.qinfo = AllQueuesInfo(server: server);
   }
 }
 
@@ -185,6 +188,7 @@ class User extends ChangeNotifier {
   final BusinessAppServer server;
 
   FirebaseUser _firebaseUser;
+  String email;
 
   bool get isLoggedIn {
     return _firebaseUser != null;
@@ -194,8 +198,10 @@ class User extends ChangeNotifier {
     return _firebaseUser.displayName;
   }
 
-  Future<MyServerResponse> notifyServerOfSignIn(String email) async {
-    return server.signIn(email);
+  Future<MyServerResponse> notifyServerOfSignIn(String email) async{
+    var k = await server.signIn(email);
+    notifyListeners();
+    return k;
   }
 
   Future<MyServerResponse> signInWithGoogle() async {
@@ -209,7 +215,7 @@ class User extends ChangeNotifier {
       );
 
       final result = await _auth.signInWithCredential(credential);
-
+      email = result.user.email;
       return notifyServerOfSignIn(result.user.email);
   }
 
@@ -259,10 +265,11 @@ class User extends ChangeNotifier {
   }
 
   User({@required this.server}) {
-    _auth.onAuthStateChanged.listen((fUser) {
+    _auth.onAuthStateChanged.listen((fUser) async {
       this._firebaseUser = fUser;
       print(
           "AUTH STATE CHANGED: ${this.isLoggedIn}");
+      var k = await server.signIn(email);
       this.notifyListeners();
     });
   }

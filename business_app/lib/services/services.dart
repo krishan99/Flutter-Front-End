@@ -31,6 +31,7 @@ class NotFoundException extends MyServerException {
 
 class MyServerResponse {
   Map<String, dynamic> body;
+  Map<String, dynamic> get data => body;
 
   int _statusCode;
   int get statusCode => _statusCode;
@@ -56,7 +57,7 @@ class MyServerResponse {
 class MyServer {
   final path;
 
-  static Map<String, String> _headers = const <String, String>{
+  static Map<String, String> _headers = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
   };
 
@@ -72,6 +73,7 @@ class MyServer {
       headers: _headers,
       body: jsonEncode(body)
     );
+    updateCookie(response);
 
     return _checkHttpResponse(response);
   }
@@ -82,6 +84,7 @@ class MyServer {
       url,
       headers: _headers,
     );
+    updateCookie(response);
 
     return _checkHttpResponse(response);
   }
@@ -91,6 +94,15 @@ class MyServer {
     _checkResponse(myServerResponse);
 
     return myServerResponse;
+  }
+
+  void updateCookie(http.Response response) {
+    String rawCookie = response.headers['set-cookie'];
+    if (rawCookie != null) {
+      int index = rawCookie.indexOf(';');
+      _headers['cookie'] =
+          (index == -1) ? rawCookie : rawCookie.substring(0, index);
+    }
   }
 
   _checkResponse(MyServerResponse response) {
