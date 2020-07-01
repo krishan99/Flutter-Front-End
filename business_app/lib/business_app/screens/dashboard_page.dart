@@ -23,7 +23,8 @@ class DashboardPage extends StatelessWidget {
                 else
                   return SlideableList(
                     onPlusTap: (){
-                      queues.add(Queue(name: "Ror", code: "542-34"));
+                      qinfo.makeQueue("Big big fish", "roar roar road");
+                      //queues.add(Queue(name: "Ror", code: "542-34"));
                     },
 
                     header: SliverPersistentHeader(

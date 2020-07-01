@@ -30,6 +30,7 @@ class AllQueuesInfo with ChangeNotifier {
 
   Future<bool> retrieveServer() async {
     var serverQueues = await server.getListofQueues();
+    // update info based on server
     for(var i=0; i<serverQueues.length; i++){
       int k = serverQueues[i]["qid"];
       if(!queues.containsKey(k)){
@@ -37,7 +38,27 @@ class AllQueuesInfo with ChangeNotifier {
       }
       queues[k].update(serverQueues[i]);
     }
+    // delete anything not on server anymore
+    var keys = queues.keys;
+    for(var k in keys){
+      bool there = false;
+      for(var j=0; j<serverQueues.length; j++){
+        if(serverQueues[j]["qid"]==k){
+          there=true;
+          break;
+        }
+      }
+      if(!there) queues.remove(k);
+    }
     return true;
+  }
+
+  void makeQueue(String name, String description) async {
+    Map<String, dynamic> n = await server.makeQueue(name, description);
+    int k = n["qid"];
+    queues[k] = new QueueInfo(id: k);
+    queues[k].update(n);
+    notifyListeners();
   }
 
   void refresh() async {

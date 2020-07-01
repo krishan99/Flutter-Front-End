@@ -110,10 +110,13 @@ class MyServer {
       case 200:
         return;
       case 403:
+        print(response.errorMessage);
         throw ForbiddenException(response.errorMessage);
       case 405:
+        print(response.errorMessage);
         throw JsonEncodingException(response.errorMessage);
       case 404:
+        print(response.errorMessage);
         throw NotFoundException(response.errorMessage);
       default:
         throw Exception(response.errorMessage);

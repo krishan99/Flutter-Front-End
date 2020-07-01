@@ -16,6 +16,17 @@ class BusinessAppServer extends MyServer {
     return temp.body["queues"];
   }
 
+  Future<Map<String, dynamic> > makeQueue(String name, String description) async {
+    MyServerResponse temp = await post(
+      "api/v1/queue/make",
+      body: <String, String>{
+        "qname": name,
+        "description": description,
+      }
+    );
+    return temp.body;
+  }
+
   BusinessAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);
 }
 
