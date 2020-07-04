@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:business_app/theme/themes.dart';
-import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/models/queues.dart';
 
 //When this file gets to big, split into multiple files.
 
@@ -259,7 +259,8 @@ class QueueCell extends SlideableListCell {
       subheading: (){
         switch (queue.state) {
           case QueueState.active:
-            final numInLine = queue.numWaiting;
+            //final numInLine = queue.numWaiting;
+            final numInLine = -1;
             switch (numInLine) {
               case 0:
                 return "Queue is Empty";
@@ -296,7 +297,7 @@ enum QueueEntryCellSize {
 }
 
 class QueueEntryCell extends SlideableListCell {
-  final QueueEntry queueEntry;
+  final QueuePerson queueEntry;
   final Future<bool> Function() onDelete;
   final Future<bool> Function() onNotify;
   
@@ -318,7 +319,7 @@ class QueueEntryCell extends SlideableListCell {
         onPrimarySwipe: onNotify,
         onSecondarySwipe: onDelete,
         title: queueEntry.name,
-        body: queueEntry.description ?? "",
+        body: queueEntry.note ?? "",
         relativeSize: (){
           switch (size) {
             case QueueEntryCellSize.small:

@@ -1,6 +1,6 @@
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/components/components.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ class QueuePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SlideableList(
       onPlusTap: (){
-        queue.add(QueueEntry(name: "John Doe"));
+        //queue.add(QueueEntry(name: "John Doe"));
       },
       header: SliverPersistentHeader(
         pinned: true,
@@ -28,32 +28,34 @@ class QueuePage extends StatelessWidget {
           maxExtent: 125,
         ),
       ),
-      cells: mapIndexed(queue, (index, e) {
-        final QueueEntry entry = e as QueueEntry;
-        return ChangeNotifierProvider.value(
-          value: entry,
-          child: Consumer<QueueEntry>(
-            builder: (context, entry, _) {
-              return QueueEntryCell(
-                queueEntry: entry,
-                size: (index < 3)
-                    ? QueueEntryCellSize.medium
-                    : QueueEntryCellSize.small,
-                
-                onDelete: () {
-                  queue.remove(entry);
-                  return Future.value(true);
-                },
-                
-                onNotify: () {
-                  entry.state = QueueEntryState.pendingNotification;
-                  return Future.value(false);
-                },
-              );
-            },
-          ),
-        );
-      }).toList()
+      cells: queue.people.body.asMap().map((index, element) =>
+        MapEntry(
+          index,
+          ChangeNotifierProvider.value(
+            value: element,
+            child: Consumer<QueuePerson>(
+              builder: (context, entry, _) {
+                return QueueEntryCell(
+                  queueEntry: entry,
+                  size: (index < 3)
+                      ? QueueEntryCellSize.medium
+                      : QueueEntryCellSize.small,
+                  
+                  onDelete: () {
+                    queue.people.remove(entry.id);
+                    return Future.value(true);
+                  },
+                  
+                  onNotify: () {
+                    entry.state = QueueEntryState.pendingNotification;
+                    return Future.value(false);
+                  },
+                );
+              },
+            ),
+          )
+        )
+      ).values.toList()
     );
   }
 }
@@ -102,9 +104,13 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                           SizedBox(
                             width: 7,
                           ),
-                          Text(
-                            queue.name,
-                            style: MyStyles.of(context).textThemes.h2,
+                          Consumer<Queue>(
+                            builder: (context, q, _){
+                              return Text(
+                                queue.name,
+                                style: MyStyles.of(context).textThemes.h2,
+                              );
+                            }
                           ),
                           Expanded(
                               child: Container(
@@ -115,21 +121,30 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                       Row(
                         children: [
                           SizedBox(width: 42),
-                          Text(
-                            "Code: ${queue.code}",
-                            style: MyStyles.of(context).textThemes.h4,
-                          )
+                          Consumer<Queue>(
+                            builder: (context, q, _){
+                              return  Text(
+                                "Code: ${queue.code}",
+                                style: MyStyles.of(context).textThemes.h4,
+                              );
+                            }
+                          ),
                         ],
                       ),
                     ],
                   ),
                   SizedBox(height: 7),
                   Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Waiting ${queue.numWaiting} | Notified ${queue.numNotified} | Completed ${queue.numCompleted}",
-                        style: MyStyles.of(context).textThemes.bodyText3,
-                      ))
+                    alignment: Alignment.center,
+                    child: Consumer<QueuePeople>(
+                      builder: (context, qpeople, _){
+                        return  Text(
+                          "Waiting ${qpeople.numWaiting} | Notified ${qpeople.numNotified} | Completed ${qpeople.numCompleted}",
+                          style: MyStyles.of(context).textThemes.bodyText3,
+                        );
+                      }
+                    ),
+                  )
                 ],
               ),
             ),

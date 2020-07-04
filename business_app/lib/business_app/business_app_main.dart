@@ -13,19 +13,19 @@ void main() {
   
   final mD = ModelData();
 
+/*
   mD.queues.add(
     Queue(
         name: "Outdoor Queue",
         state: QueueState.active,
         code: "54-24"
     )
-  );
+  );*/
 
   runApp(
     MultiProvider(
       providers: [
             ChangeNotifierProvider.value(value: mD.user),
-            ChangeNotifierProvider.value(value: mD.queues),
             ChangeNotifierProvider.value(value: mD.qinfo)
       ],
       child: MyApp()

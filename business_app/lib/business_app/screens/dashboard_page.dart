@@ -9,8 +9,8 @@ import 'package:business_app/theme/themes.dart';
 class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<Queues, AllQueuesInfo>(
-      builder: (context, queues, qinfo, _) {
+    return Consumer<AllQueuesInfo>(
+      builder: (context, qinfo, _) {
         qinfo.retrieveServer();
         return FutureBuilder(
           future: qinfo.retrieveServer(),
@@ -24,7 +24,6 @@ class DashboardPage extends StatelessWidget {
                   return SlideableList(
                     onPlusTap: (){
                       qinfo.makeQueue("Big big fish", "roar roar road");
-                      //queues.add(Queue(name: "Ror", code: "542-34"));
                     },
 
                     header: SliverPersistentHeader(
@@ -36,30 +35,29 @@ class DashboardPage extends StatelessWidget {
                       ),
                     ),
                     cells: qinfo.body.map((element) =>
-                    ChangeNotifierProvider.value(
-                      value: element,
-                      child: Consumer<QueueInfo>(
-                        builder: (context, queue, _) {
-                          Queue q = Queue(name: element.name, id: element.id, code:element.code, description: element.description);
-                          return QueueCell(
-                            queue: q,
-                            onDelete: () async {
-                              qinfo.deleteQueue(element.id);
-                              return Future.value(true);
-                            },
+                      ChangeNotifierProvider.value(
+                        value: element,
+                        child: Consumer<Queue>(
+                          builder: (context, queue, _) {
+                            return QueueCell(
+                              queue: queue,
+                              onDelete: () async {
+                                qinfo.deleteQueue(queue.id);
+                                return Future.value(true);
+                              },
 
-                            onOpen: () async {
-                                Navigator.of(context).pushNamed("/queue", arguments: q);
-                                return Future.value(false);
-                            },
+                              onOpen: () async {
+                                  Navigator.of(context).pushNamed("/queue", arguments: queue);
+                                  return Future.value(false);
+                              },
 
-                            onTap: () {
-                                Navigator.of(context).pushNamed("/queue", arguments: q);
-                            }
-                            );
-                        },
+                              onTap: () {
+                                  Navigator.of(context).pushNamed("/queue", arguments: queue);
+                              }
+                              );
+                          },
+                        )
                       )
-                    )
                     ).toList(),
                   );
             }

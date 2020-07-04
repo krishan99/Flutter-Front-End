@@ -1,4 +1,5 @@
 import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/business_app/screens/dashboard_page.dart';
 import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/business_app/screens/queue_page.dart';
@@ -30,13 +31,12 @@ class BAppRouteGenerator {
             final user = Provider.of<User>(context, listen: false);
             assert(user.isLoggedIn);
             Queue queue = args as Queue;
-            return ChangeNotifierProvider.value(
-              value: queue,
-              child: Consumer<Queue>(
-                builder: (context, queue, _) {
-                  return QueuePage(queue: queue,);
-                }
-              )
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider.value(value: queue),
+                ChangeNotifierProvider.value(value: queue.people)
+              ],
+              child: QueuePage(queue: queue,)
             );
           }
         );

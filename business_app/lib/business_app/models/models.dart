@@ -18,18 +18,18 @@ abstract class ComplexEnum<T> {
 
 class ModelData {
   User user;
-  Queues queues;
+  //Queues queues;
   BusinessAppServer server;
   AllQueuesInfo qinfo;
 
   ModelData() {
     this.server = BusinessAppServer();
     this.user = User(server: server);
-    this.queues = Queues();
+    //this.queues = Queues();
     this.qinfo = AllQueuesInfo(server: server);
   }
 }
-
+/*
 enum QueueEntryState {
   notified,
   pendingNotification,
@@ -181,7 +181,7 @@ class Queue extends ListenableList<QueueEntry> with Titled {
 }
 
 class Queues extends ListenableList<Queue> {}
-
+*/
 class User extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
