@@ -1,4 +1,6 @@
 import 'package:business_app/business_app/models/queues.dart';
+import 'package:business_app/business_app/screens/queue_settings_page.dart';
+import 'package:business_app/business_app/screens/queue_settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +25,13 @@ class DashboardPage extends StatelessWidget {
                 else
                   return SlideableList(
                     onPlusTap: (){
-                      qinfo.makeQueue("Big big fish", "roar roar road");
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => 
+                        queue_settings(
+                          qinfo)
+                        ),
+                      );
                     },
 
                     header: SliverPersistentHeader(

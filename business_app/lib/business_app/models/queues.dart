@@ -42,7 +42,7 @@ class QueuePerson with ChangeNotifier{
 class QueuePeople with ChangeNotifier{
   List<QueuePerson> theline = new List<QueuePerson>();
   List<QueuePerson> get body => theline;
-
+  int temp_index = 0;
   int get numWaiting {
     return _getNumOfState(QueueEntryState.waiting);
   }
@@ -81,6 +81,11 @@ class QueuePeople with ChangeNotifier{
       notifyListeners();
     }
   }
+
+  void add(String name) {
+    theline.add(QueuePerson(id: temp_index++, name: name));
+    notifyListeners();
+  }
 }
 
 enum QueueState {
@@ -111,7 +116,10 @@ class Queue with ChangeNotifier{
     _code = info["code"] ?? _code;
     notifyListeners();
   }
-
+  void add(String name){
+    people.add(name);
+    notifyListeners();
+  }
   Queue({@required this.id}){
     this._name = "New Queues";
     this._description = "Swipe from the left to delete this queue and swipe right to see more details.";

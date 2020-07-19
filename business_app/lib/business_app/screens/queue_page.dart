@@ -4,6 +4,7 @@ import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/components/components.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:provider/provider.dart';
+import 'package:business_app/business_app/screens/queue_add_page.dart';
 
 class QueuePage extends StatelessWidget {
   final Queue queue;
@@ -17,6 +18,13 @@ class QueuePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SlideableList(
       onPlusTap: (){
+        Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => 
+                        queue_add(
+                          queue)
+                        ),
+                      );
         //queue.add(QueueEntry(name: "John Doe"));
       },
       header: SliverPersistentHeader(
