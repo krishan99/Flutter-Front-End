@@ -118,16 +118,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Container(
-                            child: StyleTextField.type(
-                              type: StyleTextFieldType.email,
+                            child: StyleTextField.email(
                               onChanged: (string) {
                                 print("$string");
                               },
                             )
                         ),
                         Container(
-                            child: StyleTextField.type(
-                              type: StyleTextFieldType.password, 
+                            child: StyleTextField.password(
                               onChanged: (string) {
                                 print("$string");
                               },

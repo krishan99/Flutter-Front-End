@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/business_app/models/queues.dart';
+import 'package:path/path.dart';
 
 //When this file gets to big, split into multiple files.
 
@@ -89,33 +90,43 @@ class StyleTextField extends StatefulWidget {
   final StyleTextFieldStatus status;
   final Function(String) onChanged;
   final Function(String) onSubmitted;
-  final String Function(String) checkError;
+  final String Function(String) getErrorMessage;
   final String placeholderText;
   final TextInputType textInputType;
   final bool obscureText;
   final int maxLines;
   final TextEditingController controller;
 
-  factory StyleTextField.type({
-    @required StyleTextFieldType type,
+  factory StyleTextField.email({
     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
     Function(String) onChanged,
     Function(String) onSubmitted,
   }) {
-    switch (type) {
-      case StyleTextFieldType.email:
-        return StyleTextField(
-          icon: Icons.email,
-          textInputType: TextInputType.emailAddress,
-          status: status,
-          onChanged: onChanged,
-          onSubmitted: onSubmitted,
-          placeholderText: "Email...",
-          maxLines: 1,
-        );
+    return StyleTextField(
+      icon: Icons.email,
+      textInputType: TextInputType.emailAddress,
+      status: status,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      placeholderText: "Email...",
+      getErrorMessage: (text) {
+        bool isValidEmail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(text);
+        if (isValidEmail) {
+          return null;
+        } else {
+          return "Email is not valid";
+        }
+      },
+      maxLines: 1,
+    );
+  }
 
-      case StyleTextFieldType.password:
-        return StyleTextField(
+  factory StyleTextField.password({
+    StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
+    Function(String) onChanged,
+    Function(String) onSubmitted,
+  }) {
+    return StyleTextField(
           icon: Icons.panorama_fish_eye,
           textInputType: TextInputType.visiblePassword,
           obscureText: true,
@@ -123,7 +134,7 @@ class StyleTextField extends StatefulWidget {
           onChanged: onChanged,
           onSubmitted: onSubmitted,
           placeholderText: "Password...",
-          checkError: (text) {
+          getErrorMessage: (text) {
             if (text.length <= 5) {
               return "Password should contains more then 5 character";
             } else {
@@ -132,7 +143,6 @@ class StyleTextField extends StatefulWidget {
           },
           maxLines: 1,
         );
-    }
   }
 
   const StyleTextField(
@@ -141,7 +151,7 @@ class StyleTextField extends StatefulWidget {
       this.obscureText = false,
       this.textInputType,
       this.icon,
-      this.checkError,
+      this.getErrorMessage,
       this.status = StyleTextFieldStatus.neutral,
       this.onChanged,
       this.onSubmitted,
@@ -204,44 +214,76 @@ class _StyleTextFieldState extends State<StyleTextField> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Container(
-        alignment: textFieldFontAlignment,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: MyStyles.of(context).colors.background1,
-            border: Border.all(color: borderColor),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: Offset(0, 2))
-            ]),
-        padding: insets,
-        child: TextFormField(
-            controller: _controller,
-            keyboardType: widget.textInputType,
-            obscureText: widget.obscureText,
-            onChanged: widget.onChanged,
-            onFieldSubmitted: widget.onSubmitted,
-            maxLines: widget.maxLines,
-            cursorColor: Colors.blue,
-            style: MyStyles.of(context)
-                .textThemes
-                .placeholder
-                .copyWith(color: Colors.grey[900]),
-            textAlign: TextAlign.left,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-              prefixIcon: (widget.icon != null)
-                  ? Icon(widget.icon, color: iconColor)
-                  : null,
-              hintStyle: MyStyles.of(context).textThemes.placeholder,
-              border: InputBorder.none,
-              hintText: widget.placeholderText,
-              errorText: (widget.checkError != null)
-                  ? widget.checkError(_controller.text)
-                  : null,
-            )),
+      child: Column(
+        children: [
+          Container(
+            alignment: textFieldFontAlignment,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: MyStyles.of(context).colors.background1,
+                border: Border.all(color: borderColor),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 5,
+                      offset: Offset(0, 2))
+                ]),
+            padding: insets,
+            child: FormField<String>(
+              validator: widget.getErrorMessage,
+              initialValue: widget.placeholderText,
+              autovalidate: true,
+              builder: (FormFieldState<String> state) {
+                return Column(
+                  children: [
+                    TextFormField(
+                      controller: _controller,
+                      keyboardType: widget.textInputType,
+                      obscureText: widget.obscureText,
+                      onChanged: (text) {
+                        print(text);
+                        widget.onChanged(text);
+                        state.didChange(text);
+                      },
+                      onFieldSubmitted: widget.onSubmitted,
+                      maxLines: widget.maxLines,
+                      cursorColor: Colors.blue,
+                      style: MyStyles.of(context)
+                          .textThemes
+                          .placeholder
+                          .copyWith(color: Colors.grey[900]),
+                      textAlign: TextAlign.left,
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        prefixIcon: (widget.icon != null)
+                            ? Icon(widget.icon, color: iconColor)
+                            : null,
+                        hintStyle: MyStyles.of(context).textThemes.placeholder,
+                        border: InputBorder.none,
+                        hintText: widget.placeholderText,
+                      )
+                    ),
+
+                    if(state.hasError && _controller.text.isNotEmpty)
+                      Container(
+                        padding: EdgeInsets.only(top: 5),
+                        alignment: Alignment.center,
+                        child: Text(
+                          state.errorText,
+                          textAlign: TextAlign.center,
+                          style: MyStyles.of(context).textThemes.subtext
+                            .copyWith(
+                              color: Colors.red,
+                              fontSize: 12
+                            ),
+                        ),
+                      )
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
