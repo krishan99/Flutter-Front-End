@@ -266,7 +266,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
 
                     if(state.hasError && _controller.text.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.only(top: 5),
+                        padding: EdgeInsets.only(bottom: 5),
                         alignment: Alignment.center,
                         child: Text(
                           state.errorText,

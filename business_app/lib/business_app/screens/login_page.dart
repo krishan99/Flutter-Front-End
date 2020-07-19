@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 233,
                             height: 55,
                             child: Text(
-                              "Sign Up",
+                              "Continue",
                               style: MyStyles.of(context).textThemes.buttonActionText1,
                             ),
                             gradient: MyStyles.of(context).colors.accentGradient,
