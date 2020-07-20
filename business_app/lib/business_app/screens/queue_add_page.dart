@@ -10,18 +10,18 @@ import 'package:business_app/theme/themes.dart';
 class queue_add extends StatelessWidget {
   Queue queue;
   String name;
-
+  String phoneNumber;
  queue_add(Queue queue){
     this.queue = queue;
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Create Queue"),
-      ),
-      body: Center(
-        child: Container(
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Create Queue"),
+        ),
+        body: Center(
+          child: Container(
             color: MyStyles.of(context).colors.background1,
             constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             child: Column(
@@ -47,6 +47,17 @@ class queue_add extends StatelessWidget {
                               },
                             )
                         ),
+                         SizedBox(height: 12,),
+                         Flexible(
+                            flex: 1,
+                            child: StyleTextField(
+                              placeholderText: "Enter Phone Number",
+                              onChanged: (string){
+                                print("$string");
+                                phoneNumber = string;
+                              },
+                            )
+                        ),
                       ],
                     ),
                   ),
@@ -61,7 +72,7 @@ class queue_add extends StatelessWidget {
                       height: 55,
                       text: "Continue",
                       onPressed: () => {
-                        queue.add(name),
+                        queue.add(name, queue.id, phoneNumber),
                         Navigator.pop(context),
                       },
                     ),
@@ -70,7 +81,7 @@ class queue_add extends StatelessWidget {
               ],
             ),
           ),      
-      ),
-    );
+        ),
+      );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/models/queues.dart';
@@ -8,7 +9,6 @@ import 'package:business_app/business_app/screens/queue_add_page.dart';
 
 class QueuePage extends StatelessWidget {
   final Queue queue;
-
   const QueuePage({
     Key key,
     @required this.queue,

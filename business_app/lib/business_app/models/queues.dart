@@ -40,6 +40,8 @@ class QueuePerson with ChangeNotifier{
 }
 
 class QueuePeople with ChangeNotifier{
+  //final BusinessAppServer server;
+
   List<QueuePerson> theline = new List<QueuePerson>();
   List<QueuePerson> get body => theline;
   int temp_index = 0;
@@ -82,8 +84,10 @@ class QueuePeople with ChangeNotifier{
     }
   }
 
-  void add(String name) {
+  void add(String name, int id, String phone) {
+     BusinessAppServer server = BusinessAppServer();
     theline.add(QueuePerson(id: temp_index++, name: name));
+     server.addUserToQueue(id, name, phone);
     notifyListeners();
   }
 }
@@ -116,8 +120,8 @@ class Queue with ChangeNotifier{
     _code = info["code"] ?? _code;
     notifyListeners();
   }
-  void add(String name){
-    people.add(name);
+  void add(String name, int id, String phone){
+    people.add(name, id, phone);
     notifyListeners();
   }
   Queue({@required this.id}){

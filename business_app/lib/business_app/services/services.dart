@@ -39,6 +39,19 @@ class BusinessAppServer extends MyServer {
     return false;
   }
 
+  Future<bool> addUserToQueue(int qid, String name, String phoneNum) async {
+    MyServerResponse temp = await post(
+      "/api/v1/queue/user/postform",
+      body:{
+        "qid" : qid,
+        "name": name,
+        "phone" : phoneNum
+      }
+    );
+    if(temp["status_code"] == 200)
+      return true;
+    return false;
+  }
   BusinessAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);
 }
 
