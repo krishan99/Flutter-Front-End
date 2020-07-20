@@ -270,6 +270,7 @@ class User extends ChangeNotifier {
       print(
           "AUTH STATE CHANGED: ${this.isLoggedIn}");
       var k = await server.signIn(email);
+      await server.connectSocket();
       this.notifyListeners();
     });
   }

@@ -12,6 +12,7 @@ class DashboardPage extends StatelessWidget {
     return Consumer<AllQueuesInfo>(
       builder: (context, qinfo, _) {
         qinfo.retrieveServer();
+        qinfo.leaveRooms();
         return FutureBuilder(
           future: qinfo.retrieveServer(),
           builder: (context, snapshot){
@@ -42,7 +43,7 @@ class DashboardPage extends StatelessWidget {
                             return QueueCell(
                               queue: queue,
                               onDelete: () async {
-                                qinfo.deleteQueue(queue.id);
+                                await qinfo.deleteQueue(queue.id);
                                 return Future.value(true);
                               },
 

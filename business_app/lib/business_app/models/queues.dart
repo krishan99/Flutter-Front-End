@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/services/services.dart';
+import 'dart:async';
+import 'dart:collection';
 
+BusinessAppServer server = new BusinessAppServer();
 
 enum QueueEntryState {
   notified,
@@ -14,9 +17,12 @@ class QueuePerson with ChangeNotifier{
   int id;
   String _name;
   String _note;
+  String _phone;
+  String _time;
 
   String get name => _name;
   String get note => _note;
+  String get phone => _phone;
 
   QueueEntryState _state;
   QueueEntryState get state => _state;
@@ -25,7 +31,12 @@ class QueuePerson with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<bool> removeFromServer() async{}
+  void update(Map<String, dynamic> info){
+    _name = info["name"] ?? _name;
+    _note = info["note"] ?? _note;
+    _phone = info["phone"] ?? _phone;
+    _time = info["created"] ?? _time;
+  }
 
   QueuePerson({
     @required this.id,
@@ -36,12 +47,44 @@ class QueuePerson with ChangeNotifier{
     this._name = name;
     this._note = note;
     this._state = state;
+    this._phone = phone;
   }
 }
 
 class QueuePeople with ChangeNotifier{
-  List<QueuePerson> theline = new List<QueuePerson>();
-  List<QueuePerson> get body => theline;
+  final int id;
+  // this is an ordered map
+  var theline = new SplayTreeMap<int, QueuePerson>();
+  Iterable<QueuePerson> get body => theline.values;
+
+  void updateFromSever(List<dynamic> serverLine){
+    for(var i=0; i < serverLine.length; i++){
+      int k = serverLine[i]["id"];
+      if(!theline.containsKey(k)){
+        theline[k]=new QueuePerson(id: k);
+      }
+      theline[k].update(serverLine[i]);
+    }
+    // delete anything not on server anymore
+    var keys = theline.keys;
+    var toRemove = [];
+    for(var k in keys){
+      bool there = false;
+      for(var j=0; j<serverLine.length; j++){
+        if(serverLine[j]["id"]==k){
+          there=true;
+          break;
+        }
+      }
+      if(!there) toRemove.add(k);
+    }
+
+    toRemove.forEach((k) {theline.remove(k);});
+  }
+
+  void start() {
+    BusinessAppServer.joinRoom(id);
+  }
 
   int get numWaiting {
     return _getNumOfState(QueueEntryState.waiting);
@@ -56,30 +99,32 @@ class QueuePeople with ChangeNotifier{
   }
 
   int _getNumOfStates(List<QueueEntryState> states) {
-    return theline.where((element) => states.contains(element.state)).length;
+    return theline.keys.where((k) => states.contains(theline[k].state)).length;
   }
 
   int _getNumOfState(QueueEntryState state) {
     return _getNumOfStates([state]);
   }
 
-  void remove(int id) async{
-    int index = -1;
-    for(int i=0; i<theline.length; i++){
-      if(theline[i].id == id){
-        index = i;
-        break;
-      }
-    }
-    if(index == -1){
+  void remove(int person_id) async{
+    if(!theline.containsKey(person_id)){
       print("Invalid id to remove");
       return;
     }
-    bool done =  await theline[index].removeFromServer();
+
+    bool done =  await server.deletePerson(id, person_id);
     if(done){
-      theline.removeAt(index);
+      theline.remove(id);
       notifyListeners();
     }
+  }
+
+  QueuePeople({@required this.id}){
+    print("update $id");
+    BusinessAppServer.socket.on("update $id", (data) {
+        updateFromSever(data["line"]);
+        notifyListeners();
+    });
   }
 }
 
@@ -117,7 +162,7 @@ class Queue with ChangeNotifier{
     this._description = "Swipe from the left to delete this queue and swipe right to see more details.";
     this._state = QueueState.inactive;
     this._code = "...";
-    this._people = new QueuePeople();
+    this._people = new QueuePeople(id: this.id);
   }
 }
 
@@ -149,6 +194,12 @@ class AllQueuesInfo with ChangeNotifier {
       if(!there) queues.remove(k);
     }
     return true;
+  }
+
+  // currently doesn't really do anything
+  // meant to be called whenever dashboard shown
+  void leaveRooms() async {
+    BusinessAppServer.leaveRoom();
   }
 
   void makeQueue(String name, String description) async {

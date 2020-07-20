@@ -15,47 +15,51 @@ class QueuePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SlideableList(
-      onPlusTap: (){
-        //queue.add(QueueEntry(name: "John Doe"));
-      },
-      header: SliverPersistentHeader(
-        pinned: true,
-        delegate: _SliverAppBarDelegate(
-          color: MyStyles.of(context).colors.background2,
-          queue: queue,
-          minExtent: 100.0,
-          maxExtent: 125,
-        ),
-      ),
-      cells: queue.people.body.asMap().map((index, element) =>
-        MapEntry(
-          index,
-          ChangeNotifierProvider.value(
-            value: element,
-            child: Consumer<QueuePerson>(
-              builder: (context, entry, _) {
-                return QueueEntryCell(
-                  queueEntry: entry,
-                  size: (index < 3)
-                      ? QueueEntryCellSize.medium
-                      : QueueEntryCellSize.small,
-                  
-                  onDelete: () {
-                    queue.people.remove(entry.id);
-                    return Future.value(true);
-                  },
-                  
-                  onNotify: () {
-                    entry.state = QueueEntryState.pendingNotification;
-                    return Future.value(false);
-                  },
-                );
-              },
+    return Consumer<QueuePeople>(
+        builder: (context, qpeople, _) {
+          qpeople.start();
+          return SlideableList(
+            onPlusTap: (){
+              //queue.add(QueueEntry(name: "John Doe"));
+            },
+            header: SliverPersistentHeader(
+              pinned: true,
+              delegate: _SliverAppBarDelegate(
+                color: MyStyles.of(context).colors.background2,
+                queue: queue,
+                minExtent: 100.0,
+                maxExtent: 125,
+              ),
             ),
-          )
-        )
-      ).values.toList()
+            cells: qpeople.body.map((element) =>
+              ChangeNotifierProvider.value(
+                  value: element,
+                  child: Consumer<QueuePerson>(
+                    builder: (context, entry, _) {
+                      // Todo, index?
+                      var index = 10;
+                      return QueueEntryCell(
+                        queueEntry: entry,
+                        size: (index < 3)
+                            ? QueueEntryCellSize.medium
+                            : QueueEntryCellSize.small,
+                        
+                        onDelete: () {
+                          queue.people.remove(entry.id);
+                          return Future.value(true);
+                        },
+                        
+                        onNotify: () {
+                          entry.state = QueueEntryState.pendingNotification;
+                          return Future.value(false);
+                        },
+                      );
+                    },
+                  ),
+                )
+            ).toList()
+          );
+        },
     );
   }
 }

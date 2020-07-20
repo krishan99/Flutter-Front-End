@@ -60,6 +60,7 @@ class MyServer {
   static Map<String, String> _headers = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
   };
+  static Map<String, String> get headers => _headers;
 
   String _getURL({@required String route}) {
     return "$path$route";
