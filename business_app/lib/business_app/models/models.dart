@@ -198,7 +198,7 @@ class User extends ChangeNotifier {
     return _firebaseUser.displayName;
   }
 
-  notifyServerOfSignIn(String email) async {
+  Future<void> notifyServerOfSignIn(String email) async {
     try {
       await server.signIn(email);
       await server.connectSocket();
@@ -207,7 +207,7 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
-  signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
       final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
@@ -222,7 +222,7 @@ class User extends ChangeNotifier {
       return notifyServerOfSignIn(result.user.email);
   }
 
-  signUp({String name, @required String email, @required String password}) async {
+  Future<void> signUp({String name, @required String email, @required String password}) async {
     AuthResult result;
 
     try {
@@ -256,7 +256,7 @@ class User extends ChangeNotifier {
       }
   }
 
-  signIn(String email, String password) async {
+  Future<void> signIn(String email, String password) async {
     AuthResult result;
 
     try {
@@ -270,11 +270,11 @@ class User extends ChangeNotifier {
     return notifyServerOfSignIn(result.user.email);
   }
 
-  signInSilently() async {
+  Future<void> signInSilently() async {
       await googleSignIn.signInSilently(suppressErrors: true);
   }
 
-  signOut() async {
+  Future<void> signOut() async {
     await _auth.signOut();
     //TODO: Sign out from server? Idk if this is needed.
   }

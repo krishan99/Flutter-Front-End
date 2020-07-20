@@ -75,7 +75,7 @@ class NotFoundException extends MyServerException {
 
 class MyServer {
   final path;
-  static const Duration timeout = Duration(seconds: 1);
+  static const Duration timeout = Duration(seconds: Foundation.kDebugMode ? 1 : 10);
 
   static Map<String, String> _headers = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

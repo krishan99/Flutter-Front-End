@@ -30,7 +30,7 @@ class BusinessAppServer extends MyServer {
   }
 
   //TODO: Use firebase Token ID instead.
-  signIn(String email) async {
+  Future<void> signIn(String email) async {
     await post(
       "api/v1/test",
       body: <String, String>{
@@ -55,7 +55,7 @@ class BusinessAppServer extends MyServer {
     );
   }
 
-  deleteQueue(int id) async {
+  Future<void> deleteQueue(int id) async {
     await post(
       "api/v1/queue/delete",
       body: <String, int>{
@@ -64,17 +64,14 @@ class BusinessAppServer extends MyServer {
     );
   }
 
-  Future<bool> deletePerson(int id, int person_id) async{
-    MyServerResponse temp = await post(
+  Future<void> deletePerson(int id, int person_id) async{
+    await post(
       "api/v1/queue/manage/pop",
       body: <String, int>{
         "qid": id,
         "id": person_id,
       }
     );
-    if(temp["status_code"] == 200)
-      return true;
-    return false;
   }
 
   BusinessAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);

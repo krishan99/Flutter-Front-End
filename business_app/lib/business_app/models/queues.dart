@@ -107,17 +107,15 @@ class QueuePeople with ChangeNotifier{
     return _getNumOfStates([state]);
   }
 
-  void remove(int person_id) async{
-    if(!theline.containsKey(person_id)){
+  void remove(int personId) async{
+    if(!theline.containsKey(personId)){
       print("Invalid id to remove");
       return;
     }
 
-    bool done =  await server.deletePerson(id, person_id);
-    if(done){
-      theline.remove(id);
-      notifyListeners();
-    }
+    await server.deletePerson(id, personId);
+    theline.remove(id);
+    notifyListeners();
   }
 
   QueuePeople({@required this.id}){
@@ -172,7 +170,7 @@ class AllQueuesInfo with ChangeNotifier {
   var queues = new Map<int, Queue>();
   Iterable<Queue> get body => queues.values;
 
-  retrieveServer() async {
+  Future<void> retrieveServer() async {
     var serverQueues = await server.getListofQueues();
     // update info based on server
     for(var i=0; i<serverQueues.length; i++){
@@ -198,11 +196,11 @@ class AllQueuesInfo with ChangeNotifier {
 
   // currently doesn't really do anything
   // meant to be called whenever dashboard shown
-  void leaveRooms() async {
+  Future<void> leaveRooms() async {
     BusinessAppServer.leaveRoom();
   }
 
-  void makeQueue(String name, String description) async {
+  Future<void> makeQueue(String name, String description) async {
     Map<String, dynamic> n = await server.makeQueue(name, description);
     int k = n["qid"];
     queues[k] = new Queue(id: k);
@@ -210,15 +208,11 @@ class AllQueuesInfo with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteQueue(int qid) async {
-    bool done = await server.deleteQueue(qid);
-    if(done){
-      queues.remove(qid);
-      notifyListeners();
-    }
+  Future<void> deleteQueue(int qid) async {
+    await server.deleteQueue(qid);
   }
 
-  refresh() async {
+  Future<void> refresh() async {
     retrieveServer();
     notifyListeners();
   }

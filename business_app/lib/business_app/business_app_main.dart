@@ -31,7 +31,7 @@ void main() {
       child: MyApp()
     )
   );
-      
+
 }
 
 class MyApp extends StatelessWidget {

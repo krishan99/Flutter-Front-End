@@ -253,7 +253,7 @@ class StyleTextField extends StatelessWidget {
                       )
                     ),
 
-                    if(state.hasError && controller.text.isNotEmpty)
+                    if(state.errorText != null && controller.text.isNotEmpty)
                       Container(
                         padding: EdgeInsets.only(bottom: 5),
                         alignment: Alignment.center,
@@ -588,4 +588,3 @@ class _SlideableListState extends State<SlideableList> {
     );
   }
 }
-

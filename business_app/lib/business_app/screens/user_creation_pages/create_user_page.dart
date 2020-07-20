@@ -11,7 +11,7 @@ import 'package:business_app/utils.dart';
 
 class CreateUserPage extends StatefulWidget {
   final double height;
-  final Future<String> Function() onContinue;
+  final Future<void> Function() onContinue;
   Widget customUserForm;
 
   CreateUserPage({

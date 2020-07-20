@@ -16,7 +16,6 @@ class DashboardPage extends StatelessWidget {
         //qinfo.retrieveServer();
         qinfo.leaveRooms();
         return FutureBuilder(
-          initialData: "loading queues...",
           future: qinfo.retrieveServer(),
           builder: (context, snapshot){
             switch (snapshot.connectionState) {
@@ -31,7 +30,7 @@ class DashboardPage extends StatelessWidget {
                     onPlusTap: () async {
                       try {
                         await qinfo.makeQueue("Big big fish", "roar roar road");
-                      } catch (error){};
+                      } catch (error){}
                     },
 
                     header: SliverPersistentHeader(
