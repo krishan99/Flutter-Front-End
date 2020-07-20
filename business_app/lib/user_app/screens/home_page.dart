@@ -33,17 +33,6 @@ class _HomePageState extends State<HomePage> {
     _queueHandler = Provider.of<QueueHandler>(context);
   }
 
-  navigateToQueuePage(Status responseStatus) {
-    switch (responseStatus) {
-      case Status.COMPLETED:
-        Navigator.of(context).pushNamed("/join_queue");
-        break;
-      case Status.ERROR:
-      case Status.LOADING:
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return TappableGradientScaffold(
@@ -112,12 +101,19 @@ class _HomePageState extends State<HomePage> {
                         style:
                             MyStyles.of(context).textThemes.buttonActionText2),
                         onPressed: () async {
-                          final reqs = await _queueHandler.updateQueueReqs(
+                          final apiResponse = await _queueHandler.updateQueueReqs(
                             code: _code
                           );
                           // code: _textFieldController.value.text);
                       return () {
-                        navigateToQueuePage(reqs.status);
+                          switch (apiResponse.status) {
+                            case Status.COMPLETED:
+                              Navigator.of(context).pushNamed("/join_queue", arguments: apiResponse.data);
+                              break;
+                            case Status.ERROR:
+                            case Status.LOADING:
+                              break;
+                          }
                       };
                     },
                   ),

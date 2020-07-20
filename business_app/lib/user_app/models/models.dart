@@ -36,7 +36,7 @@ class QueueHandler {
   Future<ApiResponse<QueueReqs>> updateQueueReqs({@required String code}) async {
     ApiResponse<QueueReqs> reqsResponse;
     try {
-      QueueReqs reqs = await server.getQueueInfo(code: code);
+      QueueReqs reqs = await server.getQueueReqs(code: code);
       reqsResponse = ApiResponse.completed(reqs);
     } catch (e) {
       reqsResponse = ApiResponse.error(e.toString());

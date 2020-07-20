@@ -1,5 +1,6 @@
-import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/models/user.dart';
 import 'package:business_app/business_app/screens/home_page.dart';
+import 'package:business_app/user_app/models/models.dart';
 import 'package:business_app/user_app/screens/join_queue_page.dart';
 import 'package:business_app/user_app/screens/thankyou_page.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +19,11 @@ class UAppRouteGenerator {
         );
       
       case '/join_queue':
+        QueueReqs reqs = args as QueueReqs;
+
         return MaterialPageRoute(
           builder: (context) {
-            return JoinQueuePage();
+            return JoinQueuePage(reqs: reqs,);
           }
         );
 

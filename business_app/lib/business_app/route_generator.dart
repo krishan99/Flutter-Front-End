@@ -1,4 +1,4 @@
-import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/models/user.dart';
 import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/business_app/screens/dashboard_page.dart';
 import 'package:business_app/business_app/screens/home_page.dart';

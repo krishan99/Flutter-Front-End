@@ -1,4 +1,4 @@
-import 'package:business_app/business_app/models/models.dart';
+import 'package:business_app/business_app/models/user.dart';
 import 'package:business_app/business_app/screens/user_creation_pages/create_user_page.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';

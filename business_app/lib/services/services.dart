@@ -36,42 +36,9 @@ class NotFoundException extends MyServerException {
   NotFoundException(String cause) : super(cause);
 }
 
-// class MyServerResponse {
-//   Map<String, dynamic> body;
-//   Map<String, dynamic> get data => body;
-
-//   String get message {
-//     if (body.containsKey("message")) {
-//       return body["message"] as String;
-//     } else {
-//       return null;
-//     }
-//   }
-
-//   dynamic operator [](String key) {
-//     return body[key];
-//   }
-
-//   MyServerResponse(http.Response r) {
-//     this.body = jsonDecode(r.body);
-
-//     switch (r.statusCode) {
-//       case 200:
-//         return;
-//       case 403:
-//         print(this.message);
-//         throw ForbiddenException(this.message);
-//       case 405:
-//         print(this.message);
-//         throw JsonEncodingException(this.message);
-//       case 404:
-//         print(this.message);
-//         throw NotFoundException(this.message);
-//       default:
-//         throw Exception(this.message);
-//     }
-//   }
-// }
+class ServerException extends MyServerException {
+  ServerException(String cause) : super(cause);
+}
 
 class MyServer {
   final path;
@@ -93,7 +60,7 @@ class MyServer {
       url,
       headers: _headers,
       body: jsonEncode(body)
-    );
+    ).timeout(timeout);
 
     updateCookie(response);
 
@@ -113,6 +80,10 @@ class MyServer {
   }
 
   Map<String, dynamic> getMap(http.Response r) {
+    if (r.statusCode == 500) {
+      throw ServerException("Server Error");
+    }
+    
     final body = jsonDecode(r.body);
 
     if (r.statusCode == 200) {
@@ -152,6 +123,14 @@ class ApiResponse<T> {
   Status status;
   T data;
   String message;
+
+  bool get isError {
+    return status == Status.ERROR;
+  }
+
+  bool get isSuccess {
+    return status == Status.COMPLETED;
+  }
   
   ApiResponse.loading(this.message) : status = Status.LOADING;
   ApiResponse.completed(this.data) : status = Status.COMPLETED;

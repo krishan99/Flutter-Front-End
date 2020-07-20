@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/business_app/models/queues.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 
 //When this file gets to big, split into multiple files.
@@ -94,6 +95,7 @@ class StyleTextField extends StatelessWidget {
   final String Function(String) getErrorMessage;
   final String placeholderText;
   final TextInputType textInputType;
+  final List<TextInputFormatter> inputFormatters;
   final bool obscureText;
   final int maxLines;
   final TextEditingController controller;
@@ -107,6 +109,7 @@ class StyleTextField extends StatelessWidget {
     this.getErrorMessage,
     this.status = StyleTextFieldStatus.neutral,
     this.onChanged,
+    this.inputFormatters,
     this.onSubmitted,
     @required this.placeholderText,
     this.maxLines = 1}
@@ -162,6 +165,27 @@ class StyleTextField extends StatelessWidget {
           return null;
         }
       },
+      maxLines: 1,
+    );
+  }
+
+  factory StyleTextField.phoneNumber({
+    TextEditingController controller,
+    String paceholderText,
+    StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
+    Function(String) onChanged,
+    Function(String) onSubmitted,
+  }) {
+    return StyleTextField(
+      controller: controller,
+      textInputType: TextInputType.phone,
+      inputFormatters: <TextInputFormatter>[
+        WhitelistingTextInputFormatter.digitsOnly
+      ],
+      status: status,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      placeholderText: "Phone Number...",
       maxLines: 1,
     );
   }
@@ -230,6 +254,7 @@ class StyleTextField extends StatelessWidget {
                       controller: controller,
                       keyboardType: textInputType,
                       obscureText: obscureText,
+                      inputFormatters: inputFormatters,
                       onChanged: (text) {
                         print(text);
                         onChanged(text);

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class UAppServer extends MyServer {
   //TODO: Use firebase Token ID instead.
   
-  Future<QueueReqs> getQueueInfo({@required String code}) async {
+  Future<QueueReqs> getQueueReqs({@required String code}) async {
     final response = await post(
       "api/v1/queue/user/getform",
       body: <String, String> {
@@ -19,8 +19,8 @@ class UAppServer extends MyServer {
     // return QueueReqs(code: "43-4", qid: 1, needsName: true, needsPhoneNumber: true);
   }
 
-  addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
-    post(
+  Future<void> addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
+    await post(
       "/api/v1/queue/user/postform",
       body: <String, String> {
         "qid": qid.toString(),
