@@ -193,11 +193,6 @@ class AllQueuesInfo with ChangeNotifier {
       }
       if(!there) toRemove.add(k);
     }
-<<<<<<< HEAD
-    toRemove.forEach((k) {queues.remove(k);});
-    return true;
-=======
->>>>>>> a21c97101397eecb8e9a7d9aecdb2dcf80e3a755
   }
 
   // currently doesn't really do anything
@@ -206,27 +201,12 @@ class AllQueuesInfo with ChangeNotifier {
     BusinessAppServer.leaveRoom();
   }
 
-<<<<<<< HEAD
-  Future<bool> makeQueue(String name, String description) async {
-    try{
-      Map<String, dynamic> n = await server.makeQueue(name, description);
-      int k = n["qid"];
-      queues[k] = new Queue(id: k);
-      queues[k].update(n);
-      notifyListeners();
-      return true;
-    } catch(e) {
-      print('exception caught while making queue: $e');
-      return false;
-    }
-=======
   Future<void> makeQueue(String name, String description) async {
     Map<String, dynamic> n = await server.makeQueue(name, description);
     int k = n["qid"];
     queues[k] = new Queue(id: k);
     queues[k].update(n);
     notifyListeners();
->>>>>>> a21c97101397eecb8e9a7d9aecdb2dcf80e3a755
   }
 
   Future<void> deleteQueue(int qid) async {

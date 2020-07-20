@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:business_app/business_app/models/models.dart';
-import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/business_app/screens/user_creation_pages/user_creation_components.dart';
 import 'package:business_app/components/components.dart';
 import 'package:business_app/services/services.dart';
@@ -14,6 +13,7 @@ class CreateUserPage extends StatefulWidget {
   final String title;
   final String subtext;
   final String buttonText;
+  final String googleSignInText;
   final Future<void> Function() onContinue;
   Widget customUserForm;
 
@@ -23,6 +23,7 @@ class CreateUserPage extends StatefulWidget {
     @required this.title,
     this.subtext = "Happy customers are the best advertising money can buy.",
     this.buttonText = "Continue",
+    this.googleSignInText = "Sign In With Google",
     this.onContinue,
     this.customUserForm,
   }) : super(key: key);
@@ -90,10 +91,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                   child: Consumer<User>(
                     builder: (context, user, _) {
                       return GoogleSignInButton(
+                        text: widget.googleSignInText,
                         onPressed: () {
                           user.signInWithGoogle().catchError((error) {
                             showErrorDialog(context,
-                                title: "Sign In Error", body: error.toString());
+                                title: "Google Error", body: error.toString());
                           });
                         },
                       );

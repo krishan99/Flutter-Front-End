@@ -24,6 +24,7 @@ class SignUpPage extends StatelessWidget implements EntranceScreen {
         return CreateUserPage(
           height: height,
           title: "Sign Up",
+          googleSignInText: "Sign Up With Google",
           onContinue: () async {
             if (passwordController.text != checkPasswordController.text) {
               throw CustomException("passwords do not match");
@@ -45,7 +46,7 @@ class SignUpPage extends StatelessWidget implements EntranceScreen {
               SizedBox(height: 10,),
               StyleTextField.password(
                 controller: checkPasswordController,
-                paceholderText: "retype password...",
+                paceholderText: "Retype Password...",
               ),
             ]
           )

@@ -2,10 +2,12 @@ import 'package:business_app/theme/themes.dart';
 import 'package:flutter/material.dart';
 
 class GoogleSignInButton extends StatelessWidget {
+  final String text;
   final Function onPressed;
   
   const GoogleSignInButton({
     Key key,
+    this.text = "Sign in with Google",
     this.onPressed,
   }) : super(key: key);
 
@@ -30,7 +32,7 @@ class GoogleSignInButton extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Text(
-                  'Sign in with Google',
+                  this.text,
                   style: MyStyles.of(context)
                       .textThemes
                       .h4

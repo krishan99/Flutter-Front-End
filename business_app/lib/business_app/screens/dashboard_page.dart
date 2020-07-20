@@ -29,16 +29,12 @@ class DashboardPage extends StatelessWidget {
                   return Text('Error: ${snapshot.error}');
                 else
                   return SlideableList(
-<<<<<<< HEAD
                     onPlusTap: () async{
-                      bool success = await qinfo.makeQueue("Big big fish", "roar roar road");
-                      if(!success) Toast.show("Error making queue", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
-=======
-                    onPlusTap: () async {
                       try {
                         await qinfo.makeQueue("Big big fish", "roar roar road");
-                      } catch (error){}
->>>>>>> a21c97101397eecb8e9a7d9aecdb2dcf80e3a755
+                      } catch (error) {
+                        Toast.show(error.toString(), context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                      }
                     },
 
                     header: SliverPersistentHeader(
