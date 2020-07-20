@@ -31,7 +31,7 @@ void main() {
       child: MyApp()
     )
   );
-      
+
 }
 
 class MyApp extends StatelessWidget {
@@ -46,15 +46,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'EndLine',
         onGenerateRoute: BAppRouteGenerator.generateRoute,
-        home: Consumer<User>(
-          builder: (context, user, _) {
-            if (user.isLoggedIn) {
-              return DashboardPage();
-            } else {
-              return HomePage();
-            }
-          },
-        )
+        initialRoute: "/",
     );
   }
 }

@@ -33,17 +33,31 @@ class TappableGradientScaffold extends StatelessWidget {
   }
 }
 
-class LoadingButton extends StatelessWidget {
+class LB extends ActionButton {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
 
+    return super.build(context);
+  }
+}
+
+class LoadingButton extends StatelessWidget {
+  final double height;
+  final double width;
+  final Gradient gradient;
   final Color color;
   final Widget defaultWidget;
   final Function onPressed;
 
-  const LoadingButton({Key key, this.color, this.defaultWidget, this.onPressed}) : super(key: key); 
+  const LoadingButton({Key key, this.height, this.width, this.gradient, this.color, this.defaultWidget, this.onPressed}) : super(key: key); 
 
   @override
   Widget build(BuildContext context) {
     return ActionButton(
+      width: width,
+      height: height, 
+      gradient: gradient,
       color: color ?? Colors.grey[900],
       child: Container(
         child: ProgressButton(

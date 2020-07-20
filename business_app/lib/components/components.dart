@@ -1,3 +1,4 @@
+import 'package:business_app/user_app/components/components.dart';
 import 'package:flutter/material.dart';
 
 import 'package:business_app/theme/themes.dart';
@@ -85,7 +86,7 @@ enum StyleTextFieldType { email, password }
 
 enum StyleTextFieldStatus { neutral, error }
 
-class StyleTextField extends StatefulWidget {
+class StyleTextField extends StatelessWidget {
   final IconData icon;
   final StyleTextFieldStatus status;
   final Function(String) onChanged;
@@ -97,12 +98,29 @@ class StyleTextField extends StatefulWidget {
   final int maxLines;
   final TextEditingController controller;
 
+  StyleTextField(
+    {Key key,
+    this.controller,
+    this.obscureText = false,
+    this.textInputType,
+    this.icon,
+    this.getErrorMessage,
+    this.status = StyleTextFieldStatus.neutral,
+    this.onChanged,
+    this.onSubmitted,
+    @required this.placeholderText,
+    this.maxLines = 1}
+  ) : super(key: key);
+
+
   factory StyleTextField.email({
+    TextEditingController controller,
     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
     Function(String) onChanged,
     Function(String) onSubmitted,
   }) {
     return StyleTextField(
+      controller: controller,
       icon: Icons.email,
       textInputType: TextInputType.emailAddress,
       status: status,
@@ -122,52 +140,34 @@ class StyleTextField extends StatefulWidget {
   }
 
   factory StyleTextField.password({
+    TextEditingController controller,
+    String paceholderText,
     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
     Function(String) onChanged,
     Function(String) onSubmitted,
   }) {
     return StyleTextField(
-          icon: Icons.panorama_fish_eye,
-          textInputType: TextInputType.visiblePassword,
-          obscureText: true,
-          status: status,
-          onChanged: onChanged,
-          onSubmitted: onSubmitted,
-          placeholderText: "Password...",
-          getErrorMessage: (text) {
-            if (text.length <= 5) {
-              return "Password should contains more then 5 character";
-            } else {
-              return null;
-            }
-          },
-          maxLines: 1,
-        );
+      controller: controller,
+      icon: Icons.panorama_fish_eye,
+      textInputType: TextInputType.visiblePassword,
+      obscureText: true,
+      status: status,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      placeholderText: paceholderText ?? "Password...",
+      getErrorMessage: (text) {
+        if (text.length <= 5) {
+          return "Password should contains more then 5 character";
+        } else {
+          return null;
+        }
+      },
+      maxLines: 1,
+    );
   }
 
-  const StyleTextField(
-      {Key key,
-      this.controller,
-      this.obscureText = false,
-      this.textInputType,
-      this.icon,
-      this.getErrorMessage,
-      this.status = StyleTextFieldStatus.neutral,
-      this.onChanged,
-      this.onSubmitted,
-      @required this.placeholderText,
-      this.maxLines = 1})
-      : super(key: key);
-
-  @override
-  _StyleTextFieldState createState() => _StyleTextFieldState();
-}
-
-class _StyleTextFieldState extends State<StyleTextField> {
-  TextEditingController _controller;
-
   Color get borderColor {
-    switch (widget.status) {
+    switch (status) {
       case StyleTextFieldStatus.neutral:
         return Colors.transparent;
       case StyleTextFieldStatus.error:
@@ -176,7 +176,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
   }
 
   Color get iconColor {
-    switch (widget.status) {
+    switch (status) {
       case StyleTextFieldStatus.neutral:
         return null;
       case StyleTextFieldStatus.error:
@@ -185,7 +185,7 @@ class _StyleTextFieldState extends State<StyleTextField> {
   }
 
   Alignment get textFieldFontAlignment {
-    if (widget.maxLines != null && widget.maxLines <= 1) {
+    if (maxLines != null && maxLines <= 1) {
       return Alignment.center;
     } else {
       return Alignment.topLeft;
@@ -193,21 +193,11 @@ class _StyleTextFieldState extends State<StyleTextField> {
   }
 
   EdgeInsets get insets {
-    if (widget.icon == null) {
+    if (icon == null) {
       return EdgeInsets.only(left: 10);
     } else {
       return null;
     }
-  }
-
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -230,23 +220,23 @@ class _StyleTextFieldState extends State<StyleTextField> {
                 ]),
             padding: insets,
             child: FormField<String>(
-              validator: widget.getErrorMessage,
-              initialValue: widget.placeholderText,
+              validator: getErrorMessage,
+              initialValue: placeholderText,
               autovalidate: true,
               builder: (FormFieldState<String> state) {
                 return Column(
                   children: [
                     TextFormField(
-                      controller: _controller,
-                      keyboardType: widget.textInputType,
-                      obscureText: widget.obscureText,
+                      controller: controller,
+                      keyboardType: textInputType,
+                      obscureText: obscureText,
                       onChanged: (text) {
                         print(text);
-                        widget.onChanged(text);
+                        onChanged(text);
                         state.didChange(text);
                       },
-                      onFieldSubmitted: widget.onSubmitted,
-                      maxLines: widget.maxLines,
+                      onFieldSubmitted: onSubmitted,
+                      maxLines: maxLines,
                       cursorColor: Colors.blue,
                       style: MyStyles.of(context)
                           .textThemes
@@ -255,27 +245,23 @@ class _StyleTextFieldState extends State<StyleTextField> {
                       textAlign: TextAlign.left,
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
-                        prefixIcon: (widget.icon != null)
-                            ? Icon(widget.icon, color: iconColor)
+                        prefixIcon: (icon != null)
+                            ? Icon(icon, color: iconColor)
                             : null,
                         hintStyle: MyStyles.of(context).textThemes.placeholder,
                         border: InputBorder.none,
-                        hintText: widget.placeholderText,
+                        hintText: placeholderText,
                       )
                     ),
 
-                    if(state.hasError && _controller.text.isNotEmpty)
+                    if(state.errorText != null && controller.text.isNotEmpty)
                       Container(
                         padding: EdgeInsets.only(bottom: 5),
                         alignment: Alignment.center,
                         child: Text(
                           state.errorText,
                           textAlign: TextAlign.center,
-                          style: MyStyles.of(context).textThemes.subtext
-                            .copyWith(
-                              color: Colors.red,
-                              fontSize: 12
-                            ),
+                          style: MyStyles.of(context).textThemes.errorSubText
                         ),
                       )
                   ],
@@ -603,4 +589,3 @@ class _SlideableListState extends State<SlideableList> {
     );
   }
 }
-

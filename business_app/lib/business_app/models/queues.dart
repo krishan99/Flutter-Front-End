@@ -1,3 +1,4 @@
+import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/services/services.dart';
 import 'dart:async';
@@ -89,7 +90,7 @@ class QueuePeople with ChangeNotifier{
   int get numWaiting {
     return _getNumOfState(QueueEntryState.waiting);
   }
-  
+
   int get numNotified {
     return _getNumOfStates([QueueEntryState.notified, QueueEntryState.pendingNotification]);
   }
@@ -106,17 +107,15 @@ class QueuePeople with ChangeNotifier{
     return _getNumOfStates([state]);
   }
 
-  void remove(int person_id) async{
-    if(!theline.containsKey(person_id)){
+  void remove(int personId) async{
+    if(!theline.containsKey(personId)){
       print("Invalid id to remove");
       return;
     }
 
-    bool done =  await server.deletePerson(id, person_id);
-    if(done){
-      theline.remove(id);
-      notifyListeners();
-    }
+    await server.deletePerson(id, personId);
+    theline.remove(id);
+    notifyListeners();
   }
 
   QueuePeople({@required this.id}){
@@ -139,7 +138,7 @@ class Queue with ChangeNotifier{
   String _code;
   QueueState _state;
   QueuePeople _people;
-  
+
   String get name => _name;
   String get description => _description;
   String get code => _code;
@@ -171,7 +170,7 @@ class AllQueuesInfo with ChangeNotifier {
   var queues = new Map<int, Queue>();
   Iterable<Queue> get body => queues.values;
 
-  Future<bool> retrieveServer() async {
+  Future<void> retrieveServer() async {
     var serverQueues = await server.getListofQueues();
     // update info based on server
     for(var i=0; i<serverQueues.length; i++){
@@ -194,16 +193,20 @@ class AllQueuesInfo with ChangeNotifier {
       }
       if(!there) toRemove.add(k);
     }
+<<<<<<< HEAD
     toRemove.forEach((k) {queues.remove(k);});
     return true;
+=======
+>>>>>>> a21c97101397eecb8e9a7d9aecdb2dcf80e3a755
   }
 
   // currently doesn't really do anything
   // meant to be called whenever dashboard shown
-  void leaveRooms() async {
+  Future<void> leaveRooms() async {
     BusinessAppServer.leaveRoom();
   }
 
+<<<<<<< HEAD
   Future<bool> makeQueue(String name, String description) async {
     try{
       Map<String, dynamic> n = await server.makeQueue(name, description);
@@ -216,17 +219,21 @@ class AllQueuesInfo with ChangeNotifier {
       print('exception caught while making queue: $e');
       return false;
     }
+=======
+  Future<void> makeQueue(String name, String description) async {
+    Map<String, dynamic> n = await server.makeQueue(name, description);
+    int k = n["qid"];
+    queues[k] = new Queue(id: k);
+    queues[k].update(n);
+    notifyListeners();
+>>>>>>> a21c97101397eecb8e9a7d9aecdb2dcf80e3a755
   }
 
-  void deleteQueue(int qid) async {
-    bool done = await server.deleteQueue(qid);
-    if(done){
-      queues.remove(qid);
-      notifyListeners();
-    }
+  Future<void> deleteQueue(int qid) async {
+    await server.deleteQueue(qid);
   }
 
-  void refresh() async {
+  Future<void> refresh() async {
     retrieveServer();
     notifyListeners();
   }

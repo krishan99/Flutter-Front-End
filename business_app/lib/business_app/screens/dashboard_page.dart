@@ -1,4 +1,5 @@
 import 'package:business_app/business_app/models/queues.dart';
+import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,21 +14,31 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AllQueuesInfo>(
       builder: (context, qinfo, _) {
-        qinfo.retrieveServer();
+      //TODO: Retrieve Server should not be called here -> will likely cause weird things because it can throw errors
+        //qinfo.retrieveServer();
         qinfo.leaveRooms();
         return FutureBuilder(
           future: qinfo.retrieveServer(),
           builder: (context, snapshot){
-            if( snapshot.connectionState == ConnectionState.waiting){
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+              case ConnectionState.none:
                 return Text('Loading queues...');
-            }else{
+              default:
                 if (snapshot.hasError)
                   return Text('Error: ${snapshot.error}');
                 else
                   return SlideableList(
+<<<<<<< HEAD
                     onPlusTap: () async{
                       bool success = await qinfo.makeQueue("Big big fish", "roar roar road");
                       if(!success) Toast.show("Error making queue", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+=======
+                    onPlusTap: () async {
+                      try {
+                        await qinfo.makeQueue("Big big fish", "roar roar road");
+                      } catch (error){}
+>>>>>>> a21c97101397eecb8e9a7d9aecdb2dcf80e3a755
                     },
 
                     header: SliverPersistentHeader(
@@ -46,13 +57,17 @@ class DashboardPage extends StatelessWidget {
                             return QueueCell(
                               queue: queue,
                               onDelete: () async {
-                                await qinfo.deleteQueue(queue.id);
-                                return Future.value(true);
+                                try {
+                                  await qinfo.deleteQueue(queue.id);
+                                  return true;
+                                } catch (error) {
+                                  return false;
+                                }
                               },
 
                               onOpen: () async {
                                   Navigator.of(context).pushNamed("/queue", arguments: queue);
-                                  return Future.value(false);
+                                  return false;
                               },
 
                               onTap: () {
@@ -169,5 +184,3 @@ class ProfileAppBar extends StatelessWidget {
     );
   }
 }
-
-

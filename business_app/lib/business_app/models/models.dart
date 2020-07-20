@@ -80,16 +80,16 @@ class ListenableList<E> extends ListBase<E> with ChangeNotifier {
   int get length => data.length;
 
   set length(int newLength) {
-    data.length = newLength; 
+    data.length = newLength;
     notifyListeners();
   }
-  
+
   E operator [](int index) {
     return data[index];
   }
 
   void operator []=(int index, E value) {
-    data[index] = value; 
+    data[index] = value;
     notifyListeners();
   }
 }
@@ -118,7 +118,7 @@ class Queue extends ListenableList<QueueEntry> with Titled {
   int get numWaiting {
     return _getNumOfState(QueueEntryState.waiting);
   }
-  
+
   int get numNotified {
     return _getNumOfStates([QueueEntryState.notified, QueueEntryState.pendingNotification]);
   }
@@ -152,7 +152,7 @@ class Queue extends ListenableList<QueueEntry> with Titled {
 
   static Queue fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
-  
+
     return Queue(
       code: map['code'],
       description: map['description'],
@@ -167,7 +167,7 @@ class Queue extends ListenableList<QueueEntry> with Titled {
   static Queue fromJson(String source) => fromMap(json.decode(source));
 
   Queue({
-      @required String name, 
+      @required String name,
       this.id,
       String description = "Swipe from the left to delete this queue and swipe right to see more details.",
       QueueState state = QueueState.inactive,
@@ -198,13 +198,16 @@ class User extends ChangeNotifier {
     return _firebaseUser.displayName;
   }
 
-  Future<MyServerResponse> notifyServerOfSignIn(String email) async {
-    var k = await server.signIn(email);
+  Future<void> notifyServerOfSignIn(String email) async {
+    try {
+      await server.signIn(email);
+      server.connectSocket();
+    } catch (error) {}
+    this.email = email;
     notifyListeners();
-    return k;
   }
 
-  Future<MyServerResponse> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
       final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
@@ -219,19 +222,21 @@ class User extends ChangeNotifier {
       return notifyServerOfSignIn(result.user.email);
   }
 
-  Future<MyServerResponse> signUp({String name, @required String email, @required String password}) async {
+  Future<void> signUp({String name, @required String email, @required String password}) async {
     AuthResult result;
 
     try {
       result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } catch (error) {
-      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
+      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.toString());
       throw CustomException(errorMessage);
     }
 
     return notifyServerOfSignIn(result.user.email);
+    // print("email: $email, password: $password");
+    // return null;
   }
-  
+
   String getFirebaseErrorMessage({@required String firebaseErrorCode}) {
     switch (firebaseErrorCode) {
         case "ERROR_INVALID_EMAIL":
@@ -251,7 +256,7 @@ class User extends ChangeNotifier {
       }
   }
 
-  Future<MyServerResponse> signIn(String email, String password) async {
+  Future<void> signIn(String email, String password) async {
     AuthResult result;
 
     try {
@@ -265,12 +270,13 @@ class User extends ChangeNotifier {
     return notifyServerOfSignIn(result.user.email);
   }
 
-  signInSilently() async {
+  Future<void> signInSilently() async {
       await googleSignIn.signInSilently(suppressErrors: true);
   }
 
-  signOut() async {
+  Future<void> signOut() async {
     await _auth.signOut();
+    //TODO: Sign out from server? Idk if this is needed.
   }
 
   User({@required this.server}) {
@@ -278,9 +284,9 @@ class User extends ChangeNotifier {
       this._firebaseUser = fUser;
       print(
           "AUTH STATE CHANGED: ${this.isLoggedIn}");
-      var k = await server.signIn(email);
-      await server.connectSocket();
-      this.notifyListeners();
+      //var k = await server.signIn(email);
+      //await server.connectSocket();
+      //this.notifyListeners();
     });
   }
 }
