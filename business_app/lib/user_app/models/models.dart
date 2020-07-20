@@ -80,8 +80,6 @@ class QueueReqs {
     );
   }
 
-  static QueueReqs fromJson(String source) => fromMap(json.decode(source));
-
   @override
   String toString() => 'QueueReqs(qid: $qid, needsName: $needsName, needsPhoneNumber: $needsPhoneNumber)';
 

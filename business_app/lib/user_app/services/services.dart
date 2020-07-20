@@ -9,12 +9,12 @@ class UAppServer extends MyServer {
   
   Future<QueueReqs> getQueueInfo({@required String code}) async {
     final response = await post(
-      "/v1/queue/user/getform",
+      "api/v1/queue/user/getform",
       body: <String, String> {
         "code": code,
       });
     
-    return QueueReqs.fromJson(response.toString());
+    return QueueReqs.fromMap(response);
 
     // return QueueReqs(code: "43-4", qid: 1, needsName: true, needsPhoneNumber: true);
   }
