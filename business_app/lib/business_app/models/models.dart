@@ -201,7 +201,7 @@ class User extends ChangeNotifier {
   Future<void> notifyServerOfSignIn(String email) async {
     try {
       await server.signIn(email);
-      await server.connectSocket();
+      server.connectSocket();
     } catch (error) {}
     this.email = email;
     notifyListeners();

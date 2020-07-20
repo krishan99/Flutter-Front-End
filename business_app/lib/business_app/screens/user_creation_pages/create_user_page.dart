@@ -11,12 +11,18 @@ import 'package:business_app/utils.dart';
 
 class CreateUserPage extends StatefulWidget {
   final double height;
+  final String title;
+  final String subtext;
+  final String buttonText;
   final Future<void> Function() onContinue;
   Widget customUserForm;
 
   CreateUserPage({
     Key key,
     this.height,
+    @required this.title,
+    this.subtext = "Happy customers are the best advertising money can buy.",
+    this.buttonText = "Continue",
     this.onContinue,
     this.customUserForm,
   }) : super(key: key);
@@ -62,17 +68,18 @@ class _CreateUserPageState extends State<CreateUserPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                        child: Text(
-                      "Welcome Back!",
-                      textAlign: TextAlign.center,
-                      style: MyStyles.of(context).textThemes.h2,
-                    )),
+                      child: Text(
+                        widget.title,
+                        textAlign: TextAlign.center,
+                        style: MyStyles.of(context).textThemes.h2,
+                      )
+                    ),
                     SizedBox(
                       height: 12,
                     ),
                     Container(
                       child: Text(
-                        "Happy customers are the best advertising money can buy.",
+                        widget.subtext,
                         textAlign: TextAlign.center,
                         style: MyStyles.of(context).textThemes.h4,
                       ),
@@ -101,7 +108,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          "Or Create User With Email",
+                          "Or Use Email",
                           style: MyStyles.of(context).textThemes.bodyText2,
                         ),
                       ),
@@ -113,7 +120,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         children: [
                           Container(
                             child: AccentedActionButton(
-                              text: "Continue",
+                              text: widget.buttonText,
                               onPressed: () async {
                                 final response = await ApiResponse.fromFunction(widget.onContinue);
                                 setState(() {

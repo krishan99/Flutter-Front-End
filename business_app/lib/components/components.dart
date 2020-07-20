@@ -141,6 +141,7 @@ class StyleTextField extends StatelessWidget {
 
   factory StyleTextField.password({
     TextEditingController controller,
+    String paceholderText,
     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
     Function(String) onChanged,
     Function(String) onSubmitted,
@@ -153,7 +154,7 @@ class StyleTextField extends StatelessWidget {
       status: status,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
-      placeholderText: "Password...",
+      placeholderText: paceholderText ?? "Password...",
       getErrorMessage: (text) {
         if (text.length <= 5) {
           return "Password should contains more then 5 character";
