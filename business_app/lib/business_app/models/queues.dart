@@ -183,6 +183,7 @@ class AllQueuesInfo with ChangeNotifier {
     }
     // delete anything not on server anymore
     var keys = queues.keys;
+    var toRemove = [];
     for(var k in keys){
       bool there = false;
       for(var j=0; j<serverQueues.length; j++){
@@ -191,8 +192,9 @@ class AllQueuesInfo with ChangeNotifier {
           break;
         }
       }
-      if(!there) queues.remove(k);
+      if(!there) toRemove.add(k);
     }
+    toRemove.forEach((k) {queues.remove(k);});
     return true;
   }
 
@@ -202,12 +204,18 @@ class AllQueuesInfo with ChangeNotifier {
     BusinessAppServer.leaveRoom();
   }
 
-  void makeQueue(String name, String description) async {
-    Map<String, dynamic> n = await server.makeQueue(name, description);
-    int k = n["qid"];
-    queues[k] = new Queue(id: k);
-    queues[k].update(n);
-    notifyListeners();
+  Future<bool> makeQueue(String name, String description) async {
+    try{
+      Map<String, dynamic> n = await server.makeQueue(name, description);
+      int k = n["qid"];
+      queues[k] = new Queue(id: k);
+      queues[k].update(n);
+      notifyListeners();
+      return true;
+    } catch(e) {
+      print('exception caught while making queue: $e');
+      return false;
+    }
   }
 
   void deleteQueue(int qid) async {

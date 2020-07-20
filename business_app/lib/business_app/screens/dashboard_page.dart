@@ -6,6 +6,8 @@ import 'package:business_app/business_app/models/models.dart';
 import 'package:business_app/components/components.dart';
 import 'package:business_app/theme/themes.dart';
 
+import 'package:toast/toast.dart';
+
 class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,9 @@ class DashboardPage extends StatelessWidget {
                   return Text('Error: ${snapshot.error}');
                 else
                   return SlideableList(
-                    onPlusTap: (){
-                      qinfo.makeQueue("Big big fish", "roar roar road");
+                    onPlusTap: () async{
+                      bool success = await qinfo.makeQueue("Big big fish", "roar roar road");
+                      if(!success) Toast.show("Error making queue", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
                     },
 
                     header: SliverPersistentHeader(
