@@ -130,6 +130,9 @@ class User extends ChangeNotifier {
       this._firebaseUser = fUser;
       print(
           "AUTH STATE CHANGED: ${this.isLoggedIn}");
+      if (this.isLoggedIn) {
+        this.notifyServerOfSignIn(fUser.email);
+      }
       //var k = await server.signIn(email);
       //await server.connectSocket();
       //this.notifyListeners();

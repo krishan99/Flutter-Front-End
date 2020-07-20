@@ -3,6 +3,8 @@ import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/business_app/screens/dashboard_page.dart';
 import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/business_app/screens/queue_page.dart';
+import 'package:business_app/business_app/screens/create_queue_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +43,13 @@ class BAppRouteGenerator {
           }
         );
         // return _errorRoute();
-        
+        case '/createQueue':
+          return MaterialPageRoute( 
+           builder: (context) {
+            AllQueuesInfo QueuesInfo = args as AllQueuesInfo;
+            return CreateQueue(QueuesInfo);
+          }
+          );
       default:
         assert(false);
     }
