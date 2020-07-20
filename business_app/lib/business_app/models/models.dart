@@ -80,16 +80,16 @@ class ListenableList<E> extends ListBase<E> with ChangeNotifier {
   int get length => data.length;
 
   set length(int newLength) {
-    data.length = newLength; 
+    data.length = newLength;
     notifyListeners();
   }
-  
+
   E operator [](int index) {
     return data[index];
   }
 
   void operator []=(int index, E value) {
-    data[index] = value; 
+    data[index] = value;
     notifyListeners();
   }
 }
@@ -118,7 +118,7 @@ class Queue extends ListenableList<QueueEntry> with Titled {
   int get numWaiting {
     return _getNumOfState(QueueEntryState.waiting);
   }
-  
+
   int get numNotified {
     return _getNumOfStates([QueueEntryState.notified, QueueEntryState.pendingNotification]);
   }
@@ -152,7 +152,7 @@ class Queue extends ListenableList<QueueEntry> with Titled {
 
   static Queue fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
-  
+
     return Queue(
       code: map['code'],
       description: map['description'],
@@ -167,7 +167,7 @@ class Queue extends ListenableList<QueueEntry> with Titled {
   static Queue fromJson(String source) => fromMap(json.decode(source));
 
   Queue({
-      @required String name, 
+      @required String name,
       this.id,
       String description = "Swipe from the left to delete this queue and swipe right to see more details.",
       QueueState state = QueueState.inactive,
@@ -201,6 +201,7 @@ class User extends ChangeNotifier {
   notifyServerOfSignIn(String email) async {
     try {
       await server.signIn(email);
+      await server.connectSocket();
     } catch (error) {}
     this.email = email;
     notifyListeners();
@@ -235,7 +236,7 @@ class User extends ChangeNotifier {
     // print("email: $email, password: $password");
     // return null;
   }
-  
+
   String getFirebaseErrorMessage({@required String firebaseErrorCode}) {
     switch (firebaseErrorCode) {
         case "ERROR_INVALID_EMAIL":
@@ -283,12 +284,9 @@ class User extends ChangeNotifier {
       this._firebaseUser = fUser;
       print(
           "AUTH STATE CHANGED: ${this.isLoggedIn}");
-      // try {
-      //   await server.signIn(email);
-      // } catch (error) {
-      //   print("error signing in: $error");
-      // }
-      // this.notifyListeners();
+      //var k = await server.signIn(email);
+      //await server.connectSocket();
+      //this.notifyListeners();
     });
   }
 }

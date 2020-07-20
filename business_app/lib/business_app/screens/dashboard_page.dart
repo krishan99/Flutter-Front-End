@@ -12,6 +12,9 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AllQueuesInfo>(
       builder: (context, qinfo, _) {
+      //TODO: Retrieve Server should not be called here -> will likely cause weird things because it can throw errors
+        //qinfo.retrieveServer();
+        qinfo.leaveRooms();
         return FutureBuilder(
           initialData: "loading queues...",
           future: qinfo.retrieveServer(),
@@ -174,5 +177,3 @@ class ProfileAppBar extends StatelessWidget {
     );
   }
 }
-
-
