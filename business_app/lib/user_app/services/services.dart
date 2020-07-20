@@ -14,13 +14,13 @@ class UAppServer extends MyServer {
         "code": code,
       });
     
-    return QueueReqs.fromJson(response.body.toString());
+    return QueueReqs.fromJson(response.toString());
 
     // return QueueReqs(code: "43-4", qid: 1, needsName: true, needsPhoneNumber: true);
   }
 
-  Future<MyServerResponse> addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
-    return post(
+  addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
+    post(
       "/api/v1/queue/user/postform",
       body: <String, String> {
         "qid": qid.toString(),

@@ -10,26 +10,33 @@ import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget implements EntranceScreen {
   double height;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   LoginPage.height({this.height});
 
   @override
   Widget build(BuildContext context) {
-    return CreateUserPage(
-      height: height,
-      customUserForm: Column(
-        children: <Widget>[
-        Container(child: StyleTextField.email(
-          onChanged: (string) {
-            print("$string");
-          },
-        )),
-        SizedBox(height: 10,),
-        Container(child: StyleTextField.password(
-          onChanged: (string) {
-            print("$string");
-          },
-        )),
-      ]),
+    return Consumer<User>(
+      builder: (context, user, _) {
+        return CreateUserPage(
+          height: height,
+          onContinue: () async => await user.signUp(email: this.emailController.text, password: this.passwordController.text),
+          customUserForm: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(child: StyleTextField.email(
+                controller: emailController,
+              )),
+              SizedBox(height: 10,),
+              StyleTextField.password(
+                controller: passwordController,
+              ),
+            ]
+          )
+        );
+      }
     );
   }
 }

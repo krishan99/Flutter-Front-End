@@ -1,11 +1,18 @@
 import 'dart:convert';
 
+import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
+import 'package:flutter/foundation.dart' as Foundation;
 
 class CustomException implements Exception {
   String cause;
+  
+  @override
+  String toString() {
+    return cause;
+  }
+
   CustomException(this.cause);
 }
 
@@ -29,33 +36,46 @@ class NotFoundException extends MyServerException {
   NotFoundException(String cause) : super(cause);
 }
 
-class MyServerResponse {
-  Map<String, dynamic> body;
-  Map<String, dynamic> get data => body;
+// class MyServerResponse {
+//   Map<String, dynamic> body;
+//   Map<String, dynamic> get data => body;
 
-  int _statusCode;
-  int get statusCode => _statusCode;
+//   String get message {
+//     if (body.containsKey("message")) {
+//       return body["message"] as String;
+//     } else {
+//       return null;
+//     }
+//   }
 
-  String get errorMessage {
-    if (body.containsKey("message")) {
-      return body["message"] as String;
-    } else {
-      return null;
-    }
-  }
+//   dynamic operator [](String key) {
+//     return body[key];
+//   }
 
-  dynamic operator [](String key) {
-    return body[key];
-  }
+//   MyServerResponse(http.Response r) {
+//     this.body = jsonDecode(r.body);
 
-  MyServerResponse(http.Response r) {
-    this.body = jsonDecode(r.body);
-    this._statusCode = r.statusCode;
-  }
-}
+//     switch (r.statusCode) {
+//       case 200:
+//         return;
+//       case 403:
+//         print(this.message);
+//         throw ForbiddenException(this.message);
+//       case 405:
+//         print(this.message);
+//         throw JsonEncodingException(this.message);
+//       case 404:
+//         print(this.message);
+//         throw NotFoundException(this.message);
+//       default:
+//         throw Exception(this.message);
+//     }
+//   }
+// }
 
 class MyServer {
   final path;
+  static const Duration timeout = Duration(seconds: 1);
 
   static Map<String, String> _headers = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -65,35 +85,54 @@ class MyServer {
     return "$path$route";
   }
 
-  Future<MyServerResponse> post(String route, {@required Map body}) async {
+  Future<Map<String, dynamic>> post(String route, {@required Map body}) async {
     final url = _getURL(route: route);
 
     final response = await http.post(
       url,
       headers: _headers,
       body: jsonEncode(body)
-    );
+    ).timeout(timeout);
+
     updateCookie(response);
 
-    return _checkHttpResponse(response);
+    return getMap(response);
   }
 
-  Future<MyServerResponse> get(String route) async {
+  Future<Map<String, dynamic>> get(String route) async {
     final url = _getURL(route: route);
     final response = await http.get(
       url,
       headers: _headers,
-    );
+    ).timeout(timeout);
+    
     updateCookie(response);
 
-    return _checkHttpResponse(response);
+    return getMap(response);
   }
 
-  MyServerResponse _checkHttpResponse(http.Response response) {
-    final myServerResponse = MyServerResponse(response);
-    _checkResponse(myServerResponse);
+  Map<String, dynamic> getMap(http.Response r) {
+    final body = jsonDecode(r.body);
 
-    return myServerResponse;
+    if (r.statusCode == 200) {
+      return body;
+    }
+
+    final message = body['message'] as String;
+
+    switch (r.statusCode) {
+      case 403:
+        print(message);
+        throw ForbiddenException(message);
+      case 405:
+        print(message);
+        throw JsonEncodingException(message);
+      case 404:
+        print(message);
+        throw NotFoundException(message);
+      default:
+        throw Exception(message);
+    }
   }
 
   void updateCookie(http.Response response) {
@@ -105,24 +144,6 @@ class MyServer {
     }
   }
 
-  _checkResponse(MyServerResponse response) {
-    switch (response.statusCode) {
-      case 200:
-        return;
-      case 403:
-        print(response.errorMessage);
-        throw ForbiddenException(response.errorMessage);
-      case 405:
-        print(response.errorMessage);
-        throw JsonEncodingException(response.errorMessage);
-      case 404:
-        print(response.errorMessage);
-        throw NotFoundException(response.errorMessage);
-      default:
-        throw Exception(response.errorMessage);
-    }
-  }
-
   MyServer({this.path});
 }
 
@@ -131,13 +152,22 @@ class ApiResponse<T> {
   T data;
   String message;
   
-ApiResponse.loading(this.message) : status = Status.LOADING;
-ApiResponse.completed(this.data) : status = Status.COMPLETED;
-ApiResponse.error(this.message) : status = Status.ERROR;
+  ApiResponse.loading(this.message) : status = Status.LOADING;
+  ApiResponse.completed(this.data) : status = Status.COMPLETED;
+  ApiResponse.error(this.message) : status = Status.ERROR;
   
-@override
+  @override
   String toString() {
     return "Status : $status \n Message : $message \n Data : $data";
+  }
+
+  static Future<ApiResponse<T>> fromFunction<T>(Future<T> Function() function) async {
+    try {
+      T value = await function();
+      return ApiResponse.completed(value);
+    } catch (error) {
+      return ApiResponse.error(error.toString());
+    }
   }
 }
 

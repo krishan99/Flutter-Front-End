@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 
 class MyStyles {
   static MyStyles lightMode = MyStyles._(images: MyImages.lightMode, colors: MyColors.lightMode, textThemes: MyTextThemes.lightMode);
@@ -113,6 +114,7 @@ class MyTextThemes {
     buttonActionText2: TextStyle(fontSize: 18, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
     buttonActionText3: TextStyle(fontSize: 16, fontFamily: MyTextThemes._fontFamily, color: Colors.white, fontWeight: FontWeight.w300),
     subtext: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(160, 160, 160, 1), fontWeight: FontWeight.w300),
+    errorSubText: TextStyle(fontSize: 12, fontFamily: MyTextThemes._fontFamily, color: Colors.red, fontWeight: FontWeight.w300),
     placeholder: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(186, 186, 186, 1), fontWeight: FontWeight.w300),
     active: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(131, 219, 28, 1), fontWeight: FontWeight.bold),
     disabled: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Colors.red, fontWeight: FontWeight.bold)
@@ -133,9 +135,11 @@ class MyTextThemes {
   final TextStyle buttonActionText3;
   final TextStyle formField1;
   final TextStyle subtext;
+  final TextStyle errorSubText;
   final TextStyle placeholder;
   final TextStyle active;
   final TextStyle disabled;
+  
 
   const MyTextThemes._({
     this.h1,
@@ -151,6 +155,7 @@ class MyTextThemes {
     this.buttonActionText3,
     this.formField1,
     this.subtext,
+    this.errorSubText,
     this.placeholder,
     this.active,
     this.disabled

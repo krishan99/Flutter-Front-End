@@ -198,13 +198,15 @@ class User extends ChangeNotifier {
     return _firebaseUser.displayName;
   }
 
-  Future<MyServerResponse> notifyServerOfSignIn(String email) async {
-    var k = await server.signIn(email);
+  notifyServerOfSignIn(String email) async {
+    try {
+      await server.signIn(email);
+    } catch (error) {}
+    this.email = email;
     notifyListeners();
-    return k;
   }
 
-  Future<MyServerResponse> signInWithGoogle() async {
+  signInWithGoogle() async {
       final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
@@ -219,17 +221,19 @@ class User extends ChangeNotifier {
       return notifyServerOfSignIn(result.user.email);
   }
 
-  Future<MyServerResponse> signUp({String name, @required String email, @required String password}) async {
+  signUp({String name, @required String email, @required String password}) async {
     AuthResult result;
 
     try {
       result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } catch (error) {
-      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
+      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.toString());
       throw CustomException(errorMessage);
     }
 
     return notifyServerOfSignIn(result.user.email);
+    // print("email: $email, password: $password");
+    // return null;
   }
   
   String getFirebaseErrorMessage({@required String firebaseErrorCode}) {
@@ -251,7 +255,7 @@ class User extends ChangeNotifier {
       }
   }
 
-  Future<MyServerResponse> signIn(String email, String password) async {
+  signIn(String email, String password) async {
     AuthResult result;
 
     try {
@@ -271,6 +275,7 @@ class User extends ChangeNotifier {
 
   signOut() async {
     await _auth.signOut();
+    //TODO: Sign out from server? Idk if this is needed.
   }
 
   User({@required this.server}) {
@@ -278,8 +283,12 @@ class User extends ChangeNotifier {
       this._firebaseUser = fUser;
       print(
           "AUTH STATE CHANGED: ${this.isLoggedIn}");
-      var k = await server.signIn(email);
-      this.notifyListeners();
+      // try {
+      //   await server.signIn(email);
+      // } catch (error) {
+      //   print("error signing in: $error");
+      // }
+      // this.notifyListeners();
     });
   }
 }

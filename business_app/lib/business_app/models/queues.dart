@@ -1,3 +1,4 @@
+import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/services/services.dart';
 
@@ -126,7 +127,7 @@ class AllQueuesInfo with ChangeNotifier {
   var queues = new Map<int, Queue>();
   Iterable<Queue> get body => queues.values;
 
-  Future<bool> retrieveServer() async {
+  retrieveServer() async {
     var serverQueues = await server.getListofQueues();
     // update info based on server
     for(var i=0; i<serverQueues.length; i++){
@@ -148,10 +149,9 @@ class AllQueuesInfo with ChangeNotifier {
       }
       if(!there) queues.remove(k);
     }
-    return true;
   }
 
-  void makeQueue(String name, String description) async {
+  makeQueue(String name, String description) async {
     Map<String, dynamic> n = await server.makeQueue(name, description);
     int k = n["qid"];
     queues[k] = new Queue(id: k);
@@ -159,7 +159,7 @@ class AllQueuesInfo with ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteQueue(int qid) async {
+  deleteQueue(int qid) async {
     bool done = await server.deleteQueue(qid);
     if(done){
       queues.remove(qid);
@@ -167,7 +167,7 @@ class AllQueuesInfo with ChangeNotifier {
     }
   }
 
-  void refresh() async {
+  refresh() async {
     retrieveServer();
     notifyListeners();
   }

@@ -11,7 +11,6 @@ class SignUpPage extends StatefulWidget implements EntranceScreen {
 
   @override
   _SignUpPageState createState() => _SignUpPageState(height: this.height);
-
 }
 
 class _SignUpPageState extends State<SignUpPage> {
