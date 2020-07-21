@@ -102,12 +102,12 @@ class User extends ChangeNotifier {
       }
   }
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> signIn({@required String email, @required String password}) async {
     AuthResult result;
 
     try {
       result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: "pizza@gmail.com", password: password);
     } catch (error) {
       String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
       throw CustomException(errorMessage);

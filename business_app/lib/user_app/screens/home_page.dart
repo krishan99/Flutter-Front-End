@@ -6,11 +6,12 @@ import 'package:business_app/user_app/components/components.dart';
 import 'package:business_app/user_app/models/models.dart';
 import 'package:business_app/user_app/services/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   TextEditingController codeController = TextEditingController();
-  bool isError = false;
+  String errorMessage;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -44,16 +45,20 @@ class _HomePageState extends State<HomePage> {
                       constraints: BoxConstraints(maxWidth: 250),
                       child: StyleTextField(
                         controller: widget.codeController,
+                        textInputType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
                         placeholderText: "Enter Pin...",
                       ),
                     ),
                     () {
-                      if (widget.isError) {
+                      if (widget.errorMessage != null) {
                         return ShakeWidget(
                           key: ValueKey(widget.codeController.text),
                           child: Container(
                             padding: EdgeInsets.all(10),
-                            child: Text("Invalid Queue Code",
+                            child: Text(widget.errorMessage,
                                 style: MyStyles.of(context)
                                     .textThemes
                                     .subtext
@@ -87,7 +92,7 @@ class _HomePageState extends State<HomePage> {
 
                         if (apiResponse.isError) {
                           setState(() {
-                            widget.isError = true;
+                            widget.errorMessage = apiResponse.message;
                           });
                         }
 
