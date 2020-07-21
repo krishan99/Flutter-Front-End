@@ -92,6 +92,7 @@ class User extends ChangeNotifier {
 
     setToken();
     await server.signUp(name: "Starbucks", description: "I love coffee");
+    await notifyServerOfSignIn(email);
 
     // return notifyServerOfSignIn(result.user.email);
     // print("email: $email, password: $password");
@@ -156,9 +157,10 @@ class User extends ChangeNotifier {
     _auth.onAuthStateChanged.listen((fUser) async {
       this._firebaseUser = fUser;
       print("AUTH STATE CHANGED: ${this.isLoggedIn}");
+      /*
       if (this.isLoggedIn) {
         this.notifyServerOfSignIn(fUser.email);
-      }
+      }*/
       //var k = await server.signIn(email);
       //await server.connectSocket();
       //this.notifyListeners();
