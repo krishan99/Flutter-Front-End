@@ -160,7 +160,7 @@ class ProfileAppBar extends StatelessWidget {
                       Consumer<User>(
                         builder: (context, user, _) {
                           return Text(
-                            user.name,
+                            user.name ?? "John Doe",
                             style: MyStyles.of(context).textThemes.h3,
                           );
                         }
