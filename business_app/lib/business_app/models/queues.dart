@@ -117,7 +117,7 @@ class QueuePeople with ChangeNotifier{
     }
 
     await server.deletePerson(id, personId);
-    theline.remove(id);
+    theline.remove(personId);
     notifyListeners();
   }
 
@@ -156,7 +156,7 @@ class Queue with ChangeNotifier {
     if (map == null) return null;
   
     return Queue(
-      id: map['id'],
+      id: map['qid'],
       name: map['qname'],
       description: map['description'],
       code: map['code'],
