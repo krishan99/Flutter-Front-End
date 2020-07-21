@@ -58,7 +58,7 @@ class User extends ChangeNotifier {
   }
 
   Future<void> notifyServerOfSignIn(String email) async {
-    setToken();
+    await setToken();
     await server.signIn();
     server.connectSocket();
     this.email = email;
@@ -88,7 +88,7 @@ class User extends ChangeNotifier {
       throw getFirebaseException(error);
     }
 
-    setToken();
+    await setToken();
     await server.signUp(name: "Starbucks", description: "I love coffee");
     await notifyServerOfSignIn(result.user.email);
   }
