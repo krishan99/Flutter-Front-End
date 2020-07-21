@@ -17,14 +17,12 @@ abstract class ComplexEnum<T> {
 
 class ModelData {
   User user;
-  //Queues queues;
   BusinessAppServer server;
   AllQueuesInfo qinfo;
 
   ModelData() {
     this.server = BusinessAppServer();
     this.user = User(server: server);
-    //this.queues = Queues();
     this.qinfo = AllQueuesInfo(server: server);
   }
 }
@@ -42,12 +40,11 @@ class User extends ChangeNotifier {
   }
 
   String get name {
-    return _firebaseUser.displayName;
+    return _firebaseUser?.displayName;
   }
 
   Future<String> getToken() async {
-    FirebaseUser user = await _auth.currentUser();
-    IdTokenResult tokenResult = await user.getIdToken();
+    IdTokenResult tokenResult = await _firebaseUser.getIdToken();
 
     return tokenResult.token.toString();
   }

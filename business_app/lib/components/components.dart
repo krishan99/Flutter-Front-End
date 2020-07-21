@@ -584,7 +584,7 @@ class _SlideableListState extends State<SlideableList> {
         text: "+",
         width: 50,
         height: 50,
-        onSuccess: widget.onPlusTap,
+        onPressed: widget.onPlusTap,
       ),
       body: SafeArea(
         bottom: false,
