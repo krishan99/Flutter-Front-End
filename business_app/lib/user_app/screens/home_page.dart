@@ -3,14 +3,12 @@ import 'package:business_app/components/shake_widget.dart';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/user_app/components/components.dart';
-import 'package:business_app/user_app/models/models.dart';
 import 'package:business_app/user_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  TextEditingController codeController = TextEditingController();
   String errorMessage;
 
   @override
@@ -18,6 +16,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController codeController = TextEditingController();
+
+  @override
+  void dispose() {
+    codeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TappableGradientScaffold(
@@ -44,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.transparent,
                       constraints: BoxConstraints(maxWidth: 250),
                       child: StyleTextField(
-                        controller: widget.codeController,
+                        controller: codeController,
                         textInputType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           WhitelistingTextInputFormatter.digitsOnly
@@ -55,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                     () {
                       if (widget.errorMessage != null) {
                         return ShakeWidget(
-                          key: ValueKey(widget.codeController.text),
+                          key: ValueKey(codeController.text),
                           child: Container(
                             padding: EdgeInsets.all(10),
                             child: Text(widget.errorMessage,
@@ -86,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                         final apiResponse =
                           await ApiResponse.fromFunction(() async {
                           return await server.getQueueReqs(
-                            code: widget.codeController.text);
+                            code: codeController.text);
                           }
                         );
 

@@ -1,31 +1,31 @@
-import 'package:business_app/business_app/models/queues.dart';
-import 'package:business_app/business_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:toast/toast.dart';
 import 'package:business_app/components/components.dart';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/user_app/components/components.dart';
 import 'package:business_app/user_app/models/models.dart';
 import 'package:business_app/user_app/services/services.dart';
-import 'package:business_app/utils.dart';
-import 'package:toast/toast.dart';
 
-class JoinQueuePage extends StatelessWidget {
-
-  static double columnSpacing = 15;
-
-  TextEditingController fullNameController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController notesController = TextEditingController();
-
-  QueueReqs reqs = QueueReqs(code: "invalid code", qid: 1, needsName: true, needsPhoneNumber: true);
+class JoinQueuePage extends StatefulWidget {
+  final QueueReqs reqs;
 
   JoinQueuePage({
     Key key,
     this.reqs,
   }) : super(key: key);
+
+  @override
+  _JoinQueuePageState createState() => _JoinQueuePageState();
+}
+
+class _JoinQueuePageState extends State<JoinQueuePage> {
+  static const double columnSpacing = 15;
+
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class JoinQueuePage extends StatelessWidget {
                       decoration: BoxDecoration(color: MyStyles.of(context).colors.accent),
                       padding: EdgeInsets.all(5),
                       child: Text(
-                          reqs.code,
+                          widget.reqs.code,
                           textAlign: TextAlign.center,
                           style: MyStyles.of(context)
                               .textThemes
@@ -70,7 +70,7 @@ class JoinQueuePage extends StatelessWidget {
                   ),
                   SizedBox(height: columnSpacing,),
                   Text(
-                    reqs.businessName ?? "Could Not Get Business Name",
+                    widget.reqs.businessName ?? "Could Not Get Business Name",
                     style: MyStyles.of(context)
                         .textThemes
                         .h3
@@ -78,14 +78,14 @@ class JoinQueuePage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: columnSpacing,),
-                  if (reqs.needsName)
+                  if (widget.reqs.needsName)
                     StyleTextField(
                       controller: fullNameController,
                       placeholderText: "Full Name"
                     ),
                     SizedBox(height: columnSpacing,),
                   
-                  if (reqs.needsPhoneNumber)
+                  if (widget.reqs.needsPhoneNumber)
                     StyleTextField.phoneNumber(
                       controller: phoneNumberController,
                     ),
@@ -107,7 +107,7 @@ class JoinQueuePage extends StatelessWidget {
                           onPressed: () async {
                             ApiResponse<void> apiResponse = await ApiResponse.fromFunction(() async {
                                 await server.addToQueue(
-                                  qid: reqs.qid,
+                                  qid: widget.reqs.qid,
                                   name: fullNameController.text, 
                                   phoneNumber: phoneNumberController.text
                                 );

@@ -1,24 +1,43 @@
-import 'package:business_app/business_app/models/user.dart';
-import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/create_user_page.dart';
-import 'package:business_app/services/services.dart';
-import 'package:flutter/material.dart';
 import 'package:business_app/business_app/screens/home_page.dart';
-import 'package:business_app/components/components.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget implements EntranceScreen {
+import 'package:business_app/business_app/models/user.dart';
+import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/create_user_page.dart';
+import 'package:business_app/components/components.dart';
+import 'package:business_app/services/services.dart';
+
+class LoginPage extends StatefulWidget implements EntranceScreen {
   final double height;
+  
+  LoginPage({
+    Key key,
+    this.height,
+  }) : super(key: key);
+
+  LoginPage.height({this.height});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  LoginPage.height({this.height});
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<User>(
       builder: (context, user, _) {
         return CreateUserPage(
-          height: height,
+          height: widget.height,
           title: "Welcome Back!",
           onContinue: () async {
             final ApiResponse response = await ApiResponse.fromFunction(
