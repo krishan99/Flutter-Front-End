@@ -37,8 +37,8 @@ class NotFoundException extends MyServerException {
   NotFoundException(String cause) : super(cause);
 }
 
-class ServerException extends MyServerException {
-  ServerException(String cause) : super(cause);
+class FirebaseServerException extends MyServerException {
+  FirebaseServerException(String cause) : super(cause);
 }
 
 class MyServer {
@@ -81,7 +81,7 @@ class MyServer {
 
   Map<String, dynamic> getMap(http.Response r) {
     if (r.statusCode == 500) {
-      throw ServerException("Server Error");
+      throw MyServerException("Server Error");
     }
     
     final body = jsonDecode(r.body);

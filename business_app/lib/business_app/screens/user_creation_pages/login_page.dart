@@ -1,5 +1,6 @@
 import 'package:business_app/business_app/models/user.dart';
 import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/create_user_page.dart';
+import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/components/components.dart';
@@ -19,7 +20,20 @@ class LoginPage extends StatelessWidget implements EntranceScreen {
         return CreateUserPage(
           height: height,
           title: "Welcome Back!",
-          onContinue: () async => await user.signIn(email: this.emailController.text, password: this.passwordController.text),
+          onContinue: () async {
+            final ApiResponse response = await ApiResponse.fromFunction(
+              () async {
+                await user.signIn(
+                  email: this.emailController.text,
+                  password: this.passwordController.text
+                );
+              }
+            );
+            
+            if (response.isSuccess && user.isLoggedIn) {
+              Navigator.of(context).popAndPushNamed("/dashboard");
+            }
+          },
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

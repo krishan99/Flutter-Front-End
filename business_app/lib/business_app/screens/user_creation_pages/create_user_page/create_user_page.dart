@@ -115,11 +115,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                               text: widget.buttonText,
                               onPressed: () async {
                                 final response = await ApiResponse.fromFunction(widget.onContinue);
-                                
-                                if (response.isSuccess) {
-                                  Navigator.of(context).pop();
-                                }
-                                
+                                                                
                                 setState(() {
                                   this.formState = response;
                                 });

@@ -30,7 +30,17 @@ class SignUpPage extends StatelessWidget implements EntranceScreen {
             if (passwordController.text != checkPasswordController.text) {
               throw CustomException("passwords do not match");
             }
-            await user.signUp(email: emailController.text, password: passwordController.text);
+
+            ApiResponse response = await ApiResponse.fromFunction(() async {
+              await user.signUp(
+                email: emailController.text,
+                password: passwordController.text
+              );
+            });
+
+            if (response.isSuccess) {
+              Navigator.of(context).pushNamed("/accountInfo");
+            }
           },
 
           customUserForm: Column(

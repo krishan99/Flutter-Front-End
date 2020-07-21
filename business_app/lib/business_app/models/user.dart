@@ -3,6 +3,7 @@ import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/services/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:business_app/business_app/models/queues.dart';
 
@@ -116,15 +117,27 @@ class User extends ChangeNotifier {
       }
   }
 
-  Future<void> signIn({@required String email, @required String password}) async {
+
+
+  Future<void> signIn({
+      @required String email,
+      @required String password,
+      String businessName,
+      String description
+    }) async {
+
     AuthResult result;
 
     try {
       result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
     } catch (error) {
-      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
-      throw CustomException(errorMessage);
+      if (error is PlatformException) {
+        // String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
+        throw FirebaseServerException(error.details);
+      } else {
+        throw CustomException(error.toString());
+      }
     }
 
     return notifyServerOfSignIn(result.user.email);
