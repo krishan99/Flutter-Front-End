@@ -82,7 +82,7 @@ class SetupAccountPage extends StatelessWidget {
                     width: 233,
                     height: 55,
                     text: "Continue",
-                    onPressed: () async {
+                    onSuccess: () async {
                       //TODO: Update User Description
                       Navigator.of(context).popAndPushNamed("/dashboard");
                     },

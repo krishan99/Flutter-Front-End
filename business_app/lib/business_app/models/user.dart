@@ -76,7 +76,6 @@ class User extends ChangeNotifier {
       );
 
       final result = await _auth.signInWithCredential(credential);
-      email = result.user.email;
       return notifyServerOfSignIn(result.user.email);
   }
 
@@ -86,17 +85,20 @@ class User extends ChangeNotifier {
     try {
       result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } catch (error) {
-      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.toString());
-      throw CustomException(errorMessage);
+      throw getFirebaseException(error);
     }
 
     setToken();
     await server.signUp(name: "Starbucks", description: "I love coffee");
-    await notifyServerOfSignIn(email);
+    await notifyServerOfSignIn(result.user.email);
+  }
 
-    // return notifyServerOfSignIn(result.user.email);
-    // print("email: $email, password: $password");
-    // return null;
+  Exception getFirebaseException(dynamic error) {
+    if (error is PlatformException) {
+        return FirebaseServerException(getFirebaseErrorMessage(firebaseErrorCode: error.code));
+      } else {
+        return CustomException(error.toString());
+    }
   }
 
   String getFirebaseErrorMessage({@required String firebaseErrorCode}) {
@@ -133,12 +135,7 @@ class User extends ChangeNotifier {
       result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
     } catch (error) {
-      if (error is PlatformException) {
-        // String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
-        throw FirebaseServerException(error.details);
-      } else {
-        throw CustomException(error.toString());
-      }
+      throw getFirebaseException(error);
     }
 
     return notifyServerOfSignIn(result.user.email);

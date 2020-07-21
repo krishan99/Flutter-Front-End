@@ -14,7 +14,7 @@ class ActionButton extends StatelessWidget {
   final Color color;
   final double width;
   final double height;
-  final Function onPressed;
+  final Function onSuccess;
 
   const ActionButton(
       {Key key,
@@ -23,7 +23,7 @@ class ActionButton extends StatelessWidget {
       this.color = Colors.grey,
       this.width = 233,
       this.height = 55,
-      this.onPressed})
+      this.onSuccess})
       : super(key: key);
 
   @override
@@ -45,7 +45,7 @@ class ActionButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-            onTap: onPressed,
+            onTap: onSuccess,
             child: Center(
               child: child,
             )),
@@ -59,12 +59,14 @@ class AccentedActionButton extends StatelessWidget {
   final double width;
   final String text;
   final Function onPressed;
+  final Function onSuccess;
 
   const AccentedActionButton(
       {Key key,
       @required this.text,
       this.height = 55,
       this.width = 233,
+      this.onSuccess,
       this.onPressed})
       : super(key: key);
 
@@ -78,7 +80,15 @@ class AccentedActionButton extends StatelessWidget {
         style: MyStyles.of(context).textThemes.buttonActionText1,
       ),
       gradient: MyStyles.of(context).colors.accentGradient,
-      onPressed: onPressed,
+      onSuccess: () async {
+        if (onPressed != null) {
+          await onPressed();
+        }
+
+        if (onSuccess != null) {
+          await onSuccess();
+        }
+      },
     );
   }
 }
@@ -148,6 +158,7 @@ class StyleTextField extends StatelessWidget {
     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
     Function(String) onChanged,
     Function(String) onSubmitted,
+    String Function(String) getErrorMessage,
   }) {
     return StyleTextField(
       controller: controller,
@@ -158,7 +169,7 @@ class StyleTextField extends StatelessWidget {
       onChanged: onChanged,
       onSubmitted: onSubmitted,
       placeholderText: paceholderText ?? "Password...",
-      getErrorMessage: (text) {
+      getErrorMessage: getErrorMessage ?? (text) {
         if (text.length <= 5) {
           return "Password should contains more then 5 character";
         } else {
@@ -567,7 +578,7 @@ class _SlideableListState extends State<SlideableList> {
         text: "+",
         width: 50,
         height: 50,
-        onPressed: widget.onPlusTap,
+        onSuccess: widget.onPlusTap,
       ),
       body: SafeArea(
         bottom: false,

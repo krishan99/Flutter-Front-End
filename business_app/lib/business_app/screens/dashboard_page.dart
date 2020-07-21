@@ -32,14 +32,18 @@ class DashboardPage extends StatelessWidget {
                 );
               default:
                 if (snapshot.hasError)
-                  return Text('Error: ${snapshot.error}');
+                  return Container(
+                    color: Colors.white,
+                    alignment: Alignment.center,
+                    child: Text('Error: ${snapshot.error.toString()}', style: MyStyles.of(context).textThemes.h2)
+                  );
                 else
                   return SlideableList(
                     onPlusTap: () async{
                       try {
                         await qinfo.makeQueue("Big big fish", "roar roar road");
                       } catch (error) {
-                        Toast.show(error.toString(), context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                        Toast.show(error.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                       }
                     },
 

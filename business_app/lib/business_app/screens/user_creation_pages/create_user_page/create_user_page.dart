@@ -15,6 +15,7 @@ class CreateUserPage extends StatefulWidget {
   final String buttonText;
   final String googleSignInText;
   final Future<void> Function() onContinue;
+  final Function onSuccess;
   Widget customUserForm;
 
   CreateUserPage({
@@ -25,6 +26,7 @@ class CreateUserPage extends StatefulWidget {
     this.buttonText = "Continue",
     this.googleSignInText = "Sign In With Google",
     this.onContinue,
+    this.onSuccess,
     this.customUserForm,
   }) : super(key: key);
 
@@ -37,6 +39,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
   bool get isModallyPresented {
     return widget.height != null;
   }
+
+  static double spacing = 12;
 
   ApiResponse<void> formState;
 
@@ -53,21 +57,21 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 maxHeight: widget.height ?? MediaQuery.of(context).size.height),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               // mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: 20,),
                     Container(
-                      child: Text(
-                        widget.title,
-                        textAlign: TextAlign.center,
-                        style: MyStyles.of(context).textThemes.h2,
-                      )
-                    ),
+                        child: Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      style: MyStyles.of(context).textThemes.h2,
+                    )),
                     SizedBox(
-                      height: 12,
+                      height: spacing,
                     ),
                     Container(
                       child: Text(
@@ -78,23 +82,27 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     ),
                   ],
                 ),
-                Center(
-                  child: Consumer<User>(
-                    builder: (context, user, _) {
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Consumer<User>(builder: (context, user, _) {
                       return GoogleSignInButton(
                         text: widget.googleSignInText,
                         onPressed: () {
                           user.signInWithGoogle().catchError((error) {
-                            Toast.show(error.toString(), context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                            Toast.show(error.toString(), context,
+                                duration: Toast.LENGTH_LONG,
+                                gravity: Toast.BOTTOM);
                           });
                         },
                       );
-                    }
+                    }),
                   ),
                 ),
                 Container(
-                  constraints: BoxConstraints(maxHeight: 300),
-                  width: 269,
+                  constraints: BoxConstraints(maxWidth: 330),
+                  padding: EdgeInsets.all(20),
+                  // width: 269,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -104,9 +112,14 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           style: MyStyles.of(context).textThemes.bodyText2,
                         ),
                       ),
+                      SizedBox(
+                        height: spacing,
+                      ),
                       Container(
-                        // color: Colors.yellow,                          
-                        child: widget.customUserForm
+                          // color: Colors.yellow,
+                          child: widget.customUserForm),
+                      SizedBox(
+                        height: spacing,
                       ),
                       Column(
                         children: [
@@ -114,20 +127,30 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             child: AccentedActionButton(
                               text: widget.buttonText,
                               onPressed: () async {
-                                final response = await ApiResponse.fromFunction(widget.onContinue);
-                                                                
+                                final response = await ApiResponse.fromFunction(
+                                    widget.onContinue);
+
                                 setState(() {
                                   this.formState = response;
                                 });
                               },
+                              onSuccess: widget.onSuccess,
                             ),
                           ),
-                          if (this.formState != null)
+                          if (this.formState != null &&
+                              this.formState.message != null)
                             Container(
-                              padding: EdgeInsets.all(5),
-                              child: Text(this.formState.message, style: MyStyles.of(context).textThemes.errorSubText)
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                this.formState.message,
+                                textAlign: TextAlign.center,
+                                style: MyStyles.of(context).textThemes.errorSubText
+                              )
                             )
                         ],
+                      ),
+                      SizedBox(
+                        height: spacing,
                       ),
                     ],
                   ),

@@ -49,15 +49,6 @@ class TappableFullScreenView extends StatelessWidget {
   }
 }
 
-class LB extends ActionButton {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-
-    return super.build(context);
-  }
-}
-
 class LoadingButton extends StatelessWidget {
   final double height;
   final double width;

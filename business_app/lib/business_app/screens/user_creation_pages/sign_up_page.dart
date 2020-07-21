@@ -1,28 +1,41 @@
-import 'package:business_app/business_app/models/user.dart';
-import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/create_user_page.dart';
-import 'package:business_app/services/services.dart';
-import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
-
-import 'package:business_app/business_app/screens/home_page.dart';
-import 'package:business_app/components/components.dart';
-import 'package:business_app/theme/themes.dart';
 import 'package:provider/provider.dart';
 
-class SignUpPage extends StatelessWidget implements EntranceScreen {
-  double height;
+import 'package:business_app/business_app/models/user.dart';
+import 'package:business_app/business_app/screens/home_page.dart';
+import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/create_user_page.dart';
+import 'package:business_app/components/components.dart';
+import 'package:business_app/services/services.dart';
+import 'package:business_app/theme/themes.dart';
+import 'package:business_app/utils.dart';
+
+class SignUpPage extends StatefulWidget implements EntranceScreen {
+  final double height;
+
+  SignUpPage.height({this.height});
+
+  SignUpPage({
+    Key key,
+    this.height,
+  }) : super(key: key);
+
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController checkPasswordController = TextEditingController();
 
-  SignUpPage.height({this.height});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<User>(
       builder: (context, user, _) {
         return CreateUserPage(
-          height: height,
+          height: widget.height,
           title: "Sign Up",
           googleSignInText: "Sign Up With Google",
 
@@ -31,17 +44,13 @@ class SignUpPage extends StatelessWidget implements EntranceScreen {
               throw CustomException("passwords do not match");
             }
 
-            ApiResponse response = await ApiResponse.fromFunction(() async {
-              await user.signUp(
-                email: emailController.text,
-                password: passwordController.text
-              );
-            });
-
-            if (response.isSuccess) {
-              Navigator.of(context).pushNamed("/accountInfo");
-            }
+            await user.signUp(
+              email: emailController.text,
+              password: passwordController.text
+            );
           },
+
+          onSuccess: () => Navigator.of(context).pushNamed("/accountInfo"),
 
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,6 +67,13 @@ class SignUpPage extends StatelessWidget implements EntranceScreen {
               StyleTextField.password(
                 controller: checkPasswordController,
                 paceholderText: "Retype Password...",
+                getErrorMessage: (text) {
+                  if (text != passwordController.text) {
+                    return "Passwords do Not Match";
+                  } else {
+                    return null;
+                  }
+                },
               ),
             ]
           )

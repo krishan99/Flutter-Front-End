@@ -115,7 +115,7 @@ class JoinQueuePage extends StatelessWidget {
                             );
 
                             if (apiResponse.isError) {
-                              Toast.show(apiResponse.message, context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                              Toast.show(apiResponse.message, context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             }
 
                             return (){
