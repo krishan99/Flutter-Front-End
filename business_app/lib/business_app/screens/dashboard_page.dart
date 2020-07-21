@@ -23,7 +23,13 @@ class DashboardPage extends StatelessWidget {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
               case ConnectionState.none:
-                return Text('Loading queues...');
+                return Scaffold(
+                  body: Container(
+                    alignment: Alignment.center,
+                    color: MyStyles.of(context).colors.background2,
+                    child: Text("Loading Queues...", style: MyStyles.of(context).textThemes.bodyText2,),
+                  )
+                );
               default:
                 if (snapshot.hasError)
                   return Text('Error: ${snapshot.error}');

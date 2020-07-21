@@ -45,10 +45,9 @@ class MyServer {
   final path;
   static const Duration timeout = Duration(seconds: Foundation.kDebugMode ? 10 : 10);
 
-  static Map<String, String> _headers = <String, String>{
+  static Map<String, String> headers = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
   };
-  static Map<String, String> get headers => _headers;
 
   String _getURL({@required String route}) {
     return "$path$route";
@@ -59,7 +58,7 @@ class MyServer {
 
     final response = await http.post(
       url,
-      headers: _headers,
+      headers: headers,
       body: jsonEncode(body)
     ).timeout(timeout);
 
@@ -72,7 +71,7 @@ class MyServer {
     final url = _getURL(route: route);
     final response = await http.get(
       url,
-      headers: _headers,
+      headers: headers,
     );
     
     updateCookie(response);
@@ -112,7 +111,7 @@ class MyServer {
     String rawCookie = response.headers['set-cookie'];
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
-      _headers['cookie'] =
+      headers['cookie'] =
           (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
   }

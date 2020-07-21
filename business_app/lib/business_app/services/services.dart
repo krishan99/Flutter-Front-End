@@ -1,5 +1,6 @@
 import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/services/services.dart';
+import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class BusinessAppServer extends MyServer {
@@ -31,14 +32,23 @@ class BusinessAppServer extends MyServer {
   }
 
   //TODO: Use firebase Token ID instead.
-  Future<void> signIn(String email) async {
+  Future<void> signIn() async {
     await post(
-      "api/v1/test",
+      "api/v1/account/signin",
+      body: <String, String>{}
+    ); 
+  }
+
+  Future<void> signUp({@required String name, @required String description}) async {
+    await post(
+      "api/v1/account/signup",
       body: <String, String>{
-        "email": email,
+        "name": name,
+        "description": description
       }
     ); 
   }
+  
 
   Future<List<Queue>> getListofQueues() async {
     Map<String, dynamic> body = await get("api/v1/queue/retrieve_all");

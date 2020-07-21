@@ -1,5 +1,3 @@
-import 'dart:collection';
-import 'dart:convert';
 
 import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/services/services.dart';
@@ -46,8 +44,21 @@ class User extends ChangeNotifier {
     return _firebaseUser.displayName;
   }
 
+  Future<String> getToken() async {
+    FirebaseUser user = await _auth.currentUser();
+    IdTokenResult tokenResult = await user.getIdToken();
+
+    return tokenResult.token.toString();
+  }
+
+  Future<void> setToken() async {
+    String token = await getToken();
+    MyServer.headers["Authorization"] = token;
+  }
+
   Future<void> notifyServerOfSignIn(String email) async {
-    await server.signIn(email);
+    setToken();
+    await server.signIn();
     server.connectSocket();
     this.email = email;
     notifyListeners();
@@ -78,7 +89,10 @@ class User extends ChangeNotifier {
       throw CustomException(errorMessage);
     }
 
-    return notifyServerOfSignIn(result.user.email);
+    setToken();
+    await server.signUp(name: "Starbucks", description: "I love coffee");
+
+    // return notifyServerOfSignIn(result.user.email);
     // print("email: $email, password: $password");
     // return null;
   }
@@ -107,7 +121,7 @@ class User extends ChangeNotifier {
 
     try {
       result = await _auth.signInWithEmailAndPassword(
-          email: "pizza@gmail.com", password: password);
+          email: email, password: password);
     } catch (error) {
       String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
       throw CustomException(errorMessage);
