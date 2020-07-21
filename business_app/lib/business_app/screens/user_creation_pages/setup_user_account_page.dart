@@ -1,5 +1,7 @@
 import 'package:business_app/business_app/models/user.dart';
+import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/components/components.dart';
+import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/user_app/components/components.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                           builder: (context, user, _) {
                             return Container(
                               child: Text(
-                                "Hello ${user.name ?? ""}!",
+                                "Hello ${user.name ?? "John Doe"}!",
                                 textAlign: TextAlign.center,
                                 style: MyStyles.of(context).textThemes.h2,
                               )
@@ -57,7 +59,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                         ),
                         Container(
                           child: Text(
-                            "This can be changed in settings.",
+                            "Almost there.",
                             textAlign: TextAlign.center,
                             style: MyStyles.of(context).textThemes.h3,
                           ),
@@ -98,15 +100,28 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                   fit: FlexFit.loose,
                   child: Container(
                     alignment: Alignment.center,
-                    child: AccentedActionButton(
-                      width: 233,
-                      height: 55,
-                      text: "Continue",
-                      onSuccess: () async {
-                        //TODO: Update User Description
-                        
-                        Navigator.of(context).popAndPushNamed("/dashboard");
-                      },
+                    child: Consumer<User>(
+                      builder: (context, user, _) {
+                        return AccentedActionButton(
+                          width: 233,
+                          height: 55,
+                          text: "Continue",
+                          onPressed: () async {
+                            if (this.nameController.text.isEmpty) {
+                              throw CustomException("You must enter a business name.");
+                            }
+
+                            await user.updateUserData(
+                              name: this.nameController.text,
+                              description: this.descriptionController.text
+                            );
+                          },
+
+                          onSuccess: () async {
+                            Navigator.of(context).popAndPushNamed("/dashboard");
+                          },
+                        );
+                      }
                     ),
                   ),
                 ),

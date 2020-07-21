@@ -30,7 +30,7 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      height: 50.0,
+      height: height,
       decoration: BoxDecoration(
           gradient: gradient,
           color: color,
@@ -54,46 +54,76 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-class AccentedActionButton extends StatelessWidget {
+class AccentedActionButton extends StatefulWidget {
   final double height;
   final double width;
   final String text;
   final Function onPressed;
   final Function onSuccess;
 
-  const AccentedActionButton(
-      {Key key,
-      @required this.text,
-      this.height = 55,
-      this.width = 233,
-      this.onSuccess,
-      this.onPressed})
-      : super(key: key);
+  AccentedActionButton(
+    {Key key,
+    @required this.text,
+    this.height = 55,
+    this.width = 233,
+    this.onSuccess,
+    this.onPressed})
+    : super(key: key);
+
+  @override
+  _AccentedActionButtonState createState() => _AccentedActionButtonState();
+}
+
+class _AccentedActionButtonState extends State<AccentedActionButton> {
+
+  String errorMessage;
 
   @override
   Widget build(BuildContext context) {
-    return ActionButton(
-      width: width,
-      height: height,
-      child: Text(
-        text,
-        style: MyStyles.of(context).textThemes.buttonActionText1,
+    return Container(
+      width: widget.width,
+      child: Column(
+        children: [
+          ActionButton(
+            height: widget.height,
+            child: Text(
+              widget.text,
+              style: MyStyles.of(context).textThemes.buttonActionText1,
+            ),
+            gradient: MyStyles.of(context).colors.accentGradient,
+            onSuccess: () async {
+              try {
+                if (widget.onPressed != null) {
+                  await widget.onPressed();
+                }
+
+                if (widget.onSuccess != null) {
+                  await widget.onSuccess();
+                }
+
+                setState(() {
+                  this.errorMessage = null;
+                });
+              } catch (error) {
+                setState(() {
+                  this.errorMessage = error.toString();
+                });
+              } 
+            },
+          ),
+          if (this.errorMessage != null)
+            Container(
+              padding: EdgeInsets.all(5),
+              child: Text(
+                this.errorMessage,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: MyStyles.of(context).textThemes.errorSubText
+              )
+            )
+        ],
       ),
-      gradient: MyStyles.of(context).colors.accentGradient,
-      onSuccess: () async {
-        if (onPressed != null) {
-          try {
-            await onPressed();
-            if (onSuccess != null) {
-              await onSuccess();
-            }
-          } catch (error) {
-            print("ERROR: ${error.toString()}");
-          }
-        } else if (onSuccess != null) {
-          await onSuccess();
-        }
-      },
     );
   }
 }

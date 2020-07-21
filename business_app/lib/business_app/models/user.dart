@@ -96,6 +96,11 @@ class User extends ChangeNotifier {
     await notifyServerOfSignIn(result.user.email);
   }
 
+  Future<void> updateUserData({String name, String description}) async {
+    assert(isLoggedIn);
+    await server.updateUserData(name: name ?? "", description: description ?? "");
+  }
+
   Exception getFirebaseException(dynamic error) {
     if (error is PlatformException) {
         return FirebaseServerException(getFirebaseErrorMessage(firebaseErrorCode: error.code));

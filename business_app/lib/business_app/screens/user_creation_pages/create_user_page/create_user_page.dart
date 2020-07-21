@@ -42,8 +42,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
   static double spacing = 12;
 
-  String erroMessage;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,31 +135,10 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           Container(
                             child: AccentedActionButton(
                               text: widget.buttonText,
-                              onPressed: () async {
-                                try {
-                                  await widget.onContinue();
-                                  setState(() {
-                                    this.erroMessage = null;
-                                  });
-                                } catch (error) {
-                                  setState(() {
-                                    this.erroMessage = error.toString();
-                                  });
-                                  throw error;
-                                }
-                              },
+                              onPressed: widget.onContinue,
                               onSuccess: widget.onSuccess,
                             ),
                           ),
-                          if (erroMessage != null)
-                            Container(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                erroMessage,
-                                textAlign: TextAlign.center,
-                                style: MyStyles.of(context).textThemes.errorSubText
-                              )
-                            )
                         ],
                       ),
                       SizedBox(
