@@ -1,8 +1,11 @@
-import 'package:business_app/services/services.dart';
-import 'package:flutter/material.dart';
-import 'package:business_app/business_app/services/services.dart';
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
+import 'package:business_app/business_app/services/services.dart';
+import 'package:business_app/services/services.dart';
 
 BusinessAppServer server = new BusinessAppServer();
 
@@ -120,7 +123,7 @@ class QueuePeople with ChangeNotifier{
   
   void add2Queue(BusinessAppServer server, String name, int id, String phone) {
     theline.putIfAbsent(-1, () => QueuePerson(id: id, name: name));
-    server.addUserToQueue(id, name, phone);
+    server.addToQueue(name: name, phoneNumber: phone, qid: id);
     notifyListeners();
   }
 
@@ -137,7 +140,7 @@ enum QueueState {
   active, inactive
 }
 
-class Queue with ChangeNotifier{
+class Queue with ChangeNotifier {
   final int id;
   String _name;
   String _description;
@@ -155,50 +158,75 @@ class Queue with ChangeNotifier{
   }
   QueuePeople get people => _people;
 
-  void update(Map<String, dynamic> info){
-    _name = info["qname"] ?? _name;
-    _description = info["description"] ?? _description;
-    _code = info["code"] ?? _code;
-    notifyListeners();
+  static Queue fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+  
+    return Queue(
+      id: map['id'],
+      name: map['qname'],
+      description: map['description'],
+      code: map['code'],
+    );
   }
 
-  Queue({@required this.id}){
-    this._name = "New Queues";
-    this._description = "Swipe from the left to delete this queue and swipe right to see more details.";
+  // void update(Map<String, dynamic> info){
+  //   _name = info["qname"] ?? _name;
+  //   _description = info["description"] ?? _description;
+  //   _code = info["code"] ?? _code;
+  //   notifyListeners();
+  // }
+
+  Queue({
+    this.id,
+    String name,
+    String description,
+    QueueState state = QueueState.inactive,
+    String code
+  }){
+    this._name = name;
+    this._description = description;
     this._state = QueueState.inactive;
-    this._code = "...";
-    this._people = new QueuePeople(id: this.id);
+    this._code = code;
+    this._people = QueuePeople(id: this.id);
   }
 }
 
+//TODO: Someone please make sure this is ok
 class AllQueuesInfo with ChangeNotifier {
   final BusinessAppServer server;
   var queues = new Map<int, Queue>();
   Iterable<Queue> get body => queues.values;
 
   Future<void> retrieveServer() async {
+    //This now returns a list of queues instead of maps
     var serverQueues = await server.getListofQueues();
+
+    this.queues = Map<int, Queue>();
+    for (var i=0; i<serverQueues.length; i++) {
+      this.queues[i] = serverQueues[i];
+    }
+    // this.queues = serverQueues;
     // update info based on server
-    for(var i=0; i<serverQueues.length; i++){
-      int k = serverQueues[i]["qid"];
-      if(!queues.containsKey(k)){
-        queues[k]=new Queue(id: k);
-      }
-      queues[k].update(serverQueues[i]);
-    }
-    // delete anything not on server anymore
-    var keys = queues.keys;
-    var toRemove = [];
-    for(var k in keys){
-      bool there = false;
-      for(var j=0; j<serverQueues.length; j++){
-        if(serverQueues[j]["qid"]==k){
-          there=true;
-          break;
-        }
-      }
-      if(!there) toRemove.add(k);
-    }
+    // for(var i=0; i<serverQueues.length; i++){
+    //   int k = serverQueues[i]["qid"];
+    //   if(!queues.containsKey(k)){
+    //     queues[k]=new Queue(id: k);
+    //   }
+    //   queues[k].update(serverQueues[i]);
+    // }
+    // // delete anything not on server anymore
+    // var keys = queues.keys;
+    // var toRemove = [];
+    // for(var k in keys){
+    //   bool there = false;
+    //   for(var j=0; j<serverQueues.length; j++){
+    //     if(serverQueues[j]["qid"]==k){
+    //       there=true;
+    //       break;
+    //     }
+    //   }
+    //   if(!there) toRemove.add(k);
+    // }
   }
 
   // currently doesn't really do anything
@@ -207,11 +235,13 @@ class AllQueuesInfo with ChangeNotifier {
     BusinessAppServer.leaveRoom();
   }
 
+  //TODO: Someone please make sure this is ok
   Future<void> makeQueue(String name, String description) async {
-    Map<String, dynamic> n = await server.makeQueue(name, description);
-    int k = n["qid"];
-    queues[k] = new Queue(id: k);
-    queues[k].update(n);
+    Queue queue = await server.makeQueue(name, description);
+    queues[queue.id] = queue;
+    // int k = n["qid"];
+    // queues[k] = new Queue(id: k);
+    // queues[k].update(n);
     notifyListeners();
   }
 

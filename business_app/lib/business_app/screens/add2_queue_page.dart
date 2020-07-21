@@ -71,7 +71,7 @@ class Add2Queue extends StatelessWidget {
                         height: 55,
                         text: "Continue",
                         onPressed: () => {
-                          queue.people.add2Queue(server, name, -1, phoneNumber),
+                          queue.people.add2Queue(server, name, queue.id, phoneNumber),
                           Navigator.pop(context),
                         },
                       ),

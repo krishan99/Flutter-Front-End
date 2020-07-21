@@ -1,4 +1,6 @@
+import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/services/services.dart';
+import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class BusinessAppServer extends MyServer {
@@ -39,20 +41,23 @@ class BusinessAppServer extends MyServer {
     ); 
   }
 
-  Future<List> getListofQueues() async {
+  Future<List<Queue>> getListofQueues() async {
     Map<String, dynamic> body = await get("api/v1/queue/retrieve_all");
-    return body["queues"];
+    return (body["queues"] as List).map(
+      (queueMapObject) => Queue.fromMap(queueMapObject as Map<String, dynamic>)
+    ).toList();
   }
 
-  //TODO: Shouldn't this just return a Queue object?
-  Future<Map<String, dynamic>> makeQueue(String name, String description) async {
-    return await post(
+  Future<Queue> makeQueue(String name, String description) async {
+    Map<String, dynamic> body = await post(
       "api/v1/queue/make",
       body: <String, String>{
         "qname": name,
         "description": description,
       }
     );
+
+    return Queue.fromMap(body);
   }
 
   Future<void> deleteQueue(int id) async {
@@ -70,6 +75,17 @@ class BusinessAppServer extends MyServer {
       body: <String, int>{
         "qid": id,
         "id": person_id,
+      }
+    );
+  }
+  
+  Future<void> addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
+    await post(
+      "/api/v1/queue/user/postform",
+      body: <String, String> {
+        "qid": qid.toString(),
+        "name": name,
+        "phone": phoneNumber,
       }
     );
   }

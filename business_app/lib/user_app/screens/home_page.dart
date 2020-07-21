@@ -4,35 +4,20 @@ import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/user_app/components/components.dart';
 import 'package:business_app/user_app/models/models.dart';
+import 'package:business_app/user_app/services/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
+  TextEditingController codeController = TextEditingController();
+  String errorMessage;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  QueueHandler _queueHandler;
-
-  //TODO: Temporary solution, need to figure out how to pass controllers
-  String _code = "";
-  // final _textFieldController = TextEditingController();
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    // _textFieldController.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    _queueHandler = Provider.of<QueueHandler>(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return TappableGradientScaffold(
@@ -53,70 +38,73 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: 20),
 
-                Consumer<ApiResponse<QueueReqs>>(
-                  builder: (context, api, _) {
-                    final isError = api.status == Status.ERROR;
-
-                    return Column(
-                      children: [
-                        Container(
-                          color: Colors.transparent,
-                          constraints: BoxConstraints(maxWidth: 250),
-                          child: StyleTextField(
-                            onChanged: (value){
-                              _code = value;
-                            },
-
-                            placeholderText: "Enter Pin...",
+                Column(
+                  children: [
+                    Container(
+                      color: Colors.transparent,
+                      constraints: BoxConstraints(maxWidth: 250),
+                      child: StyleTextField(
+                        controller: widget.codeController,
+                        textInputType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        placeholderText: "Enter Pin...",
+                      ),
+                    ),
+                    () {
+                      if (widget.errorMessage != null) {
+                        return ShakeWidget(
+                          key: ValueKey(widget.codeController.text),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Text(widget.errorMessage,
+                                style: MyStyles.of(context)
+                                    .textThemes
+                                    .subtext
+                                    .copyWith(color: Colors.white)),
                           ),
-                        ),
-                        () {
-                          if (isError) {
-                            return ShakeWidget(
-                              key: ValueKey(_code),
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Text("Invalid Queue Code",
-                                    style: MyStyles.of(context)
-                                        .textThemes
-                                        .subtext
-                                        .copyWith(color: Colors.white)),
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }()
-                      ],
-                    );
-                  },
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }()
+                  ],
                 ),
 
                 Container(
                   padding: EdgeInsets.all(15),
                   color: Colors.transparent,
                   constraints: BoxConstraints(maxWidth: 200),
-                  child: LoadingButton(
-                    defaultWidget: Text("Submit",
-                        style:
-                            MyStyles.of(context).textThemes.buttonActionText2),
-                        onPressed: () async {
-                          final apiResponse = await _queueHandler.updateQueueReqs(
-                            code: _code
-                          );
-                          // code: _textFieldController.value.text);
-                      return () {
-                          switch (apiResponse.status) {
-                            case Status.COMPLETED:
-                              Navigator.of(context).pushNamed("/join_queue", arguments: apiResponse.data);
-                              break;
-                            case Status.ERROR:
-                            case Status.LOADING:
-                              break;
+                  child: Consumer<UAppServer>(builder: (context, server, _) {
+                    return LoadingButton(
+                      defaultWidget: Text("Submit",
+                          style: MyStyles.of(context)
+                              .textThemes
+                              .buttonActionText2),
+                      onPressed: () async {
+                        final apiResponse =
+                          await ApiResponse.fromFunction(() async {
+                          return await server.getQueueReqs(
+                            code: widget.codeController.text);
                           }
-                      };
-                    },
-                  ),
+                        );
+
+                        if (apiResponse.isError) {
+                          setState(() {
+                            widget.errorMessage = apiResponse.message;
+                          });
+                        }
+
+                        return () {
+                          if (apiResponse.isSuccess) {
+                            Navigator.of(context).pushNamed("/join_queue",
+                                arguments: apiResponse.data);
+                          }
+                        };
+                      },
+                    );
+                  }),
                 ),
 
                 // SizedBox(height: 20),

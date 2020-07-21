@@ -15,11 +15,6 @@ void main() {
     MultiProvider(
       providers: [
         Provider.value(value: mD.server),
-        Provider.value(value: mD.queueHandler),
-        StreamProvider.value(
-          value: mD.queueHandler.queueReqsStream,
-          initialData: ApiResponse.completed(QueueReqs()),
-        ),
         ChangeNotifierProvider.value(value: mD.user),
       ],
       child: MyApp()

@@ -102,7 +102,7 @@ class User extends ChangeNotifier {
       }
   }
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> signIn({@required String email, @required String password}) async {
     AuthResult result;
 
     try {
@@ -128,8 +128,7 @@ class User extends ChangeNotifier {
   User({@required this.server}) {
     _auth.onAuthStateChanged.listen((fUser) async {
       this._firebaseUser = fUser;
-      print(
-          "AUTH STATE CHANGED: ${this.isLoggedIn}");
+      print("AUTH STATE CHANGED: ${this.isLoggedIn}");
       if (this.isLoggedIn) {
         this.notifyServerOfSignIn(fUser.email);
       }

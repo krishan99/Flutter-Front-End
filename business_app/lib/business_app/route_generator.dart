@@ -18,7 +18,7 @@ class BAppRouteGenerator {
       case '/':
         return MaterialPageRoute(
           builder: (context) {
-            final user = Provider.of<User>(context, listen: false);
+            final user = Provider.of<User>(context, listen: true);
             if (user.isLoggedIn) {
               return DashboardPage();
             } else {

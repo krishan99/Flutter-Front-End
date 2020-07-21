@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget implements EntranceScreen {
         return CreateUserPage(
           height: height,
           title: "Welcome Back!",
-          onContinue: () async => await user.signUp(email: this.emailController.text, password: this.passwordController.text),
+          onContinue: () async => await user.signIn(email: this.emailController.text, password: this.passwordController.text),
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

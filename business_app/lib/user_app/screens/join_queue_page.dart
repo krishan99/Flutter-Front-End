@@ -1,3 +1,5 @@
+import 'package:business_app/business_app/models/queues.dart';
+import 'package:business_app/business_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -66,14 +68,15 @@ class JoinQueuePage extends StatelessWidget {
                         )
                     ),
                   ),
-                  // Text(
-                  //   "Join Queue for EndLine",
-                  //   style: MyStyles.of(context)
-                  //       .textThemes
-                  //       .h3
-                  //       .copyWith(color: Colors.white),
-                  //   textAlign: TextAlign.center,
-                  // ),
+                  SizedBox(height: columnSpacing,),
+                  Text(
+                    reqs.businessName ?? "Could Not Get Business Name",
+                    style: MyStyles.of(context)
+                        .textThemes
+                        .h3
+                        .copyWith(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
                   SizedBox(height: columnSpacing,),
                   if (reqs.needsName)
                     StyleTextField(
