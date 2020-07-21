@@ -1,5 +1,6 @@
 import 'package:business_app/business_app/models/user.dart';
 import 'package:business_app/business_app/models/queues.dart';
+import 'package:business_app/business_app/screens/add2_queue_page.dart';
 import 'package:business_app/business_app/screens/dashboard_page.dart';
 import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/business_app/screens/queue_page.dart';
@@ -48,6 +49,14 @@ class BAppRouteGenerator {
            builder: (context) {
             AllQueuesInfo QueuesInfo = args as AllQueuesInfo;
             return CreateQueue(QueuesInfo);
+          }
+          );
+        
+         case '/add2Queue':
+          return MaterialPageRoute( 
+           builder: (context) {
+            Queue queue = args as Queue;
+            return Add2Queue(queue);
           }
           );
       default:

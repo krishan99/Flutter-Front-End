@@ -117,6 +117,12 @@ class QueuePeople with ChangeNotifier{
     theline.remove(id);
     notifyListeners();
   }
+  
+  void add2Queue(BusinessAppServer server, String name, int id, String phone) {
+    theline.putIfAbsent(-1, () => QueuePerson(id: id, name: name));
+    server.addUserToQueue(id, name, phone);
+    notifyListeners();
+  }
 
   QueuePeople({@required this.id}){
     print("update $id");
