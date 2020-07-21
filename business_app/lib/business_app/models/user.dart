@@ -45,21 +45,20 @@ class User extends ChangeNotifier {
 
   Future<String> getToken() async {
     IdTokenResult tokenResult = await _firebaseUser.getIdToken();
-
     return tokenResult.token.toString();
   }
 
-  Future<void> setToken() async {
-    String token = await getToken();
-    MyServer.headers["Authorization"] = token;
-  }
-
   Future<void> notifyServerOfSignIn(String email) async {
-    await setToken();
-    await server.signIn();
+    final token = await getToken();
+    await server.signIn(token: token);
     server.connectSocket();
     this.email = email;
     notifyListeners();
+  }
+
+  Future<void> createAccountOnServer({String name, String description}) async {
+      final token = await getToken();
+      await server.signUp(token: token, name: name, description: description);
   }
 
   Future<void> signInWithGoogle() async {
@@ -73,7 +72,15 @@ class User extends ChangeNotifier {
       );
 
       final result = await _auth.signInWithCredential(credential);
-      return notifyServerOfSignIn(result.user.email);
+
+      try {
+        await notifyServerOfSignIn(result.user.email);
+      } on AccountDoesNotExistException {
+        await createAccountOnServer();
+        await notifyServerOfSignIn(result.user.email);
+      } catch (error) {
+        throw error;
+      } 
   }
 
   Future<void> signUp({String name, @required String email, @required String password}) async {
@@ -85,8 +92,7 @@ class User extends ChangeNotifier {
       throw getFirebaseException(error);
     }
 
-    await setToken();
-    await server.signUp(name: "Starbucks", description: "I love coffee");
+    await createAccountOnServer(name: "Starbucks", description: "I love coffee");
     await notifyServerOfSignIn(result.user.email);
   }
 

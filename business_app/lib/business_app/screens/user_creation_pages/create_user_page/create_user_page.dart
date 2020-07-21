@@ -88,12 +88,23 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     child: Consumer<User>(builder: (context, user, _) {
                       return GoogleSignInButton(
                         text: widget.googleSignInText,
-                        onPressed: () {
-                          user.signInWithGoogle().catchError((error) {
-                            Toast.show(error.toString(), context,
-                                duration: Toast.LENGTH_LONG,
-                                gravity: Toast.BOTTOM);
+                        onPressed: () async {
+                          final apiResponse = await ApiResponse.fromFunction(() async {
+                            await user.signInWithGoogle();
                           });
+                          
+                          if (apiResponse.isError) {
+                            Toast.show(
+                              apiResponse.message,
+                              context,
+                              duration: Toast.LENGTH_LONG,
+                              gravity: Toast.BOTTOM
+                            );
+                          } else if (apiResponse.isSuccess) {
+                            if (widget.onSuccess != null) {
+                              widget.onSuccess();
+                            }
+                          }
                         },
                       );
                     }),

@@ -32,21 +32,29 @@ class BusinessAppServer extends MyServer {
   }
 
   //TODO: Use firebase Token ID instead.
-  Future<void> signIn() async {
+  Future<void> signIn({@required String token}) async {
+    _setToken(token);
+    
     await post(
       "api/v1/account/signin",
       body: <String, String>{}
     ); 
   }
 
-  Future<void> signUp({@required String name, @required String description}) async {
+  Future<void> signUp({@required String token, String name, String description}) async {
+    _setToken(token);
+
     await post(
       "api/v1/account/signup",
       body: <String, String>{
-        "name": name,
-        "description": description
+        "name": name ?? "",
+        "description": description ?? ""
       }
     ); 
+  }
+
+  void _setToken(String token) {
+    MyServer.headers["Authorization"] = token;
   }
   
 

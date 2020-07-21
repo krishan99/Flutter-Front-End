@@ -25,6 +25,10 @@ class ForbiddenException extends MyServerException {
   ForbiddenException(String cause) : super(cause);
 }
 
+class AccountDoesNotExistException extends ForbiddenException {
+    AccountDoesNotExistException(String cause) : super(cause);
+}
+
 class JsonEncodingException extends MyServerException {
   JsonEncodingException(String cause) : super(cause);
 }
@@ -91,17 +95,26 @@ class MyServer {
     }
 
     final message = body['message'] as String;
+
     print("ERROR: $message");
-    switch (r.statusCode) {
-      case 403:
-        throw ForbiddenException(message);
-      case 405:
-        throw JsonEncodingException(message);
-      case 404:
-        throw NotFoundException(message);
+
+    switch (message) {
+      case "User not signed up":
+        throw AccountDoesNotExistException("This User is Not Signed Up");
       default:
-        throw Exception(message);
+        switch (r.statusCode) {
+        case 403:
+          throw ForbiddenException(message);
+        case 405:
+          throw JsonEncodingException(message);
+        case 404:
+          throw NotFoundException(message);
+        default:
+          throw Exception(message);
+      }
     }
+
+    
   }
 
   void updateCookie(http.Response response) {
