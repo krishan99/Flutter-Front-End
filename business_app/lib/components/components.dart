@@ -82,10 +82,15 @@ class AccentedActionButton extends StatelessWidget {
       gradient: MyStyles.of(context).colors.accentGradient,
       onSuccess: () async {
         if (onPressed != null) {
-          await onPressed();
-        }
-
-        if (onSuccess != null) {
+          try {
+            await onPressed();
+            if (onSuccess != null) {
+              await onSuccess();
+            }
+          } catch (error) {
+            print("ERROR: ${error.toString()}");
+          }
+        } else if (onSuccess != null) {
           await onSuccess();
         }
       },
@@ -267,8 +272,9 @@ class StyleTextField extends StatelessWidget {
                       obscureText: obscureText,
                       inputFormatters: inputFormatters,
                       onChanged: (text) {
-                        print(text);
-                        onChanged(text);
+                        if (onChanged != null) {
+                          onChanged(text);
+                        }
                         state.didChange(text);
                       },
                       onFieldSubmitted: onSubmitted,

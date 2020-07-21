@@ -55,9 +55,6 @@ class SetupAccountPage extends StatelessWidget {
                     children: <Widget>[
                       StyleTextField(
                         placeholderText: "Enter Business Name",
-                        onChanged: (string) {
-                          print("$string");
-                        },
                       ),
                       SizedBox(
                         height: 12,
@@ -65,9 +62,6 @@ class SetupAccountPage extends StatelessWidget {
                       StyleTextField(
                         placeholderText: "Enter Business Description",
                         maxLines: 6,
-                        onChanged: (string) {
-                          print("$string");
-                        },
                       ),
                     ],
                   ),
@@ -96,40 +90,3 @@ class SetupAccountPage extends StatelessWidget {
     );
   }
 }
-
-// import 'package:business_app/theme/themes.dart';
-// import 'package:flutter/material.dart';
-// import 'package:business_app/components/components.dart';
-
-// import 'home_page.dart';
-
-// class SignUpPage extends StatefulWidget implements EntranceScreen {
-//   final double height;
-//   SignUpPage.height({this.height});
-//   SignUpPage({this.height});
-
-//   @override
-//   _SignUpPageState createState() => _SignUpPageState(height: this.height);
-// }
-
-// class _SignUpPageState extends State<SignUpPage> {
-//   final double height;
-
-//   _SignUpPageState({this.height}) : super();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SingleChildScrollView(
-//         child: GestureDetector(
-//           onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
-//           child: Container(
-//             color: MyStyles.of(context).colors.background1,
-//             constraints: BoxConstraints(maxHeight: height ?? MediaQuery.of(context).size.height),
-//             child:
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

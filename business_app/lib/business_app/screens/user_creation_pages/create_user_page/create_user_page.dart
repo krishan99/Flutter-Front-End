@@ -42,7 +42,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
   static double spacing = 12;
 
-  ApiResponse<void> formState;
+  String erroMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -127,22 +127,26 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             child: AccentedActionButton(
                               text: widget.buttonText,
                               onPressed: () async {
-                                final response = await ApiResponse.fromFunction(
-                                    widget.onContinue);
-
-                                setState(() {
-                                  this.formState = response;
-                                });
+                                try {
+                                  await widget.onContinue();
+                                  setState(() {
+                                    this.erroMessage = null;
+                                  });
+                                } catch (error) {
+                                  setState(() {
+                                    this.erroMessage = error.toString();
+                                  });
+                                  throw error;
+                                }
                               },
                               onSuccess: widget.onSuccess,
                             ),
                           ),
-                          if (this.formState != null &&
-                              this.formState.message != null)
+                          if (erroMessage != null)
                             Container(
                                 padding: EdgeInsets.all(5),
                                 child: Text(
-                                this.formState.message,
+                                erroMessage,
                                 textAlign: TextAlign.center,
                                 style: MyStyles.of(context).textThemes.errorSubText
                               )

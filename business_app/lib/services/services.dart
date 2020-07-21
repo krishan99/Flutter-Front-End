@@ -91,16 +91,13 @@ class MyServer {
     }
 
     final message = body['message'] as String;
-
+    print("ERROR: $message");
     switch (r.statusCode) {
       case 403:
-        print(message);
         throw ForbiddenException(message);
       case 405:
-        print(message);
         throw JsonEncodingException(message);
       case 404:
-        print(message);
         throw NotFoundException(message);
       default:
         throw Exception(message);

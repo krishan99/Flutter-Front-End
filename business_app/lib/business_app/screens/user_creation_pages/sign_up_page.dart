@@ -9,6 +9,8 @@ import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/utils.dart';
 
+
+
 class SignUpPage extends StatefulWidget implements EntranceScreen {
   final double height;
 
@@ -29,6 +31,23 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController checkPasswordController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    
+    emailController.addListener(() {
+      print("hello: ${emailController.text}");
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailController.dispose();
+    passwordController.dispose();
+    checkPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
