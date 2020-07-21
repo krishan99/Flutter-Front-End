@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:business_app/business_app/models/user.dart';
-import 'package:business_app/business_app/screens/user_creation_pages/user_creation_components.dart';
+import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/user_creation_components.dart';
 import 'package:business_app/components/components.dart';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
-import 'package:business_app/utils.dart';
 import 'package:toast/toast.dart';
 
 class CreateUserPage extends StatefulWidget {
@@ -40,15 +39,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
   }
 
   ApiResponse<void> formState;
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();    
-
-  //   if (user.isLoggedIn && isModallyPresented) {
-  //     Navigator.pop(context);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +115,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                               text: widget.buttonText,
                               onPressed: () async {
                                 final response = await ApiResponse.fromFunction(widget.onContinue);
+                                
+                                if (response.isSuccess) {
+                                  Navigator.of(context).pop();
+                                }
+                                
                                 setState(() {
                                   this.formState = response;
                                 });
@@ -138,17 +133,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             )
                         ],
                       ),
-
-                      // Material(
-                      //   color: Colors.transparent,
-                      //   child: InkWell(
-                      //     child: Text(
-                      //       "forgot your password",
-                      //       style:
-                      //           MyStyles.of(context).textThemes.placeholder,
-                      //     ),
-                      //   ),
-                      // )
                     ],
                   ),
                 ),

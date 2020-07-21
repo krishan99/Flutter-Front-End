@@ -1,17 +1,14 @@
 import 'package:business_app/business_app/models/user.dart';
-import 'package:business_app/business_app/screens/user_creation_pages/create_user_page.dart';
-import 'package:business_app/utils.dart';
+import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/create_user_page.dart';
 import 'package:flutter/material.dart';
-
 import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/components/components.dart';
-import 'package:business_app/theme/themes.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget implements EntranceScreen {
-  double height;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final double height;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   LoginPage.height({this.height});
 

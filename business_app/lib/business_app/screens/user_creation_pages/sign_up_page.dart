@@ -1,5 +1,5 @@
 import 'package:business_app/business_app/models/user.dart';
-import 'package:business_app/business_app/screens/user_creation_pages/create_user_page.dart';
+import 'package:business_app/business_app/screens/user_creation_pages/create_user_page/create_user_page.dart';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +25,14 @@ class SignUpPage extends StatelessWidget implements EntranceScreen {
           height: height,
           title: "Sign Up",
           googleSignInText: "Sign Up With Google",
+
           onContinue: () async {
             if (passwordController.text != checkPasswordController.text) {
               throw CustomException("passwords do not match");
             }
-
             await user.signUp(email: emailController.text, password: passwordController.text);
           },
+
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
