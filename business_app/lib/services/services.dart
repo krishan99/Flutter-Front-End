@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -72,7 +73,7 @@ class MyServer {
     final response = await http.get(
       url,
       headers: _headers,
-    ).timeout(timeout);
+    );
     
     updateCookie(response);
 
@@ -117,6 +118,13 @@ class MyServer {
   }
 
   MyServer({this.path});
+}
+
+extension QueueRequests on MyServer {
+  Future<Queue> getQueue({@required qid}) async {
+    Map<String, dynamic> body = await get("api/v1/queue/retrieve");
+    return Queue.fromMap(body);
+  }
 }
 
 class ApiResponse<T> {

@@ -128,8 +128,10 @@ class User extends ChangeNotifier {
   User({@required this.server}) {
     _auth.onAuthStateChanged.listen((fUser) async {
       this._firebaseUser = fUser;
-      print(
-          "AUTH STATE CHANGED: ${this.isLoggedIn}");
+      print("AUTH STATE CHANGED: ${this.isLoggedIn}");
+      if (this.isLoggedIn) {
+        this.notifyServerOfSignIn(fUser.email);
+      }
       //var k = await server.signIn(email);
       //await server.connectSocket();
       //this.notifyListeners();

@@ -12,59 +12,61 @@ import 'package:provider/provider.dart';
 class ModelData {
   User user;
   UAppServer server;
-  QueueHandler queueHandler;
+  // QueueHandler queueHandler;
 
   ModelData() {
     user = User();
     server = UAppServer(path: "http://0.0.0.0:8000/");
-    queueHandler = QueueHandler(server: server);
+    // queueHandler = QueueHandler(server: server);
   }
 }
 
-class QueueHandler {
-  UAppServer server;
-  StreamController _queueReqsController;
+// class QueueHandler {
+//   UAppServer server;
+//   StreamController _queueReqsController;
       
-  Stream<ApiResponse<QueueReqs>> get queueReqsStream {
-    return _queueReqsController.stream;
-  }
+//   Stream<ApiResponse<QueueReqs>> get queueReqsStream {
+//     return _queueReqsController.stream;
+//   }
 
-  StreamSink<ApiResponse<QueueReqs>> get queueReqsSink {
-    return _queueReqsController.sink;
-  }
+//   StreamSink<ApiResponse<QueueReqs>> get queueReqsSink {
+//     return _queueReqsController.sink;
+//   }
 
-  Future<ApiResponse<QueueReqs>> updateQueueReqs({@required String code}) async {
-    ApiResponse<QueueReqs> reqsResponse;
-    try {
-      QueueReqs reqs = await server.getQueueReqs(code: code);
-      reqsResponse = ApiResponse.completed(reqs);
-    } catch (e) {
-      reqsResponse = ApiResponse.error(e.toString());
-    }
+//   Future<ApiResponse<QueueReqs>> updateQueueReqs({@required String code}) async {
+//     ApiResponse<QueueReqs> reqsResponse;
+//     try {
+//       QueueReqs reqs = await server.getQueueReqs(code: code);
+//       reqsResponse = ApiResponse.completed(reqs);
+//     } catch (e) {
+//       reqsResponse = ApiResponse.error(e.toString());
+//     }
 
-    queueReqsSink.add(reqsResponse);
-    return Future.value(reqsResponse);
-  }
+//     queueReqsSink.add(reqsResponse);
+//     return Future.value(reqsResponse);
+//   }
 
-  QueueHandler({@required UAppServer server}) {
-    this.server = server;
-    this._queueReqsController = StreamController<ApiResponse<QueueReqs>>();
-  }
+//   QueueHandler({@required UAppServer server}) {
+//     this.server = server;
+//     this._queueReqsController = StreamController<ApiResponse<QueueReqs>>();
+//   }
 
-  dispose() {
-    _queueReqsController?.close();
-  }
-}
+//   dispose() {
+//     _queueReqsController?.close();
+//   }
+// }
 
 class QueueReqs {
   final int qid;
   final String code;
+  final String businessName;
   final bool needsName;
   final bool needsPhoneNumber;
 
   QueueReqs({
     this.qid,
     this.code,
+    this.businessName,
     this.needsName,
     this.needsPhoneNumber,
   });
@@ -75,6 +77,7 @@ class QueueReqs {
     return QueueReqs(
       qid: map['qid'] as int,
       code: map['code'] as String,
+      businessName: map['business'] as String,
       needsName: (map.containsKey("Name: ")),
       needsPhoneNumber: map.containsKey('Phone: '),
     );

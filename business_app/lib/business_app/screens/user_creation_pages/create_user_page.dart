@@ -7,6 +7,7 @@ import 'package:business_app/components/components.dart';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/utils.dart';
+import 'package:toast/toast.dart';
 
 class CreateUserPage extends StatefulWidget {
   final double height;
@@ -94,8 +95,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         text: widget.googleSignInText,
                         onPressed: () {
                           user.signInWithGoogle().catchError((error) {
-                            showErrorDialog(context,
-                                title: "Google Error", body: error.toString());
+                            Toast.show(error.toString(), context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
                           });
                         },
                       );

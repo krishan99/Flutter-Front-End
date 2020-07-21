@@ -111,7 +111,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                           Consumer<Queue>(
                             builder: (context, q, _){
                               return Text(
-                                queue.name,
+                                queue.name ?? "New Queue",
                                 style: MyStyles.of(context).textThemes.h2,
                               );
                             }
@@ -127,8 +127,9 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                           SizedBox(width: 42),
                           Consumer<Queue>(
                             builder: (context, q, _){
+                              String queueCode = q.code ?? "...";
                               return  Text(
-                                "Code: ${queue.code}",
+                                "Code: $queueCode",
                                 style: MyStyles.of(context).textThemes.h4,
                               );
                             }

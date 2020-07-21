@@ -308,7 +308,7 @@ class QueueCell extends SlideableListCell {
   QueueCell({Key key, @required this.queue, this.onOpen, this.onDelete, Function onTap})
     : super(
       key: key,
-      title: queue.name,
+      title: queue.name ?? "New Queue",
       subheading: (){
         switch (queue.state) {
           case QueueState.active:
@@ -327,7 +327,7 @@ class QueueCell extends SlideableListCell {
             return null;
         }
       }(),
-      body: queue.description,
+      body: queue.description ?? "Swipe from the left to delete this queue and swipe right to see more details.",
       isActive: () {
         switch (queue.state) {
           case QueueState.active:
