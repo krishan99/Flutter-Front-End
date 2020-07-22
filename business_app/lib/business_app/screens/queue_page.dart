@@ -1,4 +1,5 @@
 import 'package:business_app/business_app/services/services.dart';
+import 'package:business_app/components/cells/queue_cell.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/models/queues.dart';
