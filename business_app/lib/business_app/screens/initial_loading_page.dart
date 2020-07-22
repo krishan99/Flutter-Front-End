@@ -22,6 +22,11 @@ class InitialLoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget _getLoadingScreenAndNavigate(String route, String loadingText) {
+      Future.microtask(() => Navigator.of(context).pushReplacementNamed(route));
+      return _getBasicTextPage(loadingText);
+    }
+
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, snapshot) {
@@ -30,10 +35,6 @@ class InitialLoadingPage extends StatelessWidget {
           case ConnectionState.waiting:
             return _getBasicTextPage("Getting Account Data...");
 
-          // case ConnectionState.active:
-          //   Future.microtask(() => Navigator.of(context).pushReplacementNamed("/home"));
-          //   return _getBasicTextPage("Navigating to home page...");
-            
           default:
             if (snapshot.hasData) {
               final user = Provider.of<User>(context, listen: false);
@@ -48,21 +49,18 @@ class InitialLoadingPage extends StatelessWidget {
                     default:
                       if (!snapshot.hasError) {
                         if (user.businessName == null || user.businessName.isEmpty) {
-                          Future.microtask(() => Navigator.of(context).pushReplacementNamed("/accountInfo"));
-                          return _getBasicTextPage("Navigating to account info...");
+                          return _getLoadingScreenAndNavigate("/accountInfo", "Navigating to account info...");
                         } else {
-                          Future.microtask(() => Navigator.of(context).pushReplacementNamed("/dashboard"));
-                          return _getBasicTextPage("Navigating to dashboard...");
+                          return _getLoadingScreenAndNavigate("/dashboard", "Navigating to dashboard...");
                         }
                       } else {
-                        Future.microtask(() => Navigator.of(context).pushReplacementNamed("/home"));
-                        return _getBasicTextPage("Navigating to home page...");
+                        return _getLoadingScreenAndNavigate("/home", "Navigating to home page...");
                       }
                   }
                 },
               ); 
             } else {
-                return _getServerErrorPage();
+              _getLoadingScreenAndNavigate("/home", "Navigating to home page...");
             }
         }
       }

@@ -17,6 +17,7 @@ class CreateUserPage extends StatefulWidget {
   final String googleSignInText;
   final Future<void> Function() onContinue;
   final Function onSuccess;
+  final Future<void> Function() signInWithGoogle;
   Widget customUserForm;
 
   CreateUserPage({
@@ -26,8 +27,9 @@ class CreateUserPage extends StatefulWidget {
     this.subtext = "Happy customers are the best advertising money can buy.",
     this.buttonText = "Continue",
     this.googleSignInText = "Sign In With Google",
-    this.onContinue,
+     @required this.onContinue,
     this.onSuccess,
+    @required this.signInWithGoogle,
     this.customUserForm,
   }) : super(key: key);
 
@@ -84,12 +86,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    child: Consumer<User>(builder: (context, user, _) {
-                      return GoogleSignInButton(
+                    child: GoogleSignInButton(
                         text: widget.googleSignInText,
                         onPressed: () async {
                           final apiResponse = await ApiResponse.fromFunction(() async {
-                            await user.signInWithGoogle();
+                            await widget.signInWithGoogle();
                           });
                           
                           if (apiResponse.isError) {
@@ -105,8 +106,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                             }
                           }
                         },
-                      );
-                    }),
+                      ),
                   ),
                 ),
                 Container(

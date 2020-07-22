@@ -71,6 +71,10 @@ class _SignUpPageState extends State<SignUpPage> {
           },
 
           onSuccess: () => Navigator.of(context).pushReplacementNamed("/accountInfo"),
+          
+          signInWithGoogle: () async {
+            await user.signUpWithGoogle();
+          },
 
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

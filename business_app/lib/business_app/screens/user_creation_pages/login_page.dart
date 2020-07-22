@@ -46,9 +46,10 @@ class _LoginPageState extends State<LoginPage> {
               password: this.passwordController.text
             );
           },
-
           onSuccess: () => Navigator.of(context).pushReplacementNamed("/dashboard"),
-
+          signInWithGoogle: () async {
+            await user.signInWithGoogle();
+          },
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

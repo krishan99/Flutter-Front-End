@@ -65,34 +65,41 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createAccountOnServer({String name, String description}) async {
-      final token = await getToken();
-      await server.signUp(token: token, name: name, description: description);
+  Future<void> createAccountOnServer({@required String email, String name, String description}) async {
+    final token = await getToken();
+    await server.signUp(token: token, name: name, description: description);
+    await notifyServerOfSignIn(email);
+  }
+
+  Future<AuthResult> signWithGoogleOnFirebase() async {
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    try {
+      final result = await _auth.signInWithCredential(credential);
+      return result;
+    } catch (error) {
+      throw getFirebaseException(error);
+    }
   }
 
   Future<void> signInWithGoogle() async {
-      final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-
-      final result = await _auth.signInWithCredential(credential);
-
-      try {
-        await notifyServerOfSignIn(result.user.email);
-      } on AccountDoesNotExistException {
-        await createAccountOnServer();
-        await notifyServerOfSignIn(result.user.email);
-      } catch (error) {
-        throw error;
-      } 
+    final result = await signWithGoogleOnFirebase();
+    await notifyServerOfSignIn(result.user.email);
   }
 
-  Future<void> signUp({String name, @required String email, @required String password}) async {
+  Future<void> signUpWithGoogle({String name, String description}) async {
+    final result = await signWithGoogleOnFirebase();
+    await createAccountOnServer(email: result.user.email, name: name, description: description);
+  }
+
+  Future<void> signUp({String name, String description, @required String email, @required String password}) async {
     AuthResult result;
 
     try {
@@ -101,8 +108,7 @@ class User extends ChangeNotifier {
       throw getFirebaseException(error);
     }
 
-    await createAccountOnServer(name: "Starbucks", description: "I love coffee");
-    await notifyServerOfSignIn(result.user.email);
+    await createAccountOnServer(email: result.user.email, name: name, description: description);
   }
 
   Future<void> updateUserData({String name, String description}) async {
@@ -137,8 +143,6 @@ class User extends ChangeNotifier {
       }
   }
 
-
-
   Future<void> signIn({
       @required String email,
       @required String password,
@@ -171,13 +175,6 @@ class User extends ChangeNotifier {
     _auth.onAuthStateChanged.listen((fUser) async {
       this._firebaseUser = fUser;
       print("AUTH STATE CHANGED: ${this.isLoggedIn}");
-      /*
-      if (this.isLoggedIn) {
-        this.notifyServerOfSignIn(fUser.email);
-      }*/
-      //var k = await server.signIn(email);
-      //await server.connectSocket();
-      //this.notifyListeners();
     });
   }
 }
