@@ -30,9 +30,9 @@ class InitialLoadingPage extends StatelessWidget {
           case ConnectionState.waiting:
             return _getBasicTextPage("Getting Account Data...");
 
-          case ConnectionState.active:
-            Future.microtask(() => Navigator.of(context).pushReplacementNamed("/home"));
-            return _getBasicTextPage("Navigating to home page...");
+          // case ConnectionState.active:
+          //   Future.microtask(() => Navigator.of(context).pushReplacementNamed("/home"));
+          //   return _getBasicTextPage("Navigating to home page...");
             
           default:
             if (snapshot.hasData) {

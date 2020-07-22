@@ -43,7 +43,6 @@ class DashboardPage extends StatelessWidget {
                   return Container(
                     // color: Colors.black,
                     child: Container(
-                      color: Colors.red,
                       child: SlideableList(
                         topSpacing: 55,
                         buttonText: "Add Queue",
@@ -104,8 +103,7 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate implements MySliverPersistentHeaderDelegate {
   final Color color;
   final double minExtent;
   final double maxExtent;
@@ -115,7 +113,9 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 
   @override
-  OverScrollHeaderStretchConfiguration get stretchConfiguration => OverScrollHeaderStretchConfiguration();
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
+  }
 
   @override
   Widget build(
@@ -136,13 +136,6 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         ),
       ]),
     );
-  }
-
-  
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
   }
 }
 

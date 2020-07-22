@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'package:business_app/theme/themes.dart';
 import 'package:business_app/business_app/models/queues.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+
+mixin MySliverPersistentHeaderDelegate implements SliverPersistentHeaderDelegate {
+  @override
+  OverScrollHeaderStretchConfiguration get stretchConfiguration => OverScrollHeaderStretchConfiguration();
+}
 
 //TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down. Using Temp Button rn.
 class SlideableList extends StatefulWidget {
@@ -96,7 +102,6 @@ class _SlideableListState extends State<SlideableList> {
                         }
 
                         return Container(
-                          color: Colors.red,
                           child: Stack(
                             children: [
                               Container(

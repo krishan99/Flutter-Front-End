@@ -21,6 +21,7 @@ class QueuePage extends StatelessWidget {
         builder: (context, qpeople, _) {
           qpeople.start();
           return SlideableList(
+            topSpacing: 55,
             onPlusTap: (){
               queue.people.add2Queue(name: "NAMES", id: 7, phone: "8888888888");
               // queue.add(QueueEntry(name: "John Doe"));
@@ -71,7 +72,7 @@ class QueuePage extends StatelessWidget {
   }
 }
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate implements MySliverPersistentHeaderDelegate {
   final Color color;
   final Queue queue;
   final double minExtent;
