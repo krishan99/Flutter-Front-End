@@ -16,7 +16,7 @@ class ModelData {
 
   ModelData() {
     user = User();
-    server = UAppServer(path: "http://0.0.0.0:8000/");
+    server = UAppServer();
     // queueHandler = QueueHandler(server: server);
   }
 }

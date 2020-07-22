@@ -6,11 +6,12 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class BusinessAppServer extends MyServer {
   static const String _tokenHeader = "Authorization";
 
-  static IO.Socket socket = IO.io('http://127.0.0.1:8000', <String, dynamic>{
+  static IO.Socket socket = IO.io(MyServer.path, <String, dynamic>{
     'transports': ['websocket'],
     'autoconnect': false,
     'extraHeaders': MyServer.headers
   });
+
   static int currentRoom = -1;
   bool connectSocket() {
     socket.connect();
@@ -119,6 +120,6 @@ class BusinessAppServer extends MyServer {
     );
   }
 
-  BusinessAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);
+  BusinessAppServer();
 }
 

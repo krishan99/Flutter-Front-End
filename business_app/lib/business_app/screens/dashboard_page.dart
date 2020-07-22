@@ -125,18 +125,70 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       color: color,
       child: Column(children: <Widget>[
-        ProfileAppBar(),
-        Expanded(
-          child: Container(
-            // padding: EdgeInsets.only(bottom: 70),
-            alignment: Alignment.center,
-            child: Text(
-              "Dashboard",
-              style: MyStyles.of(context).textThemes.h2,
+        PAppBar(),
+        // Container(
+        //   // padding: EdgeInsets.only(bottom: 70),
+        //   alignment: Alignment.center,
+        //   child: Text(
+        //     "Dashboard",
+        //     style: MyStyles.of(context).textThemes.h2,
+        //   ),
+        // ),
+      ]),
+    );
+  }
+}
+
+class PAppBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: MyStyles.of(context).images.userAccountIcon.image
+                  ) 
+                ),
+              )
             ),
           ),
-        ),
-      ]),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Consumer<User>(
+                builder: (context, user, _) {
+                  return Text(
+                    user.businessName ?? "Company Name",
+                    style: MyStyles.of(context).textThemes.h3,
+                  );
+                }
+              ),
+              Text(
+                "View Account",
+                style: MyStyles.of(context).textThemes.h5,
+              )
+            ]
+          ),
+          Spacer(),
+          AspectRatio(
+            aspectRatio: 1,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: MyStyles.of(context).images.gearIcon.image
+                ) 
+              ),
+            )
+          )
+        ],
+      ),
     );
   }
 }
@@ -151,54 +203,45 @@ class ProfileAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          color: color,
-          padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-          height: 37,
-          // constraints: BoxConstraints(maxHeight: 37),
-          child: Row(
+          child: MyStyles.of(context).images.userAccountIcon,
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(7, 0, 7, 0),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                child: MyStyles.of(context).images.userAccountIcon,
-              ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(7, 0, 7, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Consumer<User>(
-                        builder: (context, user, _) {
-                          return Text(
-                            user.businessName ?? "Company Name",
-                            style: MyStyles.of(context).textThemes.h3,
-                          );
-                        }
-                      ),
-                      Text(
-                        "View Account",
-                        style: MyStyles.of(context).textThemes.h5,
-                      )
-                    ],
-                  ),
-                ),
-              ),
               Consumer<User>(
                 builder: (context, user, _) {
-                  return GestureDetector(
-                    onTap: () => {user.signOut()},
-                    child: Container(
-                        padding: EdgeInsets.all(3),
-                        child: MyStyles.of(context).images.gearIcon),
+                  return Text(
+                    user.businessName ?? "Company Name",
+                    style: MyStyles.of(context).textThemes.h3,
                   );
-                },
+                }
               ),
+              Text(
+                "View Account",
+                style: MyStyles.of(context).textThemes.h5,
+              )
             ],
           ),
+        ),
+        Consumer<User>(
+          builder: (context, user, _) {
+            return GestureDetector(
+              onTap: () async {
+                await user.signOut();
+                Navigator.of(context).popAndPushNamed("/home");
+              },
+              child: Container(
+                  padding: EdgeInsets.all(3),
+                  child: MyStyles.of(context).images.gearIcon),
+            );
+          },
         ),
       ],
     );

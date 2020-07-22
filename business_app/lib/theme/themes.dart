@@ -28,11 +28,7 @@ class MyImages {
 
   static final MyImages lightMode = MyImages._(
     userAccountIcon: Image.asset("${imagePath}user_account_icon.png"),
-    gearIcon: Image.asset(
-      "${imagePath}gear_icon.png",
-        color: Color.fromRGBO(255, 255, 255, 0.39),
-        colorBlendMode: BlendMode.modulate
-      ),
+    gearIcon: Image.asset("${imagePath}gear_icon.png"),
   );
 
   static final MyImages darkMode = lightMode.copyWith();

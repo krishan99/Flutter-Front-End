@@ -46,7 +46,7 @@ class FirebaseServerException extends MyServerException {
 }
 
 class MyServer {
-  final path;
+  static const String path = true ? "http://0.0.0.0:8000/" : "http://ec2-18-221-212-236.us-east-2.compute.amazonaws.com/";
   static const Duration timeout = Duration(seconds: Foundation.kDebugMode ? 10 : 10);
 
   static Map<String, String> headers = <String, String>{
@@ -131,7 +131,7 @@ class MyServer {
     }
   }
 
-  MyServer({this.path});
+  MyServer();
 }
 
 extension QueueRequests on MyServer {
