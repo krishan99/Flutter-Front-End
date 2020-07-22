@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class BusinessAppServer extends MyServer {
+  static const String _tokenHeader = "Authorization";
+
   static IO.Socket socket = IO.io('http://127.0.0.1:8000', <String, dynamic>{
     'transports': ['websocket'],
     'autoconnect': false,
@@ -31,15 +33,41 @@ class BusinessAppServer extends MyServer {
     currentRoom = -1;
   }
 
-  //TODO: Use firebase Token ID instead.
-  Future<void> signIn(String email) async {
+  Future<void> signIn({@required String token}) async {
+    _setToken(token);
+    
     await post(
-      "api/v1/test",
+      "api/v1/account/signin",
+      body: <String, String>{}
+    ); 
+  }
+
+  Future<void> signUp({@required String token, String name, String description}) async {
+    _setToken(token);
+
+    await post(
+      "api/v1/account/signup",
       body: <String, String>{
-        "email": email,
+        "name": name ?? "",
+        "description": description ?? ""
       }
     ); 
   }
+
+  void _setToken(String token) {
+    MyServer.headers[_tokenHeader] = token;
+  }
+
+  Future<void> updateUserData({@required String name, @required String description}) async {
+    await post(
+      "api/v1/account/update",
+      body: <String, String> {
+        "name": name,
+        "description": description
+      }
+    );
+  }
+  
 
   Future<List<Queue>> getListofQueues() async {
     Map<String, dynamic> body = await get("api/v1/queue/retrieve_all");

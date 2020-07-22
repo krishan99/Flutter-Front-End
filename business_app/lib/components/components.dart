@@ -14,7 +14,7 @@ class ActionButton extends StatelessWidget {
   final Color color;
   final double width;
   final double height;
-  final Function onPressed;
+  final Function onSuccess;
 
   const ActionButton(
       {Key key,
@@ -23,14 +23,14 @@ class ActionButton extends StatelessWidget {
       this.color = Colors.grey,
       this.width = 233,
       this.height = 55,
-      this.onPressed})
+      this.onSuccess})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      height: 50.0,
+      height: height,
       decoration: BoxDecoration(
           gradient: gradient,
           color: color,
@@ -45,7 +45,7 @@ class ActionButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-            onTap: onPressed,
+            onTap: onSuccess,
             child: Center(
               child: child,
             )),
@@ -54,31 +54,76 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-class AccentedActionButton extends StatelessWidget {
+class AccentedActionButton extends StatefulWidget {
   final double height;
   final double width;
   final String text;
   final Function onPressed;
+  final Function onSuccess;
 
-  const AccentedActionButton(
-      {Key key,
-      @required this.text,
-      this.height = 55,
-      this.width = 233,
-      this.onPressed})
-      : super(key: key);
+  AccentedActionButton(
+    {Key key,
+    @required this.text,
+    this.height = 55,
+    this.width = 233,
+    this.onSuccess,
+    this.onPressed})
+    : super(key: key);
+
+  @override
+  _AccentedActionButtonState createState() => _AccentedActionButtonState();
+}
+
+class _AccentedActionButtonState extends State<AccentedActionButton> {
+
+  String errorMessage;
 
   @override
   Widget build(BuildContext context) {
-    return ActionButton(
-      width: width,
-      height: height,
-      child: Text(
-        text,
-        style: MyStyles.of(context).textThemes.buttonActionText1,
+    return Container(
+      width: widget.width,
+      child: Column(
+        children: [
+          ActionButton(
+            height: widget.height,
+            child: Text(
+              widget.text,
+              style: MyStyles.of(context).textThemes.buttonActionText1,
+            ),
+            gradient: MyStyles.of(context).colors.accentGradient,
+            onSuccess: () async {
+              try {
+                if (widget.onPressed != null) {
+                  await widget.onPressed();
+                }
+
+                if (widget.onSuccess != null) {
+                  await widget.onSuccess();
+                }
+
+                setState(() {
+                  this.errorMessage = null;
+                });
+              } catch (error) {
+                setState(() {
+                  this.errorMessage = error.toString();
+                });
+              } 
+            },
+          ),
+          if (this.errorMessage != null)
+            Container(
+              padding: EdgeInsets.all(5),
+              child: Text(
+                this.errorMessage,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: MyStyles.of(context).textThemes.errorSubText
+              )
+            )
+        ],
       ),
-      gradient: MyStyles.of(context).colors.accentGradient,
-      onPressed: onPressed,
     );
   }
 }
@@ -148,6 +193,7 @@ class StyleTextField extends StatelessWidget {
     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
     Function(String) onChanged,
     Function(String) onSubmitted,
+    String Function(String) getErrorMessage,
   }) {
     return StyleTextField(
       controller: controller,
@@ -158,7 +204,7 @@ class StyleTextField extends StatelessWidget {
       onChanged: onChanged,
       onSubmitted: onSubmitted,
       placeholderText: paceholderText ?? "Password...",
-      getErrorMessage: (text) {
+      getErrorMessage: getErrorMessage ?? (text) {
         if (text.length <= 5) {
           return "Password should contains more then 5 character";
         } else {
@@ -256,8 +302,9 @@ class StyleTextField extends StatelessWidget {
                       obscureText: obscureText,
                       inputFormatters: inputFormatters,
                       onChanged: (text) {
-                        print(text);
-                        onChanged(text);
+                        if (onChanged != null) {
+                          onChanged(text);
+                        }
                         state.didChange(text);
                       },
                       onFieldSubmitted: onSubmitted,

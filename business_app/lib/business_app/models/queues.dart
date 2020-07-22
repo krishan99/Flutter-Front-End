@@ -117,7 +117,7 @@ class QueuePeople with ChangeNotifier{
     }
 
     await server.deletePerson(id, personId);
-    theline.remove(id);
+    theline.remove(personId);
     notifyListeners();
   }
   
@@ -162,19 +162,19 @@ class Queue with ChangeNotifier {
     if (map == null) return null;
   
     return Queue(
-      id: map['id'],
+      id: map['qid'],
       name: map['qname'],
       description: map['description'],
       code: map['code'],
     );
   }
 
-  // void update(Map<String, dynamic> info){
-  //   _name = info["qname"] ?? _name;
-  //   _description = info["description"] ?? _description;
-  //   _code = info["code"] ?? _code;
-  //   notifyListeners();
-  // }
+  void update(Queue info){
+    _name = info.name ?? _name;
+    _description = info.description ?? _description;
+    _code = info.code ?? _code;
+    notifyListeners();
+  }
 
   Queue({
     this.id,
@@ -201,32 +201,29 @@ class AllQueuesInfo with ChangeNotifier {
     //This now returns a list of queues instead of maps
     var serverQueues = await server.getListofQueues();
 
-    this.queues = Map<int, Queue>();
-    for (var i=0; i<serverQueues.length; i++) {
-      this.queues[i] = serverQueues[i];
-    }
-    // this.queues = serverQueues;
     // update info based on server
-    // for(var i=0; i<serverQueues.length; i++){
-    //   int k = serverQueues[i]["qid"];
-    //   if(!queues.containsKey(k)){
-    //     queues[k]=new Queue(id: k);
-    //   }
-    //   queues[k].update(serverQueues[i]);
-    // }
-    // // delete anything not on server anymore
-    // var keys = queues.keys;
-    // var toRemove = [];
-    // for(var k in keys){
-    //   bool there = false;
-    //   for(var j=0; j<serverQueues.length; j++){
-    //     if(serverQueues[j]["qid"]==k){
-    //       there=true;
-    //       break;
-    //     }
-    //   }
-    //   if(!there) toRemove.add(k);
-    // }
+    for(var i=0; i<serverQueues.length; i++){
+      int k = serverQueues[i].id;
+      if(!queues.containsKey(k)){
+        queues[k]=new Queue(id: k);
+      }
+      queues[k].update(serverQueues[i]);
+    }
+    // delete anything not on server anymore
+    var keys = queues.keys;
+    var toRemove = [];
+    for(var k in keys){
+      bool there = false;
+      for(var j=0; j<serverQueues.length; j++){
+        if(serverQueues[j].id==k){
+          there=true;
+          break;
+        }
+      }
+      if(!there) toRemove.add(k);
+    }
+
+    toRemove.forEach((element) {queues.remove(element as int);});
   }
 
   // currently doesn't really do anything

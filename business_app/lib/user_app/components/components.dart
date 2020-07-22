@@ -1,8 +1,9 @@
-import 'package:business_app/components/components.dart';
-import 'package:business_app/theme/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+
+import 'package:business_app/components/components.dart';
+import 'package:business_app/theme/themes.dart';
 
 class TappableGradientScaffold extends StatelessWidget {
   final Widget body;
@@ -16,29 +17,35 @@ class TappableGradientScaffold extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: MyStyles.of(context).colors.accentGradient
         ),
-        child: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: GestureDetector(
-              onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
-              child: SafeArea(
-                child: body
-              )
-            ),
-          ),
-        ),
+        child: TappableFullScreenView(body: body,)
       ),
     );
   }
 }
 
-class LB extends ActionButton {
+class TappableFullScreenView extends StatelessWidget {
+
+  final Widget body;
+
+  const TappableFullScreenView({
+    Key key,
+    this.body,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
-    return super.build(context);
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: GestureDetector(
+          onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
+          child: SafeArea(
+            child: body
+          )
+        ),
+      ),
+    );
   }
 }
 

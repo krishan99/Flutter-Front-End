@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +16,6 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AllQueuesInfo>(
       builder: (context, qinfo, _) {
-      //TODO: Retrieve Server should not be called here -> will likely cause weird things because it can throw errors
-        //qinfo.retrieveServer();
         qinfo.leaveRooms();
         return FutureBuilder(
           future: qinfo.retrieveServer(),
@@ -23,28 +23,39 @@ class DashboardPage extends StatelessWidget {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
               case ConnectionState.none:
-                return Text('Loading queues...');
+                return Scaffold(
+                  body: Container(
+                    alignment: Alignment.center,
+                    color: MyStyles.of(context).colors.background2,
+                    child: Text("Loading Queues...", style: MyStyles.of(context).textThemes.bodyText2,),
+                  )
+                );
               default:
                 if (snapshot.hasError)
-                  return Text('Error: ${snapshot.error}');
+                  return Container(
+                    color: Colors.white,
+                    alignment: Alignment.center,
+                    child: Text('Error: ${snapshot.error.toString()}', style: MyStyles.of(context).textThemes.h2)
+                  );
                 else
                   return SlideableList(
                     onPlusTap: () async{
                       try {
-                        await qinfo.makeQueue("Big big fish", "roar roar road");
+                        await qinfo.makeQueue("Big big fish ${Random().nextInt(50).toString()}", "roar roar road");
                       } catch (error) {
-                        Toast.show(error.toString(), context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                        Toast.show(error.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                       }
                     },
 
                     header: SliverPersistentHeader(
-                      pinned: true,
+                      pinned: false,
                       delegate: _SliverAppBarDelegate(
                         color: MyStyles.of(context).colors.background2,
-                        minExtent: 50.0,
+                        minExtent: 115,
                         maxExtent: 125,
                       ),
                     ),
+
                     cells: qinfo.body.map((element) =>
                       ChangeNotifierProvider.value(
                         value: element,
@@ -68,8 +79,9 @@ class DashboardPage extends StatelessWidget {
 
                               onTap: () {
                                   Navigator.of(context).pushNamed("/queue", arguments: queue);
+                                  // return false;
                               }
-                              );
+                            );
                           },
                         )
                       )
@@ -133,7 +145,7 @@ class ProfileAppBar extends StatelessWidget {
         Container(
           color: color,
           padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-          height: 37,
+          constraints: BoxConstraints(maxHeight: 37),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -149,8 +161,9 @@ class ProfileAppBar extends StatelessWidget {
                     children: [
                       Consumer<User>(
                         builder: (context, user, _) {
+                          print(user.name);
                           return Text(
-                            user.name,
+                            user.name ?? "John Doe",
                             style: MyStyles.of(context).textThemes.h3,
                           );
                         }

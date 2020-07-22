@@ -25,6 +25,10 @@ class ForbiddenException extends MyServerException {
   ForbiddenException(String cause) : super(cause);
 }
 
+class AccountDoesNotExistException extends ForbiddenException {
+    AccountDoesNotExistException(String cause) : super(cause);
+}
+
 class JsonEncodingException extends MyServerException {
   JsonEncodingException(String cause) : super(cause);
 }
@@ -37,18 +41,17 @@ class NotFoundException extends MyServerException {
   NotFoundException(String cause) : super(cause);
 }
 
-class ServerException extends MyServerException {
-  ServerException(String cause) : super(cause);
+class FirebaseServerException extends MyServerException {
+  FirebaseServerException(String cause) : super(cause);
 }
 
 class MyServer {
   final path;
   static const Duration timeout = Duration(seconds: Foundation.kDebugMode ? 10 : 10);
 
-  static Map<String, String> _headers = <String, String>{
+  static Map<String, String> headers = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
   };
-  static Map<String, String> get headers => _headers;
 
   String _getURL({@required String route}) {
     return "$path$route";
@@ -59,7 +62,7 @@ class MyServer {
 
     final response = await http.post(
       url,
-      headers: _headers,
+      headers: headers,
       body: jsonEncode(body)
     ).timeout(timeout);
 
@@ -72,7 +75,7 @@ class MyServer {
     final url = _getURL(route: route);
     final response = await http.get(
       url,
-      headers: _headers,
+      headers: headers,
     );
     
     updateCookie(response);
@@ -82,7 +85,7 @@ class MyServer {
 
   Map<String, dynamic> getMap(http.Response r) {
     if (r.statusCode == 500) {
-      throw ServerException("Server Error");
+      throw MyServerException("Server Error");
     }
     
     final body = jsonDecode(r.body);
@@ -93,26 +96,32 @@ class MyServer {
 
     final message = body['message'] as String;
 
-    switch (r.statusCode) {
-      case 403:
-        print(message);
-        throw ForbiddenException(message);
-      case 405:
-        print(message);
-        throw JsonEncodingException(message);
-      case 404:
-        print(message);
-        throw NotFoundException(message);
+    print("ERROR: $message");
+
+    switch (message) {
+      case "User not signed up":
+        throw AccountDoesNotExistException("This User is Not Signed Up");
       default:
-        throw Exception(message);
+        switch (r.statusCode) {
+        case 403:
+          throw ForbiddenException(message);
+        case 405:
+          throw JsonEncodingException(message);
+        case 404:
+          throw NotFoundException(message);
+        default:
+          throw Exception(message);
+      }
     }
+
+    
   }
 
   void updateCookie(http.Response response) {
     String rawCookie = response.headers['set-cookie'];
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
-      _headers['cookie'] =
+      headers['cookie'] =
           (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
   }

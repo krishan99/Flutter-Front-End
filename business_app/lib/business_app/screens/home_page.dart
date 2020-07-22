@@ -114,8 +114,8 @@ class HomePage extends StatelessWidget {
                     Container(
                       child: AccentedActionButton(
                           text: "Sign Up",
-                          onPressed: () => {
-                             _showEntranceScreenModally(EntranceScreenType.signUp)
+                          onSuccess: () => {
+                            _showEntranceScreenModally(EntranceScreenType.signUp)
                           }
                         ),
                     ),
@@ -129,7 +129,7 @@ class HomePage extends StatelessWidget {
                             style: MyStyles.of(context).textThemes.buttonActionText1,
                           ),
                           color: MyStyles.of(context).colors.secondary,
-                          onPressed: () => {
+                          onSuccess: () => {
                             _showEntranceScreenModally(EntranceScreenType.logIn)
                           }
                       ),

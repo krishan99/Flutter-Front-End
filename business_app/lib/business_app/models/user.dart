@@ -1,10 +1,9 @@
-import 'dart:collection';
-import 'dart:convert';
 
 import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/services/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:business_app/business_app/models/queues.dart';
 
@@ -18,14 +17,12 @@ abstract class ComplexEnum<T> {
 
 class ModelData {
   User user;
-  //Queues queues;
   BusinessAppServer server;
   AllQueuesInfo qinfo;
 
   ModelData() {
     this.server = BusinessAppServer();
     this.user = User(server: server);
-    //this.queues = Queues();
     this.qinfo = AllQueuesInfo(server: server);
   }
 }
@@ -43,14 +40,25 @@ class User extends ChangeNotifier {
   }
 
   String get name {
-    return _firebaseUser.displayName;
+    return _firebaseUser?.displayName;
+  }
+
+  Future<String> getToken() async {
+    IdTokenResult tokenResult = await _firebaseUser.getIdToken();
+    return tokenResult.token.toString();
   }
 
   Future<void> notifyServerOfSignIn(String email) async {
-    await server.signIn(email);
+    final token = await getToken();
+    await server.signIn(token: token);
     server.connectSocket();
     this.email = email;
     notifyListeners();
+  }
+
+  Future<void> createAccountOnServer({String name, String description}) async {
+      final token = await getToken();
+      await server.signUp(token: token, name: name, description: description);
   }
 
   Future<void> signInWithGoogle() async {
@@ -64,8 +72,15 @@ class User extends ChangeNotifier {
       );
 
       final result = await _auth.signInWithCredential(credential);
-      email = result.user.email;
-      return notifyServerOfSignIn(result.user.email);
+
+      try {
+        await notifyServerOfSignIn(result.user.email);
+      } on AccountDoesNotExistException {
+        await createAccountOnServer();
+        await notifyServerOfSignIn(result.user.email);
+      } catch (error) {
+        throw error;
+      } 
   }
 
   Future<void> signUp({String name, @required String email, @required String password}) async {
@@ -74,13 +89,24 @@ class User extends ChangeNotifier {
     try {
       result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } catch (error) {
-      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.toString());
-      throw CustomException(errorMessage);
+      throw getFirebaseException(error);
     }
 
-    return notifyServerOfSignIn(result.user.email);
-    // print("email: $email, password: $password");
-    // return null;
+    await createAccountOnServer(name: "Starbucks", description: "I love coffee");
+    await notifyServerOfSignIn(result.user.email);
+  }
+
+  Future<void> updateUserData({String name, String description}) async {
+    assert(isLoggedIn);
+    await server.updateUserData(name: name ?? "", description: description ?? "");
+  }
+
+  Exception getFirebaseException(dynamic error) {
+    if (error is PlatformException) {
+        return FirebaseServerException(getFirebaseErrorMessage(firebaseErrorCode: error.code));
+      } else {
+        return CustomException(error.toString());
+    }
   }
 
   String getFirebaseErrorMessage({@required String firebaseErrorCode}) {
@@ -102,15 +128,22 @@ class User extends ChangeNotifier {
       }
   }
 
-  Future<void> signIn({@required String email, @required String password}) async {
+
+
+  Future<void> signIn({
+      @required String email,
+      @required String password,
+      String businessName,
+      String description
+    }) async {
+
     AuthResult result;
 
     try {
       result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
     } catch (error) {
-      String errorMessage = getFirebaseErrorMessage(firebaseErrorCode: error.code);
-      throw CustomException(errorMessage);
+      throw getFirebaseException(error);
     }
 
     return notifyServerOfSignIn(result.user.email);
@@ -129,9 +162,10 @@ class User extends ChangeNotifier {
     _auth.onAuthStateChanged.listen((fUser) async {
       this._firebaseUser = fUser;
       print("AUTH STATE CHANGED: ${this.isLoggedIn}");
+      /*
       if (this.isLoggedIn) {
         this.notifyServerOfSignIn(fUser.email);
-      }
+      }*/
       //var k = await server.signIn(email);
       //await server.connectSocket();
       //this.notifyListeners();
