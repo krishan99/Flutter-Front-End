@@ -42,7 +42,7 @@ class InitialLoadingPage extends StatelessWidget {
                       return _getBasicTextPage("Contacting Server...");
                     
                     default:
-                      if (snapshot.hasData) {
+                      if (!snapshot.hasError) {
                         if (user.businessName == null || user.businessName.isEmpty) {
                           Future.microtask(() => Navigator.of(context).pushReplacementNamed("/accountInfo"));
                           return _getBasicTextPage("Navigating to account info...");

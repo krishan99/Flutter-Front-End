@@ -1,5 +1,6 @@
 import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/components/cells/queue_cell.dart';
+import 'package:business_app/components/cells/slideable_list_cell.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/models/queues.dart';
@@ -41,11 +42,11 @@ class QueuePage extends StatelessWidget {
                     builder: (context, entry, _) {
                       // Todo, index?
                       var index = 10;
-                      return QueueEntryCell(
+                      return SlideableListCell.person(
                         queueEntry: entry,
-                        size: (index < 3)
-                            ? QueueEntryCellSize.medium
-                            : QueueEntryCellSize.small,
+                        relativeSize: (index < 3)
+                            ? SlideableListCellSize.medium
+                            : SlideableListCellSize.small,
                         
                         onDelete: () {
                           queue.people.remove(entry.id);

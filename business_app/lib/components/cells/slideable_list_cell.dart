@@ -1,3 +1,5 @@
+import 'package:business_app/business_app/models/queues.dart';
+import 'package:business_app/components/cells/queue_cell.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:flutter/material.dart';
 
@@ -10,12 +12,95 @@ class SlideableListCell extends StatelessWidget {
   final String title;
   final String subheading;
   final String body;
-  final String primaryText;
-  final String secondaryText;
+  final String Function(bool) getPrimaryText;
+  final String Function(bool) getSecondaryText;
   final Future<bool> Function() onPrimarySwipe;
   final Future<bool> Function() onSecondarySwipe;
   final Function onTap;
   final SlideableListCellSize relativeSize;
+
+  factory SlideableListCell.queue(
+    {
+      Key key,
+      SlideableListCellSize relativeSize,
+      Queue queue,
+      bool isSelected = false,
+      Future<bool> Function() onOpen,
+      Future<bool> Function() onDelete,
+      Function onTap
+    }) {
+    return SlideableListCell(
+      key: key,
+      relativeSize: relativeSize ?? SlideableListCellSize.big,
+      isActive: () {
+        switch (queue.state) {
+          case QueueState.active:
+            return true;
+          case QueueState.inactive:
+            return false;
+        }
+      }(),
+      title: queue.name ?? "New Queue",
+      subheading: (){
+        switch (queue.state) {
+          case QueueState.active:
+            //final numInLine = queue.numWaiting;
+            final numInLine = -1;
+            switch (numInLine) {
+              case 0:
+                return "Queue is Empty";
+              case 1:
+                return "1 Person is in Line";
+              default:
+                return "$numInLine People are in Line.";
+            }
+            break;
+          case QueueState.inactive:
+            return null;
+        }
+      }(),
+      body: queue.description ?? "Swipe from the left to delete this queue and swipe right to see more details.",
+      isSelected: isSelected,
+      onPrimarySwipe: onOpen,
+      onSecondarySwipe: onDelete,
+      onTap: onTap,
+      getPrimaryText: (isSelected) => isSelected ? "Deactivate" : "Activate",
+      getSecondaryText: (isSelected) => "Delete",
+    );
+  }
+
+  factory SlideableListCell.person(
+    {
+      Key key,
+      SlideableListCellSize relativeSize = SlideableListCellSize.medium,
+      QueuePerson queueEntry,
+      Future<bool> Function() onDelete,
+      Future<bool> Function() onNotify,
+      Function onTap
+    }) {
+    return SlideableListCell(
+      key: key,
+      relativeSize: relativeSize,
+      title: queueEntry.name,
+      body: queueEntry.note ?? "",
+      isSelected: (){
+          switch (queueEntry.state) {
+            case QueueEntryState.pendingNotification:
+            case QueueEntryState.notified:
+              return true;
+            case QueueEntryState.waiting:
+            case QueueEntryState.pendingDeletion:          
+            case QueueEntryState.deleted:          
+              return false;
+          }
+        }(),
+      onPrimarySwipe: onNotify,
+      onSecondarySwipe: onDelete,
+      onTap: onTap,
+      getPrimaryText: (isSelected) => isSelected ? "Notified" : "Notify",
+      getSecondaryText: (isSelected) => "Remove",
+    );
+  }
 
   SlideableListCell(
       {
@@ -29,8 +114,8 @@ class SlideableListCell extends StatelessWidget {
         this.onPrimarySwipe,
         this.onSecondarySwipe,
         this.onTap,
-        this.primaryText = "Active",
-        this.secondaryText = "Delete",
+        @required this.getPrimaryText,
+        @required this.getSecondaryText,
       }
     ) : super(key: key);
 
@@ -73,16 +158,16 @@ class SlideableListCell extends StatelessWidget {
                   color: MyStyles.of(context).colors.secondary,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    secondaryText,
+                    getSecondaryText(isSelected),
                     style: MyStyles.of(context).textThemes.buttonActionText3,
                   ),
                 ),
                 secondaryBackground: Container(
                   padding: EdgeInsets.all(15),
-                  color: MyStyles.of(context).colors.accent,
+                  color: isActive ? MyStyles.of(context).colors.accent : MyStyles.of(context).colors.active,
                   alignment: Alignment.centerRight,
                   child: Text(
-                    primaryText,
+                    getPrimaryText(isSelected),
                     style: MyStyles.of(context).textThemes.buttonActionText3,
                   ),
                 ),

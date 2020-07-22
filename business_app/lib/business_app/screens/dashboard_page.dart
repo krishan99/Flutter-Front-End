@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/components/cells/queue_cell.dart';
+import 'package:business_app/components/cells/slideable_list_cell.dart';
 import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,7 @@ class DashboardPage extends StatelessWidget {
                         value: element,
                         child: Consumer<Queue>(
                           builder: (context, queue, _) {
-                            return QueueCell(
+                            return SlideableListCell.queue(
                               queue: queue,
                               onDelete: () async {
                                 try {
