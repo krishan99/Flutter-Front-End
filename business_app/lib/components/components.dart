@@ -136,13 +136,6 @@ class _SlideableListState extends State<SlideableList> {
           ),
         ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
-      // floatingActionButton: AccentedActionButton(
-      //   text: "+",
-      //   width: 50,
-      //   height: 50,
-      //   onPressed: widget.onPlusTap,
-      // ),
     );
   }
 }

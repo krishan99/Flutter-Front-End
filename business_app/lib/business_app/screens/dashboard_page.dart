@@ -4,6 +4,7 @@ import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/components/cells/slideable_list_cell.dart';
 import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'package:business_app/business_app/models/user.dart';
@@ -41,55 +42,58 @@ class DashboardPage extends StatelessWidget {
                 else
                   return Container(
                     // color: Colors.black,
-                    child: SlideableList(
-                      topSpacing: 55,
-                      buttonText: "Add Queue",
-                      onPlusTap: () async{
-                        try {
-                          await qinfo.makeQueue("Big big fish ${Random().nextInt(50).toString()}", "roar roar road");
-                        } catch (error) {
-                          Toast.show(error.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-                        }
-                      },
+                    child: Container(
+                      color: Colors.red,
+                      child: SlideableList(
+                        topSpacing: 55,
+                        buttonText: "Add Queue",
+                        onPlusTap: () async{
+                          try {
+                            await qinfo.makeQueue("Big big fish ${Random().nextInt(50).toString()}", "roar roar road");
+                          } catch (error) {
+                            Toast.show(error.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                          }
+                        },
 
-                      header: SliverPersistentHeader(
-                        pinned: false,
-                        delegate: _SliverAppBarDelegate(
-                          color: MyStyles.of(context).colors.background2,
-                          minExtent: 60,
-                          maxExtent: 130,
+                        header: SliverPersistentHeader(
+                          pinned: false,
+                          delegate: _SliverAppBarDelegate(
+                            color: MyStyles.of(context).colors.background2,
+                            minExtent: 60,
+                            maxExtent: 130,
+                          ),
                         ),
-                      ),
 
-                      cells: qinfo.body.map((element) =>
-                        ChangeNotifierProvider.value(
-                          value: element,
-                          child: Consumer<Queue>(
-                            builder: (context, queue, _) {
-                              return SlideableListCell.queue(
-                                queue: queue,
-                                onDelete: (isActive) async {
-                                  try {
-                                    await qinfo.deleteQueue(queue.id);
-                                    return true;
-                                  } catch (error) {
+                        cells: qinfo.body.map((element) =>
+                          ChangeNotifierProvider.value(
+                            value: element,
+                            child: Consumer<Queue>(
+                              builder: (context, queue, _) {
+                                return SlideableListCell.queue(
+                                  queue: queue,
+                                  onDelete: (isActive) async {
+                                    try {
+                                      await qinfo.deleteQueue(queue.id);
+                                      return true;
+                                    } catch (error) {
+                                      return false;
+                                    }
+                                  },
+
+                                  onActivate: (isActive) async {
                                     return false;
+                                  },
+
+                                  onTap: () {
+                                      Navigator.of(context).pushNamed("/queue", arguments: queue);
+                                      // return false;
                                   }
-                                },
-
-                                onActivate: (isActive) async {
-                                  return false;
-                                },
-
-                                onTap: () {
-                                    Navigator.of(context).pushNamed("/queue", arguments: queue);
-                                    // return false;
-                                }
-                              );
-                            },
+                                );
+                              },
+                            )
                           )
-                        )
-                      ).toList(),
+                        ).toList(),
+                      ),
                     ),
                   );
             }
@@ -108,6 +112,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   const _SliverAppBarDelegate(
       {this.color, this.minExtent, this.maxExtent});
+
+
+  @override
+  OverScrollHeaderStretchConfiguration get stretchConfiguration => OverScrollHeaderStretchConfiguration();
 
   @override
   Widget build(
@@ -129,6 +137,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       ]),
     );
   }
+
+  
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
