@@ -29,7 +29,7 @@ class InitialLoadingPage extends StatelessWidget {
 
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
@@ -60,7 +60,7 @@ class InitialLoadingPage extends StatelessWidget {
                 },
               ); 
             } else {
-              _getLoadingScreenAndNavigate("/home", "Navigating to home page...");
+              return _getLoadingScreenAndNavigate("/home", "Navigating to home page...");
             }
         }
       }

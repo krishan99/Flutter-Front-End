@@ -7,11 +7,6 @@ import 'package:business_app/business_app/models/queues.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-mixin MySliverPersistentHeaderDelegate implements SliverPersistentHeaderDelegate {
-  @override
-  OverScrollHeaderStretchConfiguration get stretchConfiguration => OverScrollHeaderStretchConfiguration();
-}
-
 //TODO: Have "SilvePersistentHeader" resize to allow smaller button while scrolling down. Using Temp Button rn.
 class SlideableList extends StatefulWidget {
   final List<Widget> cells;

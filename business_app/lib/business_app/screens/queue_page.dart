@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:business_app/business_app/models/queues.dart';
 import 'package:business_app/components/components.dart';
 import 'package:business_app/theme/themes.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class QueuePage extends StatelessWidget {
@@ -72,7 +73,7 @@ class QueuePage extends StatelessWidget {
   }
 }
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate implements MySliverPersistentHeaderDelegate {
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final Color color;
   final Queue queue;
   final double minExtent;
@@ -80,6 +81,9 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate implements My
 
   const _SliverAppBarDelegate(
       {this.color, this.queue, this.minExtent, this.maxExtent});
+
+  @override
+  OverScrollHeaderStretchConfiguration get stretchConfiguration => OverScrollHeaderStretchConfiguration();
 
   @override
   Widget build(

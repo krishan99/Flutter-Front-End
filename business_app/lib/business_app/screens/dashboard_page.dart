@@ -103,7 +103,7 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate implements MySliverPersistentHeaderDelegate {
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final Color color;
   final double minExtent;
   final double maxExtent;
@@ -111,6 +111,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate implements My
   const _SliverAppBarDelegate(
       {this.color, this.minExtent, this.maxExtent});
 
+  @override
+  OverScrollHeaderStretchConfiguration get stretchConfiguration => OverScrollHeaderStretchConfiguration();
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
