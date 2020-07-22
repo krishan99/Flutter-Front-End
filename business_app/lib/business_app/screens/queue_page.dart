@@ -47,14 +47,18 @@ class QueuePage extends StatelessWidget {
                             ? SlideableListCellSize.medium
                             : SlideableListCellSize.small,
                         
-                        onDelete: (isActive) {
+                        onDelete: (isActive) async{
                           queue.people.remove(entry.id);
-                          return Future.value(true);
+                          return true;
                         },
                         
-                        onNotify: (isActive) {
+                        onNotify: (isActive) async {
                           entry.state = QueueEntryState.pendingNotification;
-                          return Future.value(false);
+                          return false;
+                        },
+
+                        onTap: () async {
+                          return false;
                         },
                       );
                     },

@@ -77,58 +77,63 @@ class _SlideableListState extends State<SlideableList> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: true,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: <Widget>[
-                  widget.header,
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      if (index != 0) {
-                        return null;
-                      }
+        top: true,
+        bottom: false,
+        child: Container(
+          color: MyStyles.of(context).colors.background1,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: <Widget>[
+                    widget.header,
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        if (index != 0) {
+                          return null;
+                        }
 
-                      return Container(
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: MyStyles.of(context).colors.background1,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30)
+                        return Container(
+                          color: Colors.red,
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: MyStyles.of(context).colors.background1,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30)
+                                  ),
+                                ),
+                                child: Column(
+                                  children: 
+                                    <Widget>[
+                                        SizedBox(
+                                          height: 70,
+                                        ),
+                                    ] +
+                                    
+                                    widget.cells.map((cell) {
+                                      return Container(
+                                        padding:EdgeInsets.fromLTRB(30, 10, 30, 10),
+                                        child: cell
+                                      );
+                                    }).toList()
                                 ),
                               ),
-                              child: Column(
-                                children: 
-                                  <Widget>[
-                                      SizedBox(
-                                        height: 70,
-                                      ),
-                                  ] +
-                                  
-                                  widget.cells.map((cell) {
-                                    return Container(
-                                      padding:EdgeInsets.fromLTRB(30, 10, 30, 10),
-                                      child: cell
-                                    );
-                                  }).toList()
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    })
-                  ),
-                ]
+                            ],
+                          ),
+                        );
+                      })
+                    ),
+                  ]
+                ),
               ),
-            ),
-            _buildFab()
-          ],
+              _buildFab()
+            ],
+          ),
         ),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,

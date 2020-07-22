@@ -29,6 +29,10 @@ class InitialLoadingPage extends StatelessWidget {
           case ConnectionState.none:
           case ConnectionState.waiting:
             return _getBasicTextPage("Getting Account Data...");
+
+          case ConnectionState.active:
+            Future.microtask(() => Navigator.of(context).pushReplacementNamed("/home"));
+            return _getBasicTextPage("Navigating to home page...");
             
           default:
             if (snapshot.hasData) {
@@ -51,7 +55,7 @@ class InitialLoadingPage extends StatelessWidget {
                           return _getBasicTextPage("Navigating to dashboard...");
                         }
                       } else {
-                          Future.microtask(() => Navigator.of(context).pushReplacementNamed("/home"));
+                        Future.microtask(() => Navigator.of(context).pushReplacementNamed("/home"));
                         return _getBasicTextPage("Navigating to home page...");
                       }
                   }

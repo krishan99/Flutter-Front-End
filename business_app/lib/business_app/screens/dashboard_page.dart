@@ -39,55 +39,58 @@ class DashboardPage extends StatelessWidget {
                     child: Text('Error: ${snapshot.error.toString()}', style: MyStyles.of(context).textThemes.h2)
                   );
                 else
-                  return SlideableList(
-                    topSpacing: 55,
-                    buttonText: "Add Queue",
-                    onPlusTap: () async{
-                      try {
-                        await qinfo.makeQueue("Big big fish ${Random().nextInt(50).toString()}", "roar roar road");
-                      } catch (error) {
-                        Toast.show(error.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-                      }
-                    },
+                  return Container(
+                    // color: Colors.black,
+                    child: SlideableList(
+                      topSpacing: 55,
+                      buttonText: "Add Queue",
+                      onPlusTap: () async{
+                        try {
+                          await qinfo.makeQueue("Big big fish ${Random().nextInt(50).toString()}", "roar roar road");
+                        } catch (error) {
+                          Toast.show(error.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                        }
+                      },
 
-                    header: SliverPersistentHeader(
-                      pinned: false,
-                      delegate: _SliverAppBarDelegate(
-                        color: MyStyles.of(context).colors.background2,
-                        minExtent: 60,
-                        maxExtent: 130,
+                      header: SliverPersistentHeader(
+                        pinned: false,
+                        delegate: _SliverAppBarDelegate(
+                          color: MyStyles.of(context).colors.background2,
+                          minExtent: 60,
+                          maxExtent: 130,
+                        ),
                       ),
-                    ),
 
-                    cells: qinfo.body.map((element) =>
-                      ChangeNotifierProvider.value(
-                        value: element,
-                        child: Consumer<Queue>(
-                          builder: (context, queue, _) {
-                            return SlideableListCell.queue(
-                              queue: queue,
-                              onDelete: (isActive) async {
-                                try {
-                                  await qinfo.deleteQueue(queue.id);
-                                  return true;
-                                } catch (error) {
+                      cells: qinfo.body.map((element) =>
+                        ChangeNotifierProvider.value(
+                          value: element,
+                          child: Consumer<Queue>(
+                            builder: (context, queue, _) {
+                              return SlideableListCell.queue(
+                                queue: queue,
+                                onDelete: (isActive) async {
+                                  try {
+                                    await qinfo.deleteQueue(queue.id);
+                                    return true;
+                                  } catch (error) {
+                                    return false;
+                                  }
+                                },
+
+                                onActivate: (isActive) async {
                                   return false;
+                                },
+
+                                onTap: () {
+                                    Navigator.of(context).pushNamed("/queue", arguments: queue);
+                                    // return false;
                                 }
-                              },
-
-                              onActivate: (isActive) async {
-                                return false;
-                              },
-
-                              onTap: () {
-                                  Navigator.of(context).pushNamed("/queue", arguments: queue);
-                                  // return false;
-                              }
-                            );
-                          },
+                              );
+                            },
+                          )
                         )
-                      )
-                    ).toList(),
+                      ).toList(),
+                    ),
                   );
             }
           }

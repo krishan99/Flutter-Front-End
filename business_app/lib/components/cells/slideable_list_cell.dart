@@ -7,7 +7,7 @@ enum SlideableListCellSize { big, medium, small }
 class SlideableListCell extends StatelessWidget {
   static const double borderRadius = 20;
   final bool isSelected;
-  final bool isActive;
+  final bool showIfActiveText;
   final String title;
   final String subheading;
   final String body;
@@ -23,7 +23,6 @@ class SlideableListCell extends StatelessWidget {
       Key key,
       SlideableListCellSize relativeSize,
       Queue queue,
-      bool isSelected = false,
       Future<bool> Function(bool) onActivate,
       Future<bool> Function(bool) onDelete,
       Function onTap
@@ -31,7 +30,7 @@ class SlideableListCell extends StatelessWidget {
     return SlideableListCell(
       key: key,
       relativeSize: relativeSize ?? SlideableListCellSize.big,
-      isActive: () {
+      isSelected: () {
         switch (queue.state) {
           case QueueState.active:
             return true;
@@ -40,6 +39,7 @@ class SlideableListCell extends StatelessWidget {
         }
       }(),
       title: queue.name ?? "New Queue",
+      showIfActiveText: true,
       subheading: (){
         switch (queue.state) {
           case QueueState.active:
@@ -59,7 +59,6 @@ class SlideableListCell extends StatelessWidget {
         }
       }(),
       body: queue.description ?? "Swipe from the left to delete this queue and swipe right to see more details.",
-      isSelected: isSelected,
       onPrimarySwipe: onActivate,
       onSecondarySwipe: onDelete,
       onTap: onTap,
@@ -72,10 +71,10 @@ class SlideableListCell extends StatelessWidget {
     {
       Key key,
       SlideableListCellSize relativeSize = SlideableListCellSize.medium,
-      QueuePerson queueEntry,
-      Future<bool> Function(bool) onDelete,
-      Future<bool> Function(bool) onNotify,
-      Function onTap
+      @required QueuePerson queueEntry,
+      @required Future<bool> Function(bool) onDelete,
+      @required Future<bool> Function(bool) onNotify,
+      @required Function onTap
     }) {
     return SlideableListCell(
       key: key,
@@ -105,10 +104,10 @@ class SlideableListCell extends StatelessWidget {
       {
         Key key,
         this.relativeSize = SlideableListCellSize.big,
-        this.isActive,
         @required this.title,
         this.subheading,
         this.body,
+        this.showIfActiveText = false,
         this.isSelected = false,
         this.onPrimarySwipe,
         this.onSecondarySwipe,
@@ -146,9 +145,9 @@ class SlideableListCell extends StatelessWidget {
                 key: GlobalKey(),
                 confirmDismiss: (direction) {
                   if (direction == DismissDirection.startToEnd) {
-                    return onSecondarySwipe(isActive);
+                    return onSecondarySwipe(isSelected);
                   } else {
-                    return onPrimarySwipe(isActive);
+                    return onPrimarySwipe(isSelected);
                   }
                 },
                 
@@ -163,7 +162,7 @@ class SlideableListCell extends StatelessWidget {
                 ),
                 secondaryBackground: Container(
                   padding: EdgeInsets.all(15),
-                  color: isActive ? MyStyles.of(context).colors.accent : MyStyles.of(context).colors.active,
+                  color: isSelected ? MyStyles.of(context).colors.accent : MyStyles.of(context).colors.active,
                   alignment: Alignment.centerRight,
                   child: Text(
                     getPrimaryText(isSelected),
@@ -198,12 +197,12 @@ class SlideableListCell extends StatelessWidget {
                                       .bodyText1),
             
                               () {
-                                if (isActive != null) {
+                                if (showIfActiveText) {
                                   return Expanded(
                                     child: Text(
-                                      (isActive) ? "Active" : "Inactive",
+                                      (isSelected) ? "Active" : "Inactive",
                                       textAlign: TextAlign.end,
-                                      style: (isActive)
+                                      style: (isSelected)
                                           ? MyStyles.of(context).textThemes.active
                                           : MyStyles.of(context)
                                               .textThemes
