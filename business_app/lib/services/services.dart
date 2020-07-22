@@ -60,11 +60,13 @@ class MyServer {
   Future<Map<String, dynamic>> post(String route, {@required Map body}) async {
     final url = _getURL(route: route);
 
+    // await Future.delayed(Duration(seconds: 3));
+
     final response = await http.post(
       url,
       headers: headers,
       body: jsonEncode(body)
-    ).timeout(timeout);
+    );
 
     updateCookie(response);
 
@@ -73,6 +75,9 @@ class MyServer {
 
   Future<Map<String, dynamic>> get(String route) async {
     final url = _getURL(route: route);
+    
+    // await Future.delayed(Duration(seconds: 3));
+
     final response = await http.get(
       url,
       headers: headers,

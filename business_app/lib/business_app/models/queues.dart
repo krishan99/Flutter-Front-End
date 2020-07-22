@@ -17,7 +17,7 @@ enum QueueEntryState {
   deleted
 }
 
-class QueuePerson with ChangeNotifier{
+class QueuePerson with ChangeNotifier {
   int id;
   String _name;
   String _note;
@@ -35,7 +35,7 @@ class QueuePerson with ChangeNotifier{
     notifyListeners();
   }
 
-  void update(Map<String, dynamic> info){
+  void update(Map<String, dynamic> info) {
     _name = info["name"] ?? _name;
     _note = info["note"] ?? _note;
     _phone = info["phone"] ?? _phone;
@@ -55,35 +55,48 @@ class QueuePerson with ChangeNotifier{
   }
 }
 
-class QueuePeople with ChangeNotifier{
+class QueuePeople with ChangeNotifier {
   final int id;
   // this is an ordered map
   var theline = new SplayTreeMap<int, QueuePerson>();
   Iterable<QueuePerson> get body => theline.values;
+  BusinessAppServer server;
 
-  void updateFromSever(List<dynamic> serverLine){
-    for(var i=0; i < serverLine.length; i++){
+  QueuePeople({
+    this.id,
+    @required this.server,
+  }) {
+    BusinessAppServer.socket.on("update $id", (data) {
+      updateFromSever(data["line"]);
+      notifyListeners();
+    });
+  }
+
+  void updateFromSever(List<dynamic> serverLine) {
+    for (var i = 0; i < serverLine.length; i++) {
       int k = serverLine[i]["id"];
-      if(!theline.containsKey(k)){
-        theline[k]=new QueuePerson(id: k);
+      if (!theline.containsKey(k)) {
+        theline[k] = new QueuePerson(id: k);
       }
       theline[k].update(serverLine[i]);
     }
     // delete anything not on server anymore
     var keys = theline.keys;
     var toRemove = [];
-    for(var k in keys){
+    for (var k in keys) {
       bool there = false;
-      for(var j=0; j<serverLine.length; j++){
-        if(serverLine[j]["id"]==k){
-          there=true;
+      for (var j = 0; j < serverLine.length; j++) {
+        if (serverLine[j]["id"] == k) {
+          there = true;
           break;
         }
       }
-      if(!there) toRemove.add(k);
+      if (!there) toRemove.add(k);
     }
 
-    toRemove.forEach((k) {theline.remove(k);});
+    toRemove.forEach((k) {
+      theline.remove(k);
+    });
   }
 
   void start() {
@@ -95,11 +108,13 @@ class QueuePeople with ChangeNotifier{
   }
 
   int get numNotified {
-    return _getNumOfStates([QueueEntryState.notified, QueueEntryState.pendingNotification]);
+    return _getNumOfStates(
+        [QueueEntryState.notified, QueueEntryState.pendingNotification]);
   }
 
   int get numCompleted {
-    return _getNumOfStates([QueueEntryState.notified, QueueEntryState.pendingDeletion]);
+    return _getNumOfStates(
+        [QueueEntryState.notified, QueueEntryState.pendingDeletion]);
   }
 
   int _getNumOfStates(List<QueueEntryState> states) {
@@ -110,8 +125,8 @@ class QueuePeople with ChangeNotifier{
     return _getNumOfStates([state]);
   }
 
-  void remove(int personId) async{
-    if(!theline.containsKey(personId)){
+  void remove(int personId) async {
+    if (!theline.containsKey(personId)) {
       print("Invalid id to remove");
       return;
     }
@@ -120,25 +135,16 @@ class QueuePeople with ChangeNotifier{
     theline.remove(personId);
     notifyListeners();
   }
-  
-  void add2Queue(BusinessAppServer server, String name, int id, String phone) {
+
+  void add2Queue(
+      {@required String name, @required int id, @required String phone}) {
     theline.putIfAbsent(-1, () => QueuePerson(id: id, name: name));
     server.addToQueue(name: name, phoneNumber: phone, qid: id);
     notifyListeners();
   }
-
-  QueuePeople({@required this.id}){
-    print("update $id");
-    BusinessAppServer.socket.on("update $id", (data) {
-        updateFromSever(data["line"]);
-        notifyListeners();
-    });
-  }
 }
 
-enum QueueState {
-  active, inactive
-}
+enum QueueState { active, inactive }
 
 class Queue with ChangeNotifier {
   final int id;
@@ -156,11 +162,12 @@ class Queue with ChangeNotifier {
     _state = newValue;
     notifyListeners();
   }
+
   QueuePeople get people => _people;
 
   static Queue fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
-  
+
     return Queue(
       id: map['qid'],
       name: map['qname'],
@@ -169,25 +176,24 @@ class Queue with ChangeNotifier {
     );
   }
 
-  void update(Queue info){
+  void update(Queue info) {
     _name = info.name ?? _name;
     _description = info.description ?? _description;
     _code = info.code ?? _code;
     notifyListeners();
   }
 
-  Queue({
-    this.id,
-    String name,
-    String description,
-    QueueState state = QueueState.inactive,
-    String code
-  }){
+  Queue(
+      {this.id,
+      String name,
+      String description,
+      QueueState state = QueueState.inactive,
+      String code}) {
     this._name = name;
     this._description = description;
     this._state = QueueState.inactive;
     this._code = code;
-    this._people = QueuePeople(id: this.id);
+    this._people = QueuePeople(id: this.id, server: server);
   }
 }
 
@@ -202,28 +208,30 @@ class AllQueuesInfo with ChangeNotifier {
     var serverQueues = await server.getListofQueues();
 
     // update info based on server
-    for(var i=0; i<serverQueues.length; i++){
+    for (var i = 0; i < serverQueues.length; i++) {
       int k = serverQueues[i].id;
-      if(!queues.containsKey(k)){
-        queues[k]=new Queue(id: k);
+      if (!queues.containsKey(k)) {
+        queues[k] = new Queue(id: k);
       }
       queues[k].update(serverQueues[i]);
     }
     // delete anything not on server anymore
     var keys = queues.keys;
     var toRemove = [];
-    for(var k in keys){
+    for (var k in keys) {
       bool there = false;
-      for(var j=0; j<serverQueues.length; j++){
-        if(serverQueues[j].id==k){
-          there=true;
+      for (var j = 0; j < serverQueues.length; j++) {
+        if (serverQueues[j].id == k) {
+          there = true;
           break;
         }
       }
-      if(!there) toRemove.add(k);
+      if (!there) toRemove.add(k);
     }
 
-    toRemove.forEach((element) {queues.remove(element as int);});
+    toRemove.forEach((element) {
+      queues.remove(element as int);
+    });
   }
 
   // currently doesn't really do anything

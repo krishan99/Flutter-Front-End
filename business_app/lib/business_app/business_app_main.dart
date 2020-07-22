@@ -48,7 +48,6 @@ class MyApp extends StatelessWidget {
         title: 'EndLine',
         onGenerateRoute: BAppRouteGenerator.generateRoute,
         initialRoute: "/",
-        // home: SetupAccountPage(),
     );
   }
 }

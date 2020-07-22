@@ -1,3 +1,4 @@
+import 'package:business_app/components/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -130,19 +131,15 @@ class _CreateUserPageState extends State<CreateUserPage> {
                       SizedBox(
                         height: spacing,
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            child: AccentedActionButton(
-                              text: widget.buttonText,
-                              onPressed: widget.onContinue,
-                              onSuccess: widget.onSuccess,
-                            ),
-                          ),
-                        ],
+                      Container(
+                        child: AccentedActionButton(
+                          text: widget.buttonText,
+                          onPressed: widget.onContinue,
+                          onSuccess: widget.onSuccess,
+                        ),
                       ),
                       SizedBox(
-                        height: spacing,
+                        height: spacing*2,
                       ),
                     ],
                   ),

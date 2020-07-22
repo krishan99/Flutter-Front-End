@@ -1,4 +1,5 @@
 import 'package:business_app/business_app/screens/home_page.dart';
+import 'package:business_app/components/textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,19 +41,14 @@ class _LoginPageState extends State<LoginPage> {
           height: widget.height,
           title: "Welcome Back!",
           onContinue: () async {
-            final ApiResponse response = await ApiResponse.fromFunction(
-              () async {
-                await user.signIn(
-                  email: this.emailController.text,
-                  password: this.passwordController.text
-                );
-              }
+            await user.signIn(
+              email: this.emailController.text,
+              password: this.passwordController.text
             );
-            
-            if (response.isSuccess && user.isLoggedIn) {
-              Navigator.of(context).popAndPushNamed("/dashboard");
-            }
           },
+
+          onSuccess: () => Navigator.of(context).pushReplacementNamed("/dashboard"),
+
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

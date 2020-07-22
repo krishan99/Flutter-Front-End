@@ -61,6 +61,7 @@ class MyColors {
     background1: Colors.white,
     background2: Color.fromRGBO(248, 248, 248, 1),
     accent: Color.fromRGBO(255, 83, 83, 1),
+    active: Color.fromRGBO(52, 209, 42, 1),
     secondary: Color.fromRGBO(98, 98, 98, 1),
     accentGradient: LinearGradient(
       begin: Alignment.topCenter,
@@ -76,11 +77,12 @@ class MyColors {
 
   static MyColors darkMode = MyColors.lightMode.copyWith(systemBarIconBrightness: Brightness.dark);
 
-  MyColors copyWith({Color background1, Color background2, Color accent, Color secondary, LinearGradient accentGradient, Color statusBarColor, Brightness systemBarIconBrightness}) {
+  MyColors copyWith({Color background1, Color background2, Color accent, Color active, Color secondary, LinearGradient accentGradient, Color statusBarColor, Brightness systemBarIconBrightness}) {
     return MyColors._(
       background1: background1 ?? this.background1,
       background2: background2 ?? this.background2,
       accent: accent ?? this.accent, 
+      active: active ?? this.active,
       secondary: secondary ?? this.secondary,
       accentGradient: accentGradient ?? this.accentGradient,
       statusBarColor: statusBarColor ?? this.statusBarColor,
@@ -94,8 +96,9 @@ class MyColors {
   final Color secondary;
   final LinearGradient accentGradient;
   final Color statusBarColor;
+  final Color active;
   final Brightness systemBarIconBrightness;
-  const MyColors._({this.background1, this.background2, this.accent, this.secondary, this.accentGradient, this.statusBarColor, this.systemBarIconBrightness}); 
+  const MyColors._({this.background1, this.background2, this.active, this.accent, this.secondary, this.accentGradient, this.statusBarColor, this.systemBarIconBrightness}); 
 }
 
 class MyTextThemes {
@@ -116,7 +119,7 @@ class MyTextThemes {
     subtext: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(160, 160, 160, 1), fontWeight: FontWeight.w300),
     errorSubText: TextStyle(fontSize: 12, fontFamily: MyTextThemes._fontFamily, color: Colors.red, fontWeight: FontWeight.w300),
     placeholder: TextStyle(fontSize: 15, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(186, 186, 186, 1), fontWeight: FontWeight.w300),
-    active: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(131, 219, 28, 1), fontWeight: FontWeight.bold),
+    active: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Color.fromRGBO(174, 214, 64, 1), fontWeight: FontWeight.bold),
     disabled: TextStyle(fontSize: 20, fontFamily: MyTextThemes._fontFamily, color: Colors.red, fontWeight: FontWeight.bold)
   );
 

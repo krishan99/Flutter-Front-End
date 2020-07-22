@@ -15,13 +15,13 @@ class BusinessAppServer extends MyServer {
   bool connectSocket() {
     socket.connect();
     socket.on('connect', (_) {
-        print('Connected to socket');
-      });
+      print('Connected to socket');
+    });
     return true;
   }
 
   static bool joinRoom(int qid) {
-    if(qid == currentRoom) return true;
+    if (qid == currentRoom) return true;
     socket.emit('join', {'qid': qid});
     currentRoom = qid;
     // check if succesful
@@ -29,95 +29,77 @@ class BusinessAppServer extends MyServer {
   }
 
   static void leaveRoom() {
-    if(currentRoom != -1) socket.emit('leave', {'qid': currentRoom});
+    if (currentRoom != -1) socket.emit('leave', {'qid': currentRoom});
     currentRoom = -1;
   }
 
-  Future<void> signIn({@required String token}) async {
+  Future<Map<String, dynamic>> signIn({@required String token}) async {
     _setToken(token);
-    
-    await post(
-      "api/v1/account/signin",
-      body: <String, String>{}
-    ); 
+
+    return await post("api/v1/account/signin", body: <String, String>{});
   }
 
-  Future<void> signUp({@required String token, String name, String description}) async {
+  Future<void> signUp(
+      {@required String token, String name, String description}) async {
     _setToken(token);
 
-    await post(
-      "api/v1/account/signup",
-      body: <String, String>{
-        "name": name ?? "",
-        "description": description ?? ""
-      }
-    ); 
+    await post("api/v1/account/signup", body: <String, String>{
+      "name": name ?? "",
+      "description": description ?? ""
+    });
   }
 
   void _setToken(String token) {
     MyServer.headers[_tokenHeader] = token;
   }
 
-  Future<void> updateUserData({@required String name, @required String description}) async {
-    await post(
-      "api/v1/account/update",
-      body: <String, String> {
-        "name": name,
-        "description": description
-      }
-    );
+  Future<void> updateUserData(
+      {@required String name, @required String description}) async {
+    await post("api/v1/account/update",
+        body: <String, String>{"name": name, "description": description});
   }
-  
 
   Future<List<Queue>> getListofQueues() async {
     Map<String, dynamic> body = await get("api/v1/queue/retrieve_all");
-    return (body["queues"] as List).map(
-      (queueMapObject) => Queue.fromMap(queueMapObject as Map<String, dynamic>)
-    ).toList();
+    return (body["queues"] as List)
+        .map((queueMapObject) =>
+            Queue.fromMap(queueMapObject as Map<String, dynamic>))
+        .toList();
   }
 
   Future<Queue> makeQueue(String name, String description) async {
-    Map<String, dynamic> body = await post(
-      "api/v1/queue/make",
-      body: <String, String>{
-        "qname": name,
-        "description": description,
-      }
-    );
+    Map<String, dynamic> body =
+        await post("api/v1/queue/make", body: <String, String>{
+      "qname": name,
+      "description": description,
+    });
 
     return Queue.fromMap(body);
   }
 
   Future<void> deleteQueue(int id) async {
-    await post(
-      "api/v1/queue/delete",
-      body: <String, int>{
-        "qid": id,
-      }
-    );
+    await post("api/v1/queue/delete", body: <String, int>{
+      "qid": id,
+    });
   }
 
-  Future<void> deletePerson(int id, int person_id) async{
-    await post(
-      "api/v1/queue/manage/pop",
-      body: <String, int>{
-        "qid": id,
-        "id": person_id,
-      }
-    );
+  Future<void> deletePerson(int id, int person_id) async {
+    await post("api/v1/queue/manage/pop", body: <String, int>{
+      "qid": id,
+      "id": person_id,
+    });
   }
-  
-  Future<void> addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
-    await post(
-      "/api/v1/queue/user/postform",
-      body: <String, String> {
-        "qid": qid.toString(),
-        "name": name,
-        "phone": phoneNumber,
-      }
-    );
+
+  Future<void> addToQueue(
+      {@required int qid,
+      String name = "John Doe",
+      String phoneNumber = ""}) async {
+    await post("/api/v1/queue/user/postform", body: <String, String>{
+      "qid": qid.toString(),
+      "name": name,
+      "phone": phoneNumber,
+    });
   }
 
   BusinessAppServer({String path = "http://0.0.0.0:8000/"}) : super(path: path);
 }
-

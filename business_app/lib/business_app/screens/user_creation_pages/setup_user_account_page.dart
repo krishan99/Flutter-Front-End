@@ -1,9 +1,9 @@
 import 'package:business_app/business_app/models/user.dart';
-import 'package:business_app/business_app/services/services.dart';
+import 'package:business_app/components/buttons.dart';
 import 'package:business_app/components/components.dart';
+import 'package:business_app/components/textfields.dart';
 import 'package:business_app/services/services.dart';
 import 'package:business_app/theme/themes.dart';
-import 'package:business_app/user_app/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +47,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                           builder: (context, user, _) {
                             return Container(
                               child: Text(
-                                "Hello ${user.name ?? "John Doe"}!",
+                                "Hello There!",
                                 textAlign: TextAlign.center,
                                 style: MyStyles.of(context).textThemes.h2,
                               )
@@ -59,7 +59,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                         ),
                         Container(
                           child: Text(
-                            "Almost there.",
+                            "We're almost finished.",
                             textAlign: TextAlign.center,
                             style: MyStyles.of(context).textThemes.h3,
                           ),
@@ -118,7 +118,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                           },
 
                           onSuccess: () async {
-                            Navigator.of(context).popAndPushNamed("/dashboard");
+                            Navigator.of(context).pushReplacementNamed("/dashboard");
                           },
                         );
                       }

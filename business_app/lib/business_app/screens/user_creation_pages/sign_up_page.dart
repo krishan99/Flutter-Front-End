@@ -1,3 +1,4 @@
+import 'package:business_app/components/textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           },
 
-          onSuccess: () => Navigator.of(context).pushNamed("/accountInfo"),
+          onSuccess: () => Navigator.of(context).pushReplacementNamed("/accountInfo"),
 
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
