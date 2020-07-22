@@ -33,13 +33,15 @@ class BusinessAppServer extends MyServer {
     currentRoom = -1;
   }
 
-  Future<void> signIn({@required String token}) async {
+  Future<Map<String, dynamic>> signIn({@required String token}) async {
     _setToken(token);
     
-    await post(
+    return await post(
       "api/v1/account/signin",
       body: <String, String>{}
     ); 
+
+
   }
 
   Future<void> signUp({@required String token, String name, String description}) async {
@@ -103,6 +105,16 @@ class BusinessAppServer extends MyServer {
       body: <String, int>{
         "qid": id,
         "id": person_id,
+      }
+    );
+  }
+  Future<void> addToQueue({@required int qid, String name = "John Doe", String phoneNumber = ""}) async {
+    await post(
+      "/api/v1/queue/user/postform",
+      body: <String, String> {
+        "qid": qid.toString(),
+        "name": name,
+        "phone": phoneNumber,
       }
     );
   }

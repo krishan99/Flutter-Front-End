@@ -1,3 +1,4 @@
+import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:business_app/business_app/models/queues.dart';
@@ -20,7 +21,8 @@ class QueuePage extends StatelessWidget {
           qpeople.start();
           return SlideableList(
             onPlusTap: (){
-              //queue.add(QueueEntry(name: "John Doe"));
+              queue.people.add2Queue(name: "NAMES", id: 7, phone: "8888888888");
+              // queue.add(QueueEntry(name: "John Doe"));
             },
             header: SliverPersistentHeader(
               pinned: true,

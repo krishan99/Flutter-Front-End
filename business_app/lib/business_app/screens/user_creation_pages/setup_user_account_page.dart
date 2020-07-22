@@ -45,7 +45,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                           builder: (context, user, _) {
                             return Container(
                               child: Text(
-                                "Hello ${user.name ?? "John Doe"}!",
+                                "Hello There!",
                                 textAlign: TextAlign.center,
                                 style: MyStyles.of(context).textThemes.h2,
                               )
@@ -57,7 +57,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                         ),
                         Container(
                           child: Text(
-                            "Almost there.",
+                            "We're almost finished.",
                             textAlign: TextAlign.center,
                             style: MyStyles.of(context).textThemes.h3,
                           ),
@@ -116,7 +116,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                           },
 
                           onSuccess: () async {
-                            Navigator.of(context).popAndPushNamed("/dashboard");
+                            Navigator.of(context).pushReplacementNamed("/dashboard");
                           },
                         );
                       }

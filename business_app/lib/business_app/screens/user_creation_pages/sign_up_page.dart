@@ -69,7 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           },
 
-          onSuccess: () => Navigator.of(context).popAndPushNamed("/accountInfo"),
+          onSuccess: () => Navigator.of(context).pushReplacementNamed("/accountInfo"),
 
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

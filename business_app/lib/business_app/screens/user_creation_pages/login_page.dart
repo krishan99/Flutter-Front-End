@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
 
-          onSuccess: () => Navigator.of(context).popAndPushNamed("/dashboard"),
+          onSuccess: () => Navigator.of(context).pushReplacementNamed("/dashboard"),
 
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

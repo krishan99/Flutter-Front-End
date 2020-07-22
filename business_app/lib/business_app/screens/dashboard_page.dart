@@ -165,9 +165,8 @@ class ProfileAppBar extends StatelessWidget {
                     children: [
                       Consumer<User>(
                         builder: (context, user, _) {
-                          print(user.name);
                           return Text(
-                            user.name ?? "John Doe",
+                            user.businessName ?? "Company Name",
                             style: MyStyles.of(context).textThemes.h3,
                           );
                         }

@@ -32,6 +32,9 @@ class User extends ChangeNotifier {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final BusinessAppServer server;
 
+  String _businessName;
+  String _businessDescription;
+
   FirebaseUser _firebaseUser;
   String email;
 
@@ -39,8 +42,12 @@ class User extends ChangeNotifier {
     return _firebaseUser != null;
   }
 
-  String get name {
-    return _firebaseUser?.displayName;
+  String get businessName {
+    return _businessName;
+  }
+
+  String get businessDescription {
+    return _businessDescription;
   }
 
   Future<String> getToken() async {
@@ -50,7 +57,9 @@ class User extends ChangeNotifier {
 
   Future<void> notifyServerOfSignIn(String email) async {
     final token = await getToken();
-    await server.signIn(token: token);
+    final map = await server.signIn(token: token);
+    this._businessName = map["name"];
+    this._businessDescription = map["description"];
     server.connectSocket();
     this.email = email;
     notifyListeners();

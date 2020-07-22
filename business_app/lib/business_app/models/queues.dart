@@ -55,11 +55,22 @@ class QueuePerson with ChangeNotifier{
   }
 }
 
-class QueuePeople with ChangeNotifier{
+class QueuePeople with ChangeNotifier {
   final int id;
   // this is an ordered map
   var theline = new SplayTreeMap<int, QueuePerson>();
   Iterable<QueuePerson> get body => theline.values;
+  BusinessAppServer server;
+
+  QueuePeople({
+    this.id,
+    @required this.server,
+  }) {
+    BusinessAppServer.socket.on("update $id", (data) {
+        updateFromSever(data["line"]);
+        notifyListeners();
+    });
+  }
 
   void updateFromSever(List<dynamic> serverLine){
     for(var i=0; i < serverLine.length; i++){
@@ -120,12 +131,11 @@ class QueuePeople with ChangeNotifier{
     theline.remove(personId);
     notifyListeners();
   }
-
-  QueuePeople({@required this.id}){
-    BusinessAppServer.socket.on("update $id", (data) {
-        updateFromSever(data["line"]);
-        notifyListeners();
-    });
+ 
+  void add2Queue({@required String name, @required int id, @required String phone}) {
+    theline.putIfAbsent(-1, () => QueuePerson(id: id, name: name));
+    server.addToQueue(name: name, phoneNumber: phone, qid: id);
+    notifyListeners();
   }
 }
 
@@ -180,7 +190,7 @@ class Queue with ChangeNotifier {
     this._description = description;
     this._state = QueueState.inactive;
     this._code = code;
-    this._people = QueuePeople(id: this.id);
+    this._people = QueuePeople(id: this.id, server: server);
   }
 }
 
