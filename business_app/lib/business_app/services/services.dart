@@ -5,6 +5,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class BusinessAppServer extends MyServer {
   static const String _tokenHeader = "Authorization";
+  static const USE_TEST_SERVER = true;
 
   static IO.Socket socket = IO.io('http://127.0.0.1:8000', <String, dynamic>{
     'transports': ['websocket'],
@@ -36,7 +37,12 @@ class BusinessAppServer extends MyServer {
   Future<Map<String, dynamic>> signIn({@required String token}) async {
     _setToken(token);
 
-    return await post("api/v1/account/signin", body: <String, String>{});
+    if (USE_TEST_SERVER) {
+      return await post("api/v1/test",
+          body: <String, String>{"email": "pizza@gmail.com"});
+    } else {
+      return await post("api/v1/account/signin", body: <String, String>{});
+    }
   }
 
   Future<void> signUp(
@@ -50,7 +56,9 @@ class BusinessAppServer extends MyServer {
   }
 
   void _setToken(String token) {
-    MyServer.headers[_tokenHeader] = token;
+    if (!USE_TEST_SERVER) {
+      MyServer.headers[_tokenHeader] = token;
+    }
   }
 
   Future<void> updateUserData(
