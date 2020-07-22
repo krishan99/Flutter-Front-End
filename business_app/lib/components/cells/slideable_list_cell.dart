@@ -1,5 +1,4 @@
 import 'package:business_app/business_app/models/queues.dart';
-import 'package:business_app/components/cells/queue_cell.dart';
 import 'package:business_app/theme/themes.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +13,8 @@ class SlideableListCell extends StatelessWidget {
   final String body;
   final String Function(bool) getPrimaryText;
   final String Function(bool) getSecondaryText;
-  final Future<bool> Function() onPrimarySwipe;
-  final Future<bool> Function() onSecondarySwipe;
+  final Future<bool> Function(bool) onPrimarySwipe;
+  final Future<bool> Function(bool) onSecondarySwipe;
   final Function onTap;
   final SlideableListCellSize relativeSize;
 
@@ -25,8 +24,8 @@ class SlideableListCell extends StatelessWidget {
       SlideableListCellSize relativeSize,
       Queue queue,
       bool isSelected = false,
-      Future<bool> Function() onOpen,
-      Future<bool> Function() onDelete,
+      Future<bool> Function(bool) onActivate,
+      Future<bool> Function(bool) onDelete,
       Function onTap
     }) {
     return SlideableListCell(
@@ -61,7 +60,7 @@ class SlideableListCell extends StatelessWidget {
       }(),
       body: queue.description ?? "Swipe from the left to delete this queue and swipe right to see more details.",
       isSelected: isSelected,
-      onPrimarySwipe: onOpen,
+      onPrimarySwipe: onActivate,
       onSecondarySwipe: onDelete,
       onTap: onTap,
       getPrimaryText: (isSelected) => isSelected ? "Deactivate" : "Activate",
@@ -74,8 +73,8 @@ class SlideableListCell extends StatelessWidget {
       Key key,
       SlideableListCellSize relativeSize = SlideableListCellSize.medium,
       QueuePerson queueEntry,
-      Future<bool> Function() onDelete,
-      Future<bool> Function() onNotify,
+      Future<bool> Function(bool) onDelete,
+      Future<bool> Function(bool) onNotify,
       Function onTap
     }) {
     return SlideableListCell(
@@ -147,9 +146,9 @@ class SlideableListCell extends StatelessWidget {
                 key: GlobalKey(),
                 confirmDismiss: (direction) {
                   if (direction == DismissDirection.startToEnd) {
-                    return onSecondarySwipe();
+                    return onSecondarySwipe(isActive);
                   } else {
-                    return onPrimarySwipe();
+                    return onPrimarySwipe(isActive);
                   }
                 },
                 

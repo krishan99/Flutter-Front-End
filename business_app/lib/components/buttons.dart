@@ -1,4 +1,5 @@
 import 'package:business_app/theme/themes.dart';
+import 'package:business_app/user_app/components/components.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
@@ -77,26 +78,23 @@ class _AccentedActionButtonState extends State<AccentedActionButton> {
       width: widget.width,
       child: Column(
         children: [
-          ActionButton(
+          LoadingButton(
             height: widget.height,
-            child: Text(
+            defaultWidget: Text(
               widget.text,
               style: MyStyles.of(context).textThemes.buttonActionText1,
             ),
             gradient: MyStyles.of(context).colors.accentGradient,
-            onSuccess: () async {
+            onPressed: () async {
               try {
                 if (widget.onPressed != null) {
                   await widget.onPressed();
                 }
-
-                if (widget.onSuccess != null) {
-                  await widget.onSuccess();
-                }
-
                 setState(() {
                   this.errorMessage = null;
                 });
+
+                return widget.onSuccess;
               } catch (error) {
                 setState(() {
                   this.errorMessage = error.toString();

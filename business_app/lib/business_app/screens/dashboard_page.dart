@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:business_app/business_app/models/queues.dart';
-import 'package:business_app/components/cells/queue_cell.dart';
 import 'package:business_app/components/cells/slideable_list_cell.dart';
 import 'package:business_app/services/services.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +66,7 @@ class DashboardPage extends StatelessWidget {
                           builder: (context, queue, _) {
                             return SlideableListCell.queue(
                               queue: queue,
-                              onDelete: () async {
+                              onDelete: (isActive) async {
                                 try {
                                   await qinfo.deleteQueue(queue.id);
                                   return true;
@@ -76,9 +75,8 @@ class DashboardPage extends StatelessWidget {
                                 }
                               },
 
-                              onOpen: () async {
-                                  Navigator.of(context).pushNamed("/queue", arguments: queue);
-                                  return false;
+                              onActivate: (isActive) async {
+                                return false;
                               },
 
                               onTap: () {

@@ -1,5 +1,4 @@
 import 'package:business_app/business_app/services/services.dart';
-import 'package:business_app/components/cells/queue_cell.dart';
 import 'package:business_app/components/cells/slideable_list_cell.dart';
 import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
@@ -48,12 +47,12 @@ class QueuePage extends StatelessWidget {
                             ? SlideableListCellSize.medium
                             : SlideableListCellSize.small,
                         
-                        onDelete: () {
+                        onDelete: (isActive) {
                           queue.people.remove(entry.id);
                           return Future.value(true);
                         },
                         
-                        onNotify: () {
+                        onNotify: (isActive) {
                           entry.state = QueueEntryState.pendingNotification;
                           return Future.value(false);
                         },
