@@ -130,19 +130,15 @@ class _CreateUserPageState extends State<CreateUserPage> {
                       SizedBox(
                         height: spacing,
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            child: AccentedActionButton(
-                              text: widget.buttonText,
-                              onPressed: widget.onContinue,
-                              onSuccess: widget.onSuccess,
-                            ),
-                          ),
-                        ],
+                      Container(
+                        child: AccentedActionButton(
+                          text: widget.buttonText,
+                          onPressed: widget.onContinue,
+                          onSuccess: widget.onSuccess,
+                        ),
                       ),
                       SizedBox(
-                        height: spacing,
+                        height: spacing*2,
                       ),
                     ],
                   ),

@@ -39,6 +39,8 @@ class DashboardPage extends StatelessWidget {
                   );
                 else
                   return SlideableList(
+                    topSpacing: 55,
+                    buttonText: "Add Queue",
                     onPlusTap: () async{
                       try {
                         await qinfo.makeQueue("Big big fish ${Random().nextInt(50).toString()}", "roar roar road");
@@ -51,8 +53,8 @@ class DashboardPage extends StatelessWidget {
                       pinned: false,
                       delegate: _SliverAppBarDelegate(
                         color: MyStyles.of(context).colors.background2,
-                        minExtent: 115,
-                        maxExtent: 125,
+                        minExtent: 60,
+                        maxExtent: 130,
                       ),
                     ),
 
@@ -113,6 +115,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         ProfileAppBar(),
         Expanded(
           child: Container(
+            // padding: EdgeInsets.only(bottom: 70),
             alignment: Alignment.center,
             child: Text(
               "Dashboard",
@@ -145,7 +148,8 @@ class ProfileAppBar extends StatelessWidget {
         Container(
           color: color,
           padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-          constraints: BoxConstraints(maxHeight: 37),
+          height: 37,
+          // constraints: BoxConstraints(maxHeight: 37),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

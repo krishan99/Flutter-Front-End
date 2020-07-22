@@ -122,7 +122,6 @@ class QueuePeople with ChangeNotifier{
   }
 
   QueuePeople({@required this.id}){
-    print("update $id");
     BusinessAppServer.socket.on("update $id", (data) {
         updateFromSever(data["line"]);
         notifyListeners();

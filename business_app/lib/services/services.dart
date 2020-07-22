@@ -64,7 +64,7 @@ class MyServer {
       url,
       headers: headers,
       body: jsonEncode(body)
-    ).timeout(timeout);
+    );
 
     updateCookie(response);
 

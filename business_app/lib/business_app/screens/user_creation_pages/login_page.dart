@@ -40,19 +40,14 @@ class _LoginPageState extends State<LoginPage> {
           height: widget.height,
           title: "Welcome Back!",
           onContinue: () async {
-            final ApiResponse response = await ApiResponse.fromFunction(
-              () async {
-                await user.signIn(
-                  email: this.emailController.text,
-                  password: this.passwordController.text
-                );
-              }
+            await user.signIn(
+              email: this.emailController.text,
+              password: this.passwordController.text
             );
-            
-            if (response.isSuccess && user.isLoggedIn) {
-              Navigator.of(context).popAndPushNamed("/dashboard");
-            }
           },
+
+          onSuccess: () => Navigator.of(context).popAndPushNamed("/dashboard"),
+
           customUserForm: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
