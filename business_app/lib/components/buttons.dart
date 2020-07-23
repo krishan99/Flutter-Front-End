@@ -77,8 +77,10 @@ class _AccentedActionButtonState extends State<AccentedActionButton> {
     return Container(
       width: widget.width,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           LoadingButton(
+            width: widget.width,
             height: widget.height,
             defaultWidget: Text(
               widget.text,

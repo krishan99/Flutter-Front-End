@@ -63,12 +63,12 @@ class LoadingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionButton(
-      width: width,
-      height: height, 
       gradient: gradient,
       color: color ?? Colors.grey[900],
       child: Container(
         child: ProgressButton(
+          width: width,
+          height: height,
           defaultWidget: defaultWidget,
           type: ProgressButtonType.Flat,
           borderRadius: 1,
