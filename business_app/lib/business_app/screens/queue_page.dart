@@ -32,8 +32,8 @@ class QueuePage extends StatelessWidget {
               delegate: _SliverAppBarDelegate(
                 color: MyStyles.of(context).colors.background2,
                 queue: queue,
-                minExtent: 100.0,
-                maxExtent: 125,
+                minExtent: 100,
+                maxExtent: 130,
               ),
             ),
             cells: qpeople.body
@@ -120,6 +120,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                           Consumer<Queue>(builder: (context, q, _) {
                             return Text(
                               queue.name ?? "New Queue",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: MyStyles.of(context).textThemes.h2,
                             );
                           }),
