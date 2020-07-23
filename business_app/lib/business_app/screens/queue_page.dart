@@ -10,8 +10,7 @@ import 'package:business_app/theme/themes.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-class QueuePage extends StatefulWidget {
-
+class QueuePage extends StatelessWidget {
   final Queue queue;
 
   QueuePage({
@@ -23,26 +22,20 @@ class QueuePage extends StatefulWidget {
   }
 
   @override
-  _QueuePageState createState() => _QueuePageState();
-}
-
-class _QueuePageState extends State<QueuePage> {
-
-  @override
   Widget build(BuildContext context) {
     return Consumer<QueuePeople>(
       builder: (context, qpeople, _) {
         return SlideableList(
             topSpacing: 55,
             onPlusTap: () {
-              Navigator.of(context).pushNamed("/add2Queue", arguments: widget.queue);
+              Navigator.of(context).pushNamed("/add2Queue", arguments: queue);
               // queue.add(QueueEntry(name: "John Doe"));
             },
             header: SliverPersistentHeader(
               pinned: false,
               delegate: _SliverAppBarDelegate(
                 color: MyStyles.of(context).colors.background2,
-                queue: widget.queue,
+                queue: queue,
                 minExtent: 100,
                 maxExtent: 130,
               ),
@@ -60,7 +53,7 @@ class _QueuePageState extends State<QueuePage> {
                                 ? SlideableListCellSize.medium
                                 : SlideableListCellSize.small,
                             onDelete: (isActive) async {
-                              widget.queue.people.remove(entry.id);
+                              queue.people.remove(entry.id);
                               return true;
                             },
                             onNotify: (isActive) async {
