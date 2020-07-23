@@ -27,6 +27,7 @@ class QueuePerson with ChangeNotifier{
   String get name => _name;
   String get note => _note;
   String get phone => _phone;
+  String get time => _time;
 
   QueueEntryState _state;
   QueueEntryState get state => _state;
@@ -36,10 +37,25 @@ class QueuePerson with ChangeNotifier{
   }
 
   void update(Map<String, dynamic> info){
-    _name = info["name"] ?? _name;
-    _note = info["note"] ?? _note;
-    _phone = info["phone"] ?? _phone;
-    _time = info["created"] ?? _time;
+    _updateFromData(
+      name: info["name"],
+      note: info["note"],
+      phone: info["phone"],
+      time: info["created"]
+    );
+  }
+
+  Future<void> updateToServer({String name, String note, String phone, String time}) async {
+    _updateFromData(name: name, note: note, phone: phone, time: time);
+    await server.updatePerson(this);
+  }
+
+  void _updateFromData({String name, String note, String phone, String time}) {
+    _name = name ?? _name;
+    _note = note ?? _note;
+    _phone = phone ?? _phone;
+    _time = time ?? _time;
+    notifyListeners();
   }
 
   QueuePerson({
