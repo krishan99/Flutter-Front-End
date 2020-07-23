@@ -127,12 +127,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       color: color,
       child: Column(children: <Widget>[
         DashboardAppBar(),
-        Container(
-          padding: EdgeInsets.only(top: 7),
-          alignment: Alignment.center,
-          child: Text(
-            "Dashboard",
-            style: MyStyles.of(context).textThemes.h2,
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.only(top: 7),
+            alignment: Alignment.center,
+            child: Text(
+              "Dashboard",
+              style: MyStyles.of(context).textThemes.h2,
+            ),
           ),
         ),
       ]),
