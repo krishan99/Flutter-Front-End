@@ -13,6 +13,7 @@ class FormFieldData {
   String title;
   String placeholderText;
   int maxLines;
+  final String Function(String) checkError;
   TextEditingController controller = TextEditingController();
 
   String get text {
@@ -22,6 +23,7 @@ class FormFieldData {
   FormFieldData({
     this.title,
     this.maxLines,
+    this.checkError,
     @required this.placeholderText
   });
 }
@@ -63,7 +65,7 @@ class FormPage extends StatefulWidget {
     this.subheading,
     @required this.formPageData,
     this.onPressed,
-    this.onSuccess
+    this.onSuccess,
   }) : super(key: key);
 
   @override
@@ -149,6 +151,7 @@ class _FormPageState extends State<FormPage> {
                               controller: element.controller,
                               placeholderText: element.placeholderText,
                               maxLines: element.maxLines,
+                              getErrorMessage: element.checkError,
                             ),
 
                             SizedBox(height: 12,),

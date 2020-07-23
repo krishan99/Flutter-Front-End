@@ -18,8 +18,16 @@ class CreateQueue extends StatelessWidget {
     return FormPage(
       title: "Create a Queue",
       formPageData: FormPageData([
-        FormFieldData(placeholderText: "Enter Queue Name"),
-        FormFieldData(placeholderText: "Enter Queue Description", maxLines: 3)
+        FormFieldData(
+          placeholderText: "Enter Queue Name",
+          checkError: (text) {
+            if (text != null && text.length < 5) {
+              return "Queue name must be at least 5 characters.";
+            } else {
+              return null;
+            }
+          }),
+        FormFieldData(placeholderText: "Enter Queue Description (Optional)", maxLines: 3)
       ]),
       onPressed: (formData) async {
         if (formData[0].text.isEmpty) {
