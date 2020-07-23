@@ -18,7 +18,6 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AllQueuesInfo>(
       builder: (context, qinfo, _) {
-        qinfo.leaveRooms();
         return FutureBuilder(
             future: qinfo.retrieveServer(),
             builder: (context, snapshot) {

@@ -12,7 +12,6 @@ class BusinessAppServer extends MyServer {
     'extraHeaders': MyServer.headers
   });
 
-  static int currentRoom = -1;
   bool connectSocket() {
     socket.connect();
     socket.on('connect', (_) {
@@ -22,17 +21,21 @@ class BusinessAppServer extends MyServer {
   }
 
   static bool joinRoom(int qid) {
-    if(qid == currentRoom) return true;
     socket.emit('join', {'qid': qid});
-    currentRoom = qid;
-    // check if succesful
     return true;
   }
+/*
+Not using anymore 
+
+  static int currentRoom = -1;
+
+  
 
   static void leaveRoom() {
     if(currentRoom != -1) socket.emit('leave', {'qid': currentRoom});
     currentRoom = -1;
   }
+*/
 
   Future<Map<String, dynamic>> signIn({@required String token}) async {
     _setToken(token);

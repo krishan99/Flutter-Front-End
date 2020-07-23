@@ -11,16 +11,18 @@ import 'package:provider/provider.dart';
 class QueuePage extends StatelessWidget {
   final Queue queue;
 
-  const QueuePage({
+  QueuePage({
     Key key,
     @required this.queue,
-  }) : super(key: key);
+  }) : super(key: key) {
+    queue.people.connectSocket();
+    queue.listen();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<QueuePeople>(
       builder: (context, qpeople, _) {
-        qpeople.start();
         return SlideableList(
             topSpacing: 55,
             onPlusTap: () {

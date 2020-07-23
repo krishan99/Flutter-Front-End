@@ -65,8 +65,12 @@ class QueuePeople with ChangeNotifier {
   QueuePeople({
     this.id,
     @required this.server,
-  }) {
+  }) {}
+
+  void connectSocket () {
+    print("update $id");
     BusinessAppServer.socket.on("update $id", (data) {
+        print("hi");
         updateFromSever(data["line"]);
         notifyListeners();
     });
@@ -95,10 +99,6 @@ class QueuePeople with ChangeNotifier {
     }
 
     toRemove.forEach((k) {theline.remove(k);});
-  }
-
-  void start() {
-    BusinessAppServer.joinRoom(id);
   }
 
   int get numWaiting {
@@ -133,7 +133,7 @@ class QueuePeople with ChangeNotifier {
   }
  
   void add2Queue({@required String name, @required int id, @required String phone}) {
-    theline.putIfAbsent(-1, () => QueuePerson(id: id, name: name));
+    theline.putIfAbsent(-1, () => QueuePerson(id: -1, name: name));
     server.addToQueue(name: name, phoneNumber: phone, qid: id);
     notifyListeners();
   }
@@ -149,7 +149,7 @@ class Queue with ChangeNotifier {
   String _description;
   String _code;
   QueueState _state;
-  QueuePeople _people;
+  QueuePeople people;
 
   String get name => _name;
   String get description => _description;
@@ -159,7 +159,6 @@ class Queue with ChangeNotifier {
     _state = newValue;
     notifyListeners();
   }
-  QueuePeople get people => _people;
 
   static Queue fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -179,6 +178,10 @@ class Queue with ChangeNotifier {
     notifyListeners();
   }
 
+  void listen() {
+    BusinessAppServer.joinRoom(id);
+  }
+
   Queue({
     this.id,
     String name,
@@ -190,7 +193,7 @@ class Queue with ChangeNotifier {
     this._description = description;
     this._state = QueueState.inactive;
     this._code = code;
-    this._people = QueuePeople(id: this.id, server: server);
+    this.people = QueuePeople(id: this.id, server: server);
   }
 }
 
@@ -227,12 +230,6 @@ class AllQueuesInfo with ChangeNotifier {
     }
 
     toRemove.forEach((element) {queues.remove(element as int);});
-  }
-
-  // currently doesn't really do anything
-  // meant to be called whenever dashboard shown
-  Future<void> leaveRooms() async {
-    BusinessAppServer.leaveRoom();
   }
 
   //TODO: Someone please make sure this is ok
