@@ -47,8 +47,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'EndLine',
         onGenerateRoute: BAppRouteGenerator.generateRoute,
-        // initialRoute: "/",
-        home: SetupAccountPage(),
+        initialRoute: "/",
+        // home: SetupAccountPage(),
     );
   }
 }
