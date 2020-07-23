@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart' as Foundation;
 
 class CustomException implements Exception {
   String cause;
-  
+
   @override
   String toString() {
     return cause;
@@ -26,7 +26,7 @@ class ForbiddenException extends MyServerException {
 }
 
 class AccountDoesNotExistException extends ForbiddenException {
-    AccountDoesNotExistException(String cause) : super(cause);
+  AccountDoesNotExistException(String cause) : super(cause);
 }
 
 class JsonEncodingException extends MyServerException {
@@ -46,11 +46,14 @@ class FirebaseServerException extends MyServerException {
 }
 
 class MyServer {
-  static const String path = true ? "http://0.0.0.0:8000/" : "http://ec2-18-221-212-236.us-east-2.compute.amazonaws.com/";
-  static const Duration timeout = Duration(seconds: Foundation.kDebugMode ? 10 : 10);
+  static const String path = false
+      ? "http://0.0.0.0:8000/"
+      : "http://ec2-18-221-212-236.us-east-2.compute.amazonaws.com/";
+  static const Duration timeout =
+      Duration(seconds: Foundation.kDebugMode ? 10 : 10);
 
   static Map<String, String> headers = <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+    'Content-Type': 'application/json; charset=UTF-8',
   };
 
   String _getURL({@required String route}) {
@@ -62,11 +65,8 @@ class MyServer {
 
     // await Future.delayed(Duration(seconds: 3));
 
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body)
-    );
+    final response =
+        await http.post(url, headers: headers, body: jsonEncode(body));
 
     updateCookie(response);
 
@@ -75,14 +75,14 @@ class MyServer {
 
   Future<Map<String, dynamic>> get(String route) async {
     final url = _getURL(route: route);
-    
+
     // await Future.delayed(Duration(seconds: 3));
 
     final response = await http.get(
       url,
       headers: headers,
     );
-    
+
     updateCookie(response);
 
     return getMap(response);
@@ -92,7 +92,7 @@ class MyServer {
     if (r.statusCode == 500) {
       throw MyServerException("Server Error");
     }
-    
+
     final body = jsonDecode(r.body);
 
     if (r.statusCode == 200) {
@@ -108,18 +108,16 @@ class MyServer {
         throw AccountDoesNotExistException("This User is Not Signed Up");
       default:
         switch (r.statusCode) {
-        case 403:
-          throw ForbiddenException(message);
-        case 405:
-          throw JsonEncodingException(message);
-        case 404:
-          throw NotFoundException(message);
-        default:
-          throw Exception(message);
-      }
+          case 403:
+            throw ForbiddenException(message);
+          case 405:
+            throw JsonEncodingException(message);
+          case 404:
+            throw NotFoundException(message);
+          default:
+            throw Exception(message);
+        }
     }
-
-    
   }
 
   void updateCookie(http.Response response) {
@@ -153,17 +151,18 @@ class ApiResponse<T> {
   bool get isSuccess {
     return status == Status.COMPLETED;
   }
-  
+
   ApiResponse.loading(this.message) : status = Status.LOADING;
   ApiResponse.completed(this.data) : status = Status.COMPLETED;
   ApiResponse.error(this.message) : status = Status.ERROR;
-  
+
   @override
   String toString() {
     return "Status : $status \n Message : $message \n Data : $data";
   }
 
-  static Future<ApiResponse<T>> fromFunction<T>(Future<T> Function() function) async {
+  static Future<ApiResponse<T>> fromFunction<T>(
+      Future<T> Function() function) async {
     try {
       T value = await function();
       return ApiResponse.completed(value);

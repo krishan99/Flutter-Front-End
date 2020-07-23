@@ -19,12 +19,12 @@ class QueuePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<QueuePeople>(
-        builder: (context, qpeople, _) {
-          qpeople.start();
-          return SlideableList(
+      builder: (context, qpeople, _) {
+        qpeople.start();
+        return SlideableList(
             topSpacing: 55,
-            onPlusTap: (){
-              queue.people.add2Queue(name: "NAMES", id: 7, phone: "8888888888");
+            onPlusTap: () {
+              Navigator.of(context).pushNamed("/add2Queue", arguments: queue);
               // queue.add(QueueEntry(name: "John Doe"));
             },
             header: SliverPersistentHeader(
@@ -36,39 +36,35 @@ class QueuePage extends StatelessWidget {
                 maxExtent: 125,
               ),
             ),
-            cells: qpeople.body.map((element) =>
-              ChangeNotifierProvider.value(
-                  value: element,
-                  child: Consumer<QueuePerson>(
-                    builder: (context, entry, _) {
-                      // Todo, index?
-                      var index = 10;
-                      return SlideableListCell.person(
-                        queueEntry: entry,
-                        relativeSize: (index < 3)
-                            ? SlideableListCellSize.medium
-                            : SlideableListCellSize.small,
-                        
-                        onDelete: (isActive) async{
-                          queue.people.remove(entry.id);
-                          return true;
+            cells: qpeople.body
+                .map((element) => ChangeNotifierProvider.value(
+                      value: element,
+                      child: Consumer<QueuePerson>(
+                        builder: (context, entry, _) {
+                          // Todo, index?
+                          var index = 10;
+                          return SlideableListCell.person(
+                            queueEntry: entry,
+                            relativeSize: (index < 3)
+                                ? SlideableListCellSize.medium
+                                : SlideableListCellSize.small,
+                            onDelete: (isActive) async {
+                              queue.people.remove(entry.id);
+                              return true;
+                            },
+                            onNotify: (isActive) async {
+                              entry.state = QueueEntryState.pendingNotification;
+                              return false;
+                            },
+                            onTap: () async {
+                              return false;
+                            },
+                          );
                         },
-                        
-                        onNotify: (isActive) async {
-                          entry.state = QueueEntryState.pendingNotification;
-                          return false;
-                        },
-
-                        onTap: () async {
-                          return false;
-                        },
-                      );
-                    },
-                  ),
-                )
-            ).toList()
-          );
-        },
+                      ),
+                    ))
+                .toList());
+      },
     );
   }
 }
@@ -83,7 +79,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       {this.color, this.queue, this.minExtent, this.maxExtent});
 
   @override
-  OverScrollHeaderStretchConfiguration get stretchConfiguration => OverScrollHeaderStretchConfiguration();
+  OverScrollHeaderStretchConfiguration get stretchConfiguration =>
+      OverScrollHeaderStretchConfiguration();
 
   @override
   Widget build(
@@ -107,7 +104,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                         children: [
                           Container(
                             child: InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.pop(context);
                               },
                               child: Icon(
@@ -120,14 +117,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                           SizedBox(
                             width: 7,
                           ),
-                          Consumer<Queue>(
-                            builder: (context, q, _){
-                              return Text(
-                                queue.name ?? "New Queue",
-                                style: MyStyles.of(context).textThemes.h2,
-                              );
-                            }
-                          ),
+                          Consumer<Queue>(builder: (context, q, _) {
+                            return Text(
+                              queue.name ?? "New Queue",
+                              style: MyStyles.of(context).textThemes.h2,
+                            );
+                          }),
                           Expanded(
                               child: Container(
                                   alignment: Alignment.centerRight,
@@ -137,15 +132,13 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                       Row(
                         children: [
                           SizedBox(width: 42),
-                          Consumer<Queue>(
-                            builder: (context, q, _){
-                              String queueCode = q.code ?? "...";
-                              return  Text(
-                                "Code: $queueCode",
-                                style: MyStyles.of(context).textThemes.h4,
-                              );
-                            }
-                          ),
+                          Consumer<Queue>(builder: (context, q, _) {
+                            String queueCode = q.code ?? "...";
+                            return Text(
+                              "Code: $queueCode",
+                              style: MyStyles.of(context).textThemes.h4,
+                            );
+                          }),
                         ],
                       ),
                     ],
@@ -153,14 +146,13 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                   SizedBox(height: 7),
                   Container(
                     alignment: Alignment.center,
-                    child: Consumer<QueuePeople>(
-                      builder: (context, qpeople, _){
-                        return  Text(
-                          "Waiting ${qpeople.numWaiting} | Notified ${qpeople.numNotified} | Completed ${qpeople.numCompleted}",
-                          style: MyStyles.of(context).textThemes.bodyText3,
-                        );
-                      }
-                    ),
+                    child:
+                        Consumer<QueuePeople>(builder: (context, qpeople, _) {
+                      return Text(
+                        "Waiting ${qpeople.numWaiting} | Notified ${qpeople.numNotified} | Completed ${qpeople.numCompleted}",
+                        style: MyStyles.of(context).textThemes.bodyText3,
+                      );
+                    }),
                   )
                 ],
               ),

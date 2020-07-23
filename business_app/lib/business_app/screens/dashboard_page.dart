@@ -50,9 +50,8 @@ class DashboardPage extends StatelessWidget {
                           buttonText: "Add Queue",
                           onPlusTap: () async {
                             try {
-                              await qinfo.makeQueue(
-                                  "Big big fish ${Random().nextInt(50).toString()}",
-                                  "roar roar road");
+                              Navigator.of(context)
+                                  .pushNamed("/createQueue", arguments: qinfo);
                             } catch (error) {
                               Toast.show(error.toString(), context,
                                   duration: Toast.LENGTH_LONG,
@@ -194,13 +193,9 @@ class DashboardAppBar extends StatelessWidget {
                                     image: MyStyles.of(context)
                                         .images
                                         .gearIcon
-                                        .image
-                                )
-                            ),
-                          )
-                        ),
-                    )
-                  );
+                                        .image)),
+                          )),
+                    ));
               },
             ),
           ],
