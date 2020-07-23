@@ -12,6 +12,7 @@ import 'package:business_app/theme/themes.dart';
 class FormFieldData {
   String title;
   String placeholderText;
+  String initialText;
   int maxLines;
   final String Function(String) checkError;
   TextEditingController controller = TextEditingController();
@@ -24,6 +25,7 @@ class FormFieldData {
     this.title,
     this.maxLines,
     this.checkError,
+    this.initialText,
     @required this.placeholderText
   });
 }
@@ -77,7 +79,7 @@ class _FormPageState extends State<FormPage> {
   @override
   void initState() {
     super.initState();
-    widget.formPageData.map((field) => field.controller = TextEditingController());
+    widget.formPageData.map((field) => field.controller = TextEditingController(text: field.initialText));
   }
 
   @override

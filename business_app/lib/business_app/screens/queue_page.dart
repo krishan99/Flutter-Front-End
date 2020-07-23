@@ -59,6 +59,7 @@ class QueuePage extends StatelessWidget {
                               return false;
                             },
                             onTap: () async {
+                              Navigator.of(context).pushNamed("/personDetails", arguments: entry);
                               return false;
                             },
                           );

@@ -44,7 +44,9 @@ Not using anymore
       "api/v1/account/signin",
       body: <String, String>{}
     ); 
+  }
 
+  Future<void> updatePerson(QueuePerson person) async {
 
   }
 

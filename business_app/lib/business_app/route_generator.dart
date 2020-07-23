@@ -6,6 +6,7 @@ import 'package:business_app/business_app/screens/dashboard_page.dart';
 import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/business_app/screens/initial_loading_page.dart';
 import 'package:business_app/business_app/screens/queue_page.dart';
+import 'package:business_app/business_app/screens/queue_person_edit.dart';
 import 'package:business_app/business_app/screens/user_creation_pages/setup_user_account_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +64,11 @@ class BAppRouteGenerator {
       case '/dashboard':
         return MaterialPageRoute(builder: (context) {
           return _getPageRoute(RoutePageType.dashboard, args);
+        });
+
+      case '/personDetails':
+        return MaterialPageRoute(builder: (context) {
+          return QueuePersonDescription(person: args as QueuePerson);
         });
 
       case '/queue':
