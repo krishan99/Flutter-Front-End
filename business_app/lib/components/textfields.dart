@@ -92,7 +92,7 @@ class StyleTextField extends StatelessWidget {
 
   factory StyleTextField.phoneNumber({
     TextEditingController controller,
-    String paceholderText,
+    bool isOptional = false,
     StyleTextFieldStatus status = StyleTextFieldStatus.neutral,
     Function(String) onChanged,
     Function(String) onSubmitted,
@@ -106,7 +106,7 @@ class StyleTextField extends StatelessWidget {
       status: status,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
-      placeholderText: "Phone Number...",
+      placeholderText: "Phone Number ${isOptional ? "(Optional)" : ""}",
       maxLines: 1,
     );
   }

@@ -79,24 +79,25 @@ class _JoinQueuePageState extends State<JoinQueuePage> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: columnSpacing,),
-                  if (widget.reqs.needsName)
-                    StyleTextField(
+
+                  StyleTextField(
                       controller: fullNameController,
-                      placeholderText: "Full Name"
+                      placeholderText: "Full Name ${widget.reqs.needsName ? "" : "(Optional)"}"
                     ),
                     SizedBox(height: columnSpacing,),
                   
-                  if (widget.reqs.needsPhoneNumber)
-                    StyleTextField.phoneNumber(
-                      controller: phoneNumberController,
-                    ),
-                    SizedBox(height: columnSpacing,),
+                  StyleTextField.phoneNumber(
+                    controller: phoneNumberController,
+                    isOptional: !widget.reqs.needsPhoneNumber,
+                  ),
+                  SizedBox(height: columnSpacing,),
 
                   StyleTextField(
                     controller: notesController,
                     placeholderText: "Notes (Optional)"
                   ),
                   SizedBox(height: columnSpacing,),
+
                   Container(
                     padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
                     color: Colors.transparent,
@@ -107,6 +108,18 @@ class _JoinQueuePageState extends State<JoinQueuePage> {
                           style: MyStyles.of(context).textThemes.buttonActionText2),
                           onPressed: () async {
                             ApiResponse<void> apiResponse = await ApiResponse.fromFunction(() async {
+                                if (widget.reqs.needsName && fullNameController.text.isEmpty) {
+                                  throw CustomException("You must enter a name.");
+                                }
+
+                                if (widget.reqs.needsPhoneNumber) {
+                                  if (phoneNumberController.text.isEmpty) {
+                                    throw CustomException("You must enter a phone number.");
+                                  } else if (phoneNumberController.text.length != 10) {
+                                    throw CustomException("You must enter a valid phone number.");
+                                  }
+                                }
+
                                 await server.addToQueue(
                                   qid: widget.reqs.qid,
                                   name: fullNameController.text, 
