@@ -1,6 +1,7 @@
 
 import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/services/services.dart';
+import 'package:business_app/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,22 +146,37 @@ class User extends ChangeNotifier {
       }
   }
 
+  Future<void> sendPasswordResetLink({@required String email}) async {
+    if (!Utils.isValidEmail(email)) {
+      throw CustomException("Not a valid email address.");
+    }
+
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (error) {
+      throw getFirebaseException(error);
+    }
+  }
+
+  Future<AuthResult> signInOnFirebase({
+    @required String email,
+    @required String password,
+  }) async {
+    try {
+      return await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } catch (error) {
+      throw getFirebaseException(error);
+    }
+  }
+
   Future<void> signIn({
       @required String email,
       @required String password,
       String businessName,
       String description
     }) async {
-
-    AuthResult result;
-
-    try {
-      result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-    } catch (error) {
-      throw getFirebaseException(error);
-    }
-
+    final result = await signInOnFirebase(email: email, password: password);
     return notifyServerOfSignIn(result.user.email);
   }
 

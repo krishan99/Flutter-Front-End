@@ -1,5 +1,6 @@
 
 import 'package:business_app/theme/themes.dart';
+import 'package:business_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -51,8 +52,7 @@ class StyleTextField extends StatelessWidget {
       onSubmitted: onSubmitted,
       placeholderText: "Email...",
       getErrorMessage: (text) {
-        bool isValidEmail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(text);
-        if (isValidEmail) {
+        if (Utils.isValidEmail(text)) {
           return null;
         } else {
           return "Email is not valid";

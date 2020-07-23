@@ -7,6 +7,7 @@ import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/business_app/screens/initial_loading_page.dart';
 import 'package:business_app/business_app/screens/queue_page.dart';
 import 'package:business_app/business_app/screens/queue_person_edit.dart';
+import 'package:business_app/business_app/screens/user_creation_pages/forgot_password_page.dart';
 import 'package:business_app/business_app/screens/user_creation_pages/setup_user_account_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,11 @@ class BAppRouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (context) {
           return _getPageRoute(RoutePageType.initialLoadingPage, args);
+        });
+
+      case '/forgotpassword':
+        return MaterialPageRoute(builder: (context) {
+          return ForgotYourPasswordPage();
         });
 
       case '/home':

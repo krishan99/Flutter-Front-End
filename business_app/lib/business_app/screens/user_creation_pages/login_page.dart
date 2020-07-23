@@ -1,5 +1,6 @@
 import 'package:business_app/business_app/screens/home_page.dart';
 import 'package:business_app/components/textfields.dart';
+import 'package:business_app/theme/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,6 +62,15 @@ class _LoginPageState extends State<LoginPage> {
               StyleTextField.password(
                 controller: passwordController,
               ),
+              InkWell(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Text("forgot your password", style: MyStyles.of(context).textThemes.subtext)
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamed("/forgotpassword");
+                }
+              )
             ]
           )
         );
