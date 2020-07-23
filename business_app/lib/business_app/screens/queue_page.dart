@@ -29,21 +29,6 @@ class QueuePage extends StatefulWidget {
 class _QueuePageState extends State<QueuePage> {
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // setState((){
-    //   print("it idid a rteresh");
-    //   widget.queue.listen();
-    // });
-            Timer.periodic(Duration(seconds: 1), (Timer t) => setState((){
-              print("refresh me");
-              widget.queue.listen();
-            }));
-
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Consumer<QueuePeople>(
       builder: (context, qpeople, _) {

@@ -29,15 +29,18 @@ class QueuePersonDescription extends StatelessWidget {
       subheading: subheading,
       formPageData: FormPageData(
         [
-          FormFieldData(
-            placeholderText: "Add any notes for this person...",
-            initialText: person.note,
-            maxLines: 4
+          FormPageDataElement.textfield(
+            FormFieldData(
+              placeholderText: "Add any notes for this person...",
+              initialText: person.note,
+              maxLines: 4
+            )
           )
+          
         ]
       ),
       onPressed: (form) async {
-        await person.updateToServer(note: form[0].text);
+        await person.updateToServer(note: form[0].textfield.text);
       },
 
       onSuccess: () {

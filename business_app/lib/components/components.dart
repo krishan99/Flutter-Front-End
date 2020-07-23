@@ -15,7 +15,7 @@ class SlideableList extends StatefulWidget {
   final String buttonText;
   final double topSpacing;
 
-  const SlideableList({Key key,this.onPlusTap, @required this.header, @required this.cells, this.buttonText = "Roar", this.topSpacing = 95}) : super(key: key);
+  const SlideableList({Key key,this.onPlusTap, @required this.header, @required this.cells, this.buttonText = "Add Person", this.topSpacing = 95}) : super(key: key);
 
   @override
   _SlideableListState createState() => _SlideableListState();

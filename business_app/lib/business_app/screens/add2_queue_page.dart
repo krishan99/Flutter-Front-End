@@ -19,15 +19,15 @@ class Add2Queue extends StatelessWidget {
     return FormPage(
       title: "Add Someone to the Queue",
       formPageData: FormPageData([
-        FormFieldData(placeholderText: "Enter Name"),
-        FormFieldData(placeholderText: "Enter Phone Number", maxLines: 1)
+        FormPageDataElement.textfield(FormFieldData(placeholderText: "Enter Name")),
+        FormPageDataElement.textfield(FormFieldData(placeholderText: "Enter Phone Number", maxLines: 1))
       ]),
       onPressed: (formData) async {
-        if (formData[0].text.isEmpty) {
+        if (formData[0].textfield.text.isEmpty) {
           throw CustomException("You must enter a name.");
         }
         queue.people.add2Queue(
-            name: formData[0].text, id: queue.id, phone: formData[1].text);
+            name: formData[0].textfield.text, id: queue.id, phone: formData[1].textfield.text);
       },
       onSuccess: () => Navigator.pop(context),
     );

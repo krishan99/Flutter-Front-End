@@ -18,22 +18,44 @@ class CreateQueue extends StatelessWidget {
     return FormPage(
       title: "Create a Queue",
       formPageData: FormPageData([
-        FormFieldData(
-          placeholderText: "Enter Queue Name",
-          checkError: (text) {
-            if (text != null && text.length < 5) {
-              return "Queue name must be at least 5 characters.";
-            } else {
-              return null;
+        FormPageDataElement.textfield(
+          FormFieldData(
+            placeholderText: "Enter Queue Name",
+            checkError: (text) {
+              if (text != null && text.length < 5) {
+                return "Queue name must be at least 5 characters.";
+              } else {
+                return null;
+              }
             }
-          }),
-        FormFieldData(placeholderText: "Enter Queue Description (Optional)", maxLines: 3)
+          )
+        ),
+        
+        FormPageDataElement.textfield(
+          FormFieldData(
+            placeholderText: "Enter Queue Description (Optional)",
+            maxLines: 3
+          )
+        ),
+
+        FormPageDataElement.checkbox(
+          CheckBoxFormData(title: "Require Name", isOn: true)
+        )
       ]),
       onPressed: (formData) async {
-        if (formData[0].text.isEmpty) {
+        final name = formData[0].textfield.text;
+        final description = formData[1].textfield.text;
+        final requireName = formData[2].checkbox.isOn;
+
+        if (name.isEmpty) {
           throw CustomException("You must enter a queue name.");
         }
-        qinfo.makeQueue(formData[0].text, formData[1].text);
+
+        qinfo.makeQueue(
+          name: name,
+          description: description,
+          requireName: requireName,
+        );
       },
       onSuccess: () => Navigator.pop(context),
     );

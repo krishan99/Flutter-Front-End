@@ -249,7 +249,7 @@ class AllQueuesInfo with ChangeNotifier {
   }
 
   //TODO: Someone please make sure this is ok
-  Future<void> makeQueue(String name, String description) async {
+  Future<void> makeQueue({String name, String description, bool requireName}) async {
     Queue queue = await server.makeQueue(name, description);
     queues[queue.id] = queue;
     // int k = n["qid"];

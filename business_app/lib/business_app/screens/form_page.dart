@@ -9,7 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:business_app/business_app/models/user.dart';
 import 'package:business_app/theme/themes.dart';
 
-class FormFieldData {
+class FormPageDataElementProtocol {}
+
+class FormFieldData implements FormPageDataElementProtocol {
   String title;
   String placeholderText;
   String initialText;
@@ -30,8 +32,36 @@ class FormFieldData {
   });
 }
 
-class FormPageData extends ListBase<FormFieldData> {
-  List<FormFieldData> _data;
+class CheckBoxFormData implements FormPageDataElementProtocol {
+  String title;
+  bool isOn;
+
+  CheckBoxFormData({@required this.title, this.isOn = false});
+}
+
+enum FormPageDataElementType {
+  checkbox,
+  textfield
+}
+
+class FormPageDataElement {
+  FormPageDataElementType type;
+  FormFieldData textfield;
+  CheckBoxFormData checkbox;
+
+  factory FormPageDataElement.textfield(FormFieldData textfield) {
+    return FormPageDataElement(type: FormPageDataElementType.textfield, textfield: textfield);
+  }
+
+  factory FormPageDataElement.checkbox(CheckBoxFormData checkbox) {
+    return FormPageDataElement(type: FormPageDataElementType.checkbox, checkbox: checkbox);
+  }
+
+  FormPageDataElement({this.type, this.textfield, this.checkbox});
+}
+
+class FormPageData extends ListBase<FormPageDataElement> {
+  List<FormPageDataElement> _data;
 
   int get length => _data.length;
 
@@ -40,16 +70,16 @@ class FormPageData extends ListBase<FormFieldData> {
   }
 
   @override
-  FormFieldData operator [](int index) {
+  FormPageDataElement operator [](int index) {
       return _data[index];
     }
   
   @override
-  void operator []=(int index, FormFieldData value) {
+  void operator []=(int index, FormPageDataElement value) {
     _data[index] = value;
   }
 
-  FormPageData(List<FormFieldData> data) {
+  FormPageData(List<FormPageDataElement> data) {
     this._data = data;
   }
 }
@@ -79,13 +109,13 @@ class _FormPageState extends State<FormPage> {
   @override
   void initState() {
     super.initState();
-    widget.formPageData.map((field) => field.controller = TextEditingController(text: field.initialText));
+    widget.formPageData.where((element) => element.type == FormPageDataElementType.textfield).map((field) => field.textfield.controller = TextEditingController(text: field.textfield.initialText));
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget.formPageData.map((field) => field.controller.dispose());
+    widget.formPageData.where((element) => element.type == FormPageDataElementType.textfield).map((field) => field.textfield.controller.dispose());
   }
 
 
@@ -141,24 +171,45 @@ class _FormPageState extends State<FormPage> {
                       // mainAxisAlignment: MainAxisAlignment.center,
                       children: widget.formPageData.map((element) {
                         return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[                            
-                            if (element.title != null && element.title.isNotEmpty)
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                child: Text(element.title, textAlign: TextAlign.start, style: MyStyles.of(context).textThemes.bodyText3)
-                              ),
-                            
-                            StyleTextField(
-                              controller: element.controller,
-                              placeholderText: element.placeholderText,
-                              maxLines: element.maxLines,
-                              getErrorMessage: element.checkError,
-                            ),
+                          children: <Widget>[
+                            (() {
+                              switch (element.type) {
+                                case FormPageDataElementType.textfield:
+                                  final textField = element.textfield;
+                                  return Column(
+                                    children: <Widget>[
+                                      if (textField.title != null && textField.title.isNotEmpty)
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Text(textField.title, textAlign: TextAlign.start, style: MyStyles.of(context).textThemes.bodyText3)
+                                      ),
+                                  
+                                      StyleTextField(
+                                        controller: textField.controller,
+                                        placeholderText: textField.placeholderText,
+                                        maxLines: textField.maxLines,
+                                        getErrorMessage: textField.checkError,
+                                      ),
+                                    ],
+                                  );
 
-                            SizedBox(height: 12,),
+                                case FormPageDataElementType.checkbox:
+                                  final checkboxData = element.checkbox;
+                                  return CheckboxListTile(
+                                    title: Text(checkboxData.title, style: MyStyles.of(context).textThemes.bodyText2),
+                                    controlAffinity: ListTileControlAffinity.trailing,
+                                    value: checkboxData.isOn,
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        checkboxData.isOn = value;  
+                                      });
+                                    },
+                                  );
+                                }            
+                            } ()),
+                            SizedBox(height: 12),
                           ],
-                        );
+                        );             
                       }).toList()
                     ),
                   ),
