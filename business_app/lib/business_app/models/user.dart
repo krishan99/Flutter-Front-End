@@ -65,6 +65,14 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateUserData({String name, String description}) async {
+    assert(isLoggedIn);
+    await server.updateUserData(name: name ?? "", description: description ?? "");
+    this._businessName = name;
+    this._businessDescription = description;
+    notifyListeners();
+  }
+
   Future<void> createAccountOnServer({@required String email, String name, String description}) async {
     final token = await getToken();
     await server.signUp(token: token, name: name, description: description);
@@ -108,11 +116,6 @@ class User extends ChangeNotifier {
     }
 
     await createAccountOnServer(email: result.user.email, name: name, description: description);
-  }
-
-  Future<void> updateUserData({String name, String description}) async {
-    assert(isLoggedIn);
-    await server.updateUserData(name: name ?? "", description: description ?? "");
   }
 
   Exception getFirebaseException(dynamic error) {
