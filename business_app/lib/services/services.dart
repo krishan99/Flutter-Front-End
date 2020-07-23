@@ -46,11 +46,16 @@ class FirebaseServerException extends MyServerException {
 }
 
 class MyServer {
+<<<<<<< HEAD
   static const String path = false
       ? "http://0.0.0.0:8000/"
       : "http://ec2-18-221-212-236.us-east-2.compute.amazonaws.com/";
   static const Duration timeout =
       Duration(seconds: Foundation.kDebugMode ? 10 : 10);
+=======
+  static const String path = false ? "http://0.0.0.0:8000/" : "http://ec2-18-221-212-236.us-east-2.compute.amazonaws.com/";
+  static const Duration timeout = Duration(seconds: Foundation.kDebugMode ? 10 : 10);
+>>>>>>> 8f8237f920c9779e5c25300bcfba9f18dce8cd30
 
   static Map<String, String> headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',

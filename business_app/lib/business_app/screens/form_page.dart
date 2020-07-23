@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:business_app/components/buttons.dart';
 import 'package:business_app/components/textfields.dart';
+import 'package:business_app/user_app/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -83,21 +84,20 @@ class _FormPageState extends State<FormPage> {
     widget.formPageData.map((field) => field.controller.dispose());
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MyStyles.of(context).colors.background1,
-        body: SafeArea(
-          child: Container(
-            color: MyStyles.of(context).colors.background1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.loose,
-                  child: Container(
+        body: TappableFullScreenView(
+          body: SafeArea(
+            child: Container(
+              color: MyStyles.of(context).colors.background1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -127,11 +127,8 @@ class _FormPageState extends State<FormPage> {
                       ],
                     ),
                   ),
-                ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  flex: 3,
-                  child: Container(
+                  SizedBox(height: 10,),
+                  Container(
                     // color: Colors.red,
                     // alignment: Alignment.center,
                     padding: EdgeInsets.only(left: 30, right: 30),
@@ -140,9 +137,13 @@ class _FormPageState extends State<FormPage> {
                       // mainAxisAlignment: MainAxisAlignment.center,
                       children: widget.formPageData.map((element) {
                         return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[                            
-                            if (element.text != null && element.text.isNotEmpty)
-                              Text(element.text, style: MyStyles.of(context).textThemes.formField1),
+                            if (element.title != null && element.title.isNotEmpty)
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(element.title, textAlign: TextAlign.start, style: MyStyles.of(context).textThemes.bodyText3)
+                              ),
                             
                             StyleTextField(
                               controller: element.controller,
@@ -156,11 +157,8 @@ class _FormPageState extends State<FormPage> {
                       }).toList()
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.loose,
-                  child: Container(
+                  SizedBox(height: 10,),
+                  Container(
                     alignment: Alignment.center,
                     child: Consumer<User>(
                       builder: (context, user, _) {
@@ -177,8 +175,8 @@ class _FormPageState extends State<FormPage> {
                       }
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

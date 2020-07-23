@@ -60,8 +60,8 @@ class User extends ChangeNotifier {
     final map = await server.signIn(token: token);
     this._businessName = map["name"];
     this._businessDescription = map["description"];
-    server.connectSocket();
     this.email = email;
+    server.connectSocket();
     notifyListeners();
   }
 
@@ -82,8 +82,7 @@ class User extends ChangeNotifier {
     );
 
     try {
-      final result = await _auth.signInWithCredential(credential);
-      return result;
+      return await _auth.signInWithCredential(credential);
     } catch (error) {
       throw getFirebaseException(error);
     }
