@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:business_app/business_app/services/services.dart';
 import 'package:business_app/components/cells/slideable_list_cell.dart';
 import 'package:business_app/utils.dart';
@@ -8,7 +10,8 @@ import 'package:business_app/theme/themes.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-class QueuePage extends StatelessWidget {
+class QueuePage extends StatefulWidget {
+
   final Queue queue;
 
   QueuePage({
@@ -20,20 +23,41 @@ class QueuePage extends StatelessWidget {
   }
 
   @override
+  _QueuePageState createState() => _QueuePageState();
+}
+
+class _QueuePageState extends State<QueuePage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // setState((){
+    //   print("it idid a rteresh");
+    //   widget.queue.listen();
+    // });
+            Timer.periodic(Duration(seconds: 1), (Timer t) => setState((){
+              print("refresh me");
+              widget.queue.listen();
+            }));
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<QueuePeople>(
       builder: (context, qpeople, _) {
         return SlideableList(
             topSpacing: 55,
             onPlusTap: () {
-              Navigator.of(context).pushNamed("/add2Queue", arguments: queue);
+              Navigator.of(context).pushNamed("/add2Queue", arguments: widget.queue);
               // queue.add(QueueEntry(name: "John Doe"));
             },
             header: SliverPersistentHeader(
-              pinned: true,
+              pinned: false,
               delegate: _SliverAppBarDelegate(
                 color: MyStyles.of(context).colors.background2,
-                queue: queue,
+                queue: widget.queue,
                 minExtent: 100,
                 maxExtent: 130,
               ),
@@ -51,7 +75,7 @@ class QueuePage extends StatelessWidget {
                                 ? SlideableListCellSize.medium
                                 : SlideableListCellSize.small,
                             onDelete: (isActive) async {
-                              queue.people.remove(entry.id);
+                              widget.queue.people.remove(entry.id);
                               return true;
                             },
                             onNotify: (isActive) async {
